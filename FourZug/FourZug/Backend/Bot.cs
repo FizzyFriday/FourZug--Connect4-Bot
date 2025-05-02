@@ -4,6 +4,14 @@
     // Handles tree results
     internal static class Bot
     {
+        // - PARAMETERS -
+
+
+        // - PUBLIC METHODS -
+
+
+        // - PRIVATE METHODS -
+
 
     }
 }
