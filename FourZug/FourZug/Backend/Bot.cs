@@ -11,6 +11,9 @@
         // Manages the Minimax searching and returns final best move results
         public static int BestMove(string[,] grid, string turn)
         {
+            Node root = new Node(grid, turn);
+
+
             return -1;
         }
 

@@ -7,10 +7,11 @@
         // - PARAMETERS -
         private string[,] gameGrid;
         private string turn;
-        private int[]? move;
+        private int col;
 
         private List<Node> children;
-        private List<int[]> unaddedChildMoves;
+        private List<int> unaddedChildCols;
+
 
         // - PUBLIC METHODS -
 
@@ -19,20 +20,28 @@
         {
             this.gameGrid = grid;
             this.turn = turn;
-            // Set value of unaddedChildMove
+            SetValidCols();
         }
 
         // Main constructor
-        public Node(string[,] grid, string turn, int[] move)
+        public Node(string[,] grid, string turn, int col)
         {
             this.gameGrid = grid;
             this.turn = turn;
-            this.move = move;
-            // Set value of unaddedChildMove
+            this.col = col;
+            SetValidCols();
         }
 
         // - PRIVATE METHODS -
+        private void SetValidCols()
+        {
+            // Gets the game grid after the node's move
+            string[,] postMoveGrid = GameUtility.MakeMove(this.gameGrid, this.turn, this.col);
 
+            // Gets all possible column moves
+            List<int> validChildCols = GameUtility.ValidColumns(postMoveGrid);
+            this.unaddedChildCols = validChildCols;
+        }
 
     }
 }
