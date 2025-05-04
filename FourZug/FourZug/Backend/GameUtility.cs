@@ -15,10 +15,10 @@
 
             // Returns all columns where at least top
             // slot is empty
-            int[] validColumns = ValidColumns(grid);
+            List<int> validColumns = ValidColumns(grid);
 
             // Checks if inputted column is a valid move
-            if (Array.IndexOf(validColumns, col) == -1)
+            if (validColumns.IndexOf(col) == -1)
             {
                 Console.WriteLine("Column invalid");
                 return null;
@@ -43,9 +43,22 @@
         }
 
         // Returns all valid columns in the game
-        public static int[] ValidColumns(string[,] grid)
+        public static List<int> ValidColumns(string[,] grid)
         {
-            return Array.Empty<int>();
+            List<int> validCols = new();
+
+            // Runs through all columns of grid
+            for (int col = 0; col < grid.GetLength(0); col++)
+            {
+                // If the toprow is empty, col is valid
+                int topRow = grid.GetLength(1) - 1;
+                if (grid[col, topRow] == " ")
+                {
+                    validCols.Add(col);
+                }
+            }
+
+            return validCols;
         }
 
 
