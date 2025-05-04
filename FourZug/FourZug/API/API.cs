@@ -9,13 +9,35 @@ namespace FourZug.API
         // Returns best move from the bot
         // Preconditions:
         //     grid - represents the game board
-        //     turn - return of current player
+        //     turn - turn of current player
         // Postconditions:
         //     Return column of best move
-
         public static int BestMove(string[,] grid, string turn)
         {
             return Bot.BestMove(grid, turn);
         }
+
+        // Returns the grid after making column move
+        // Preconditions:
+        //     grid - represents the game board
+        //     turn - turn of current player
+        //     col - column user entered
+        // Postconditions:
+        //     Return grid after column move
+        public static string[,] MakeMove(string[,] grid, string turn, int col)
+        {
+            return GameUtility.MakeMove(grid, turn, col);
+        }
+
+        // Returns the valid columns
+        // Preconditions:
+        //      grid - represents the game board
+        // Postconditions:
+        //      Return list of all valid columns
+        public static List<int> ValidColumns(string[,] grid)
+        {
+            return GameUtility.ValidColumns(grid);
+        }
+
     }
 }
