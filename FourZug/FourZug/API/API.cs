@@ -6,7 +6,6 @@ namespace FourZug.API
     // Handles Frontend requests to the Backend
     internal static class API
     {
-
         // Returns best move from the bot
         // Preconditions:
         //     grid - represents the game board
@@ -16,7 +15,7 @@ namespace FourZug.API
 
         public static int BestMove(string[,] grid, string turn)
         {
-            return -1;
+            return Bot.BestMove(grid, turn);
         }
     }
 }
