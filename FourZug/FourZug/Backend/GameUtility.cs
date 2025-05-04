@@ -8,9 +8,38 @@
 
         // - PUBLIC METHODS -
         // Makes a move onto a grid, and returns the new grid
-        public static string[,] MakeMove(string[,] grid, string turn)
+        public static string[,] MakeMove(string[,] grid, string turn, int col)
         {
-            return null;
+            // Clones grid so value is used not reference
+            grid = (string[,])grid.Clone();
+
+            // Returns all columns where at least top
+            // slot is empty
+            int[] validColumns = ValidColumns(grid);
+
+            // Checks if inputted column is a valid move
+            if (Array.IndexOf(validColumns, col) == -1)
+            {
+                Console.WriteLine("Column invalid");
+                return null;
+            }
+
+            // Starts 1 spot above highest index of array
+            int currentRow = grid.GetLength(1);
+
+            // Keep moving down until spot underneath isn't empty
+            // Result is the row the piece should fall into (via gravity)
+            while (currentRow > 0)
+            {
+                if (grid[col, currentRow - 1] == " ")
+                {
+                    currentRow--;
+                }
+            }
+
+            // Make move and return new grid
+            grid[col, currentRow] = turn;
+            return grid;
         }
 
         // Returns all valid columns in the game
