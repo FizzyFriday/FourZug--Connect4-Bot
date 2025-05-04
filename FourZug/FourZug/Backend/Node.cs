@@ -5,15 +5,31 @@
     internal class Node
     {
         // - PARAMETERS -
-        private static string[,] gameGrid;
-        private static string turn;
-        private static int[] move;
+        private string[,] gameGrid;
+        private string turn;
+        private int[]? move;
 
-        private static List<Node> children;
-        private static List<int[]> validChildMoves;
+        private List<Node> children;
+        private List<int[]> unaddedChildMoves;
 
         // - PUBLIC METHODS -
 
+        // Root constructor
+        public Node(string[,] grid, string turn)
+        {
+            this.gameGrid = grid;
+            this.turn = turn;
+            // Set value of unaddedChildMove
+        }
+
+        // Main constructor
+        public Node(string[,] grid, string turn, int[] move)
+        {
+            this.gameGrid = grid;
+            this.turn = turn;
+            this.move = move;
+            // Set value of unaddedChildMove
+        }
 
         // - PRIVATE METHODS -
 
