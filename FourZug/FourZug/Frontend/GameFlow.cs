@@ -47,13 +47,40 @@ namespace FourZug.Frontend
             {
                 DisplayGame();
                 Console.WriteLine($"Player {turn}. Enter move (0-6)");
-                int colMove = Convert.ToInt16(Console.ReadLine());
+                int colMove = ValidateInput();
                 Console.WriteLine("");
 
                 // Validate move
                 // Make move
                 // Check if game ended
             }
+        }
+
+        // Asks for user move repeatedly until input is acceptable
+        private static int ValidateInput()
+        {
+            bool accepted = false;
+            int colMove = -1;
+            
+            // While the move isn't acceptable
+            while (!accepted)
+            {
+                try
+                {
+                    // Attempt to translate to int
+                    colMove = Convert.ToInt16(Console.ReadLine());
+
+                    // Check if int matches a valid column
+                    List<int> validColumns = API.API.ValidColumns(grid);
+                    if (validColumns.IndexOf(colMove) != -1)
+                    {
+                        accepted = true;
+                    }
+                }
+                catch { }
+            }
+
+            return colMove;
         }
     }
 }
