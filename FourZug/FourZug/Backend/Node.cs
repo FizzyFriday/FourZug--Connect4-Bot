@@ -22,6 +22,7 @@
             this.col = col;
         }
 
+        // Returns a created child node given a column
         public Node CreateNode(int col)
         {
             List<int> validCols = GameUtility.ValidColumns(grid);
@@ -50,7 +51,6 @@
         }
 
         // - PRIVATE METHODS -
-        private string[,] 
 
     }
 }
