@@ -58,7 +58,7 @@
             // Leaf node - run heuristics
             if (currentDepth == maxDepth)
             {
-                return -1;
+                return HeuristicsManager.GetHeuristics(node);
             }
 
             // Non leaf - deepen and send back results
@@ -77,8 +77,11 @@
                 rewards.Add(reward);
             }
 
-            // return best result
-            return -1;
+            int bestValue = 0;
+            if (maximizing) bestValue = rewards.Max();
+            else if (!maximizing) bestValue = rewards.Min();
+
+            return rewards.IndexOf(bestValue);
         }
     }
 }

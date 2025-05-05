@@ -5,11 +5,11 @@
     internal class Node
     {
         // - PARAMETERS -
-        public string[,] grid;
-        private string turn;
+        public string[,] grid { get; }
+        public string turn { get; }
         public int col { get; }
 
-        public List<Node> children;
+        public List<Node> children { get; set; }
 
 
         // - PUBLIC METHODS -

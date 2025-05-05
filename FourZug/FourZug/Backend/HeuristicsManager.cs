@@ -7,8 +7,11 @@
 
 
         // - PUBLIC METHODS -
-        public static int GetHeuristics(string[,] grid, string turn)
+        public static int GetHeuristics(Node node)
         {
+            string[,] grid = node.grid;
+            string turn = node.turn;
+
             return -1;
         }
 
