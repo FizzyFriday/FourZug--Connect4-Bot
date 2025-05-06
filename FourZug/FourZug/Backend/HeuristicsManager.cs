@@ -43,7 +43,7 @@ namespace FourZug.Backend
                 int endRow = basePos[1] + (3 * grad[1]);
 
                 if (endCol >= grid.GetLength(0) || endCol < 0) return false;
-                if (endCol >= grid.GetLength(1) || endRow < 0) return false;
+                if (endRow >= grid.GetLength(1) || endRow < 0) return false;
 
                 // Check the 3 other spots using provided direction gradient
                 for (int dist = 1; dist <= 3; dist++)

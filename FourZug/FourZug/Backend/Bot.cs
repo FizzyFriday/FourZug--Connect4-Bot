@@ -5,7 +5,7 @@
     internal static class Bot
     {
         // - PARAMETERS -
-        private static int maxDepth = 1;
+        private static int maxDepth = 2;
         private static bool maximizing;
 
 
@@ -34,9 +34,12 @@
 
             // Evaluate each move
             int bestCol = -1;
+            // Headers of the debugging display
+            Console.WriteLine("R   X   O");
             foreach (Node directMove in root)
             {
                 int reward = Minimax(directMove, 1, maximizing);
+                // Display the new bestmove value (root header)
                 Console.WriteLine(reward);
 
                 // If the move result is better than already seen
@@ -64,13 +67,19 @@
             // Leaf node - run heuristics
             if (currentDepth == maxDepth)
             {
-                return HeuristicsManager.GetHeuristics(node);
+                int reward = HeuristicsManager.GetHeuristics(node);
+                // Displays heuristic value in debug display
+                string padding = new string(' ', currentDepth*4);
+                Console.WriteLine($"{padding}{reward}");
+
+                return reward;
             }
 
             // Non leaf - deepen and send back results
-            // Make a dictionary?
             List<int> childCols = GameUtility.ValidColumns(node.grid);
-            List<int> rewards = new();
+
+            int bestReward = int.MinValue;
+            if (node.turn == "O") bestReward = int.MaxValue;
 
             foreach (int childCol in childCols)
             {
@@ -78,16 +87,19 @@
                 Node child = node.CreateNode(childCol);
                 node.children.Add(child);
 
-                // Deepens search and adds onto list
-                int reward = Minimax(node, currentDepth + 1, !maximizing);
-                rewards.Add(reward);
+                int reward = Minimax(child, currentDepth + 1, maximizing);
+
+                // Displays the nodes value after child nodes
+                string padding = new string(' ', currentDepth*4);
+                Console.WriteLine($"{padding}{reward}");
+
+                // If the reward is better than already seen
+                if (maximizing) bestReward = Math.Max(reward, bestReward);
+                if (!maximizing) bestReward = Math.Min(reward, bestReward);
             }
 
-            int bestValue = 0;
-            if (maximizing) bestValue = rewards.Max();
-            else if (!maximizing) bestValue = rewards.Min();
+            return bestReward;
 
-            return rewards.IndexOf(bestValue);
         }
     }
 }
