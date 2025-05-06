@@ -29,8 +29,6 @@
             return pHeuristic;
         }
 
-
-        // - PRIVATE METHODS -
         // Returns Win (for node not current player), Draw or StillInPlay
         // Losses would have returned a Win for the parent node already (this node wouldnt exist then)
         public static string GameState(string[,] grid, string nodeTurn)
@@ -46,7 +44,7 @@
                     {
                         // Saves the owned piece
                         int[] pos = [col, row];
-                        ownedPieces.Add(pos); 
+                        ownedPieces.Add(pos);
                     }
                 }
             }
@@ -121,6 +119,10 @@
             else return "StillInPlay";
 
         }
+
+
+        // - PRIVATE METHODS -
+
 
         // Returns the position score of the 2 players
         // Returns points of maximizer take points of minimizer

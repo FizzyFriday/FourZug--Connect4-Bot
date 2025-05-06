@@ -9,7 +9,7 @@ namespace FourZug.Frontend
     {
         private static string[,] grid;
         private static string turn = "X";
-        private static bool gameEnded = false;
+        private static string boardState = "StillInPlay";
 
 
         // - PUBLIC METHODS -
@@ -61,20 +61,30 @@ namespace FourZug.Frontend
         // Handles gameplay loop
         private static void GameLoop()
         {
-            while (!gameEnded)
+            // Runs until game ends
+            while (boardState == "StillInPlay")
             {
+                //Console.Clear();
                 DisplayGame();
                 Console.WriteLine($"Player {turn}. Enter move (0-6)");
+
+                // Makes sure move is valid before allowing to continue
                 int colMove = ValidateInput();
                 Console.WriteLine("");
 
                 grid = API.API.MakeMove(grid, turn, colMove);
-                // Check if game ended
 
-                if (turn == "X") turn = "O";
-                else turn = "X";
+                // Gets if the game has ended or still in play
+                boardState = API.API.BoardState(grid, turn);
+
+                // Switches turn if the game is still going
+                if (boardState == "StillInPlay")
+                {
+                    if (turn == "X") turn = "O";
+                    else turn = "X";
+                } 
             }
-            Console.WriteLine("Game end");
+            GameEnd();
         }
 
         // Asks for user move repeatedly until input is acceptable
@@ -102,6 +112,23 @@ namespace FourZug.Frontend
             }
 
             return colMove;
+        }
+
+        // Handles the end of game display message
+        private static void GameEnd()
+        {
+            Console.Clear();
+            DisplayGame();
+            Console.WriteLine("");
+
+            if (boardState == "Win")
+            {
+                Console.WriteLine($"Player {turn} wins!");
+            }
+            else if (boardState == "Draw")
+            {
+                Console.WriteLine("The game ended with a draw");
+            }
         }
     }
 }

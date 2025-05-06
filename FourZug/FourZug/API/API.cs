@@ -38,5 +38,17 @@ namespace FourZug.API
         {
             return GameUtility.ValidColumns(grid);
         }
+
+        // Returns if game has ended
+        // Preconditions:
+        //      grid - represents the game board
+        //      turn - turn of current player
+        // Postconditions:
+        //      Returns string, representing Win, Draw or StillInPlay
+        public static string BoardState(string[,] grid, string turn)
+        {
+            return HeuristicsManager.GameState(grid, turn);
+        }
+
     }
 }
