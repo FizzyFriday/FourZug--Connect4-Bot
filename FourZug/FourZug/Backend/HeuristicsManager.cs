@@ -24,9 +24,7 @@
                 if (result == "Draw") return 500;
             }
 
-            int pHeuristic = PositionHeuristic();
-
-            return pHeuristic;
+            return PositionHeuristic(node.grid);
         }
 
         // Returns Win (for node not current player), Draw or StillInPlay
@@ -37,8 +35,11 @@
             Func<string, int[], int[], bool> CheckIfConnect4 = (nodeTurn, basePos, grad) =>
             {
                 // Checks if the end of the potential connect 4 will go out of array
-                if (basePos[0] + (3 * grad[0]) >= grid.GetLength(0)) return false;
-                if (basePos[1] + (3 * grad[1]) >= grid.GetLength(1)) return false;
+                int endCol = basePos[0] + (3 * grad[0]);
+                int endRow = basePos[1] + (3 * grad[1]);
+
+                if (endCol >= grid.GetLength(0) || endCol < 0) return false;
+                if (endCol >= grid.GetLength(1) || endRow < 0) return false;
 
                 // Check the 3 other spots using provided direction gradient
                 for (int dist = 1; dist <= 3; dist++)
@@ -103,7 +104,6 @@
 
             // If no one has won and it isnt a draw, the game must still be in play
             else return "StillInPlay";
-
         }
 
 
@@ -112,9 +112,37 @@
 
         // Returns the position score of the 2 players
         // Returns points of maximizer take points of minimizer
-        private static int PositionHeuristic()
+        private static int PositionHeuristic(string[,] grid)
         {
-            return -1;
+            // Represents the points gained from positions taken
+            // Viewing from side would correlate visually to game board and help understand array access
+            int[,] pointTable = new int[7, 6]
+            {
+                { 3, 4, 5, 5, 4, 3},
+                { 4, 6, 8, 8, 6, 4 },
+                { 5, 8, 11, 11, 8, 5 },
+                { 7, 10, 13, 13, 10, 7 },
+                { 5, 8, 11, 11, 8, 5 },
+                { 4, 6, 8, 8, 6, 4 },
+                { 3, 4, 5, 5, 4, 3}
+            };
+
+            // Get the points gained for each player on each position
+            int pointBalance = 0;
+            for (int col = 0; col < grid.GetLength(0); col++)
+            {
+                for (int row = 0; row < grid.GetLength(1); row++)
+                {
+                    // Add on points for the position owning player
+                    string containedPiece = grid[col, row];
+                    int positionPoints = pointTable[col, row];
+
+                    if (containedPiece == "X") pointBalance += positionPoints;
+                    else if (containedPiece == "O") pointBalance -= positionPoints;
+                }
+            }
+
+            return pointBalance;
         }
 
     }

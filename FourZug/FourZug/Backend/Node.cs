@@ -20,6 +20,7 @@
             this.grid = grid;
             this.turn = turn;
             this.col = col;
+            this.children = new();
         }
 
         // Returns a created child node given a column

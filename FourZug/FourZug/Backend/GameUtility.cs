@@ -33,7 +33,6 @@
             {
                 if (grid[col, currentRow - 1] == " ")
                 {
-                    Console.WriteLine(currentRow);
                     currentRow--;
                 }
                 else break;
