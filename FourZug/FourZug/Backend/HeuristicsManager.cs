@@ -33,25 +33,13 @@
         // Losses would have returned a Win for the parent node already (this node wouldnt exist then)
         public static string GameState(string[,] grid, string nodeTurn)
         {
-            List<int[]> ownedPieces = new();
-
-            // Run through whole grid and save position of each piece node owns
-            for (int col = 0; col < grid.GetLength(0); col++)
-            {
-                for (int row = 0; row < grid.GetLength(1); row++)
-                {
-                    if (grid[col, row] == nodeTurn)
-                    {
-                        // Saves the owned piece
-                        int[] pos = [col, row];
-                        ownedPieces.Add(pos);
-                    }
-                }
-            }
-
-
+            // Checks a given direction and position if a connect 4 is made
             Func<string, int[], int[], bool> CheckIfConnect4 = (nodeTurn, basePos, grad) =>
             {
+                // Checks if the end of the potential connect 4 will go out of array
+                if (basePos[0] + (3 * grad[0]) >= grid.GetLength(0)) return false;
+                if (basePos[1] + (3 * grad[1]) >= grid.GetLength(1)) return false;
+
                 // Check the 3 other spots using provided direction gradient
                 for (int dist = 1; dist <= 3; dist++)
                 {
@@ -69,46 +57,44 @@
                 return true;
             };
 
-            // Check each 4D direction for a connect 4
-            foreach (int[] piecePos in ownedPieces)
+            // Check each 4D direction for a connect 4, provided a positon
+            Func<int, int, bool> CheckDirections = (col, row) =>
             {
-                int topIndex = grid.GetLength(1) - 1;
-                int rightmostIndex = grid.GetLength(0) - 1;
+                int[] piecePos = [col, row];
 
                 // Check vertical (up)
-                // Check for if out of bounds error would occur
-                if (piecePos[1] + 3 <= topIndex)
-                {
-                    int[] grad = [0, 1];
-                    bool connect4made = CheckIfConnect4(nodeTurn, piecePos, grad);
-                    if (connect4made) return "Win";
-                }
+                int[] grad = [0, 1];
+                bool connect4made = CheckIfConnect4(nodeTurn, piecePos, grad);
+                if (connect4made) return true;
 
                 // Check diagonal (NE)
-                if (piecePos[0] + 3 <= rightmostIndex && piecePos[1] + 3 <= topIndex)
-                {
-                    Console.WriteLine($"{piecePos[0]}, {piecePos[1]}");
-
-                    int[] grad = [1, 1];
-                    bool connect4made = CheckIfConnect4(nodeTurn, piecePos, grad);
-                    if (connect4made) return "Win";
-                }
+                grad = [1, 1];
+                connect4made = CheckIfConnect4(nodeTurn, piecePos, grad);
+                if (connect4made) return true;
 
                 // Check horizontal (right)
-                if (piecePos[0] + 3 <= rightmostIndex)
-                {
-                    if (piecePos[0] == 1 && piecePos[1] == 0) Console.WriteLine("A");
-                    int[] grad = [1, 0];
-                    bool connect4made = CheckIfConnect4(nodeTurn, piecePos, grad);
-                    if (connect4made) return "Win";
-                }
+                grad = [1, 0];
+                connect4made = CheckIfConnect4(nodeTurn, piecePos, grad);
+                if (connect4made) return true;
 
                 // Check diagonal (SE)
-                if (piecePos[0] + 3 <= rightmostIndex && piecePos[1] - 3 >= 0)
+                grad = [1, -1];
+                connect4made = CheckIfConnect4(nodeTurn, piecePos, grad);
+                if (connect4made) return true;
+
+                return false;
+            };
+
+            // Check each piece node owns in grid for a connect 4
+            for (int col = 0; col < grid.GetLength(0); col++)
+            {
+                for (int row = 0; row < grid.GetLength(1); row++)
                 {
-                    int[] grad = [1, -1];
-                    bool connect4made = CheckIfConnect4(nodeTurn, piecePos, grad);
-                    if (connect4made) return "Win";
+                    if (grid[col, row] == nodeTurn)
+                    {
+                        bool isInConnect4 = CheckDirections(col, row);
+                        if (isInConnect4) return "Win";
+                    }
                 }
             }
 
