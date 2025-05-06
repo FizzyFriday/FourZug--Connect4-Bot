@@ -10,6 +10,8 @@
         // Makes a move onto a grid, and returns the new grid
         public static string[,] MakeMove(string[,] grid, string turn, int col)
         {
+            Console.WriteLine("Call");
+
             // Clones grid so value is used not reference
             grid = (string[,])grid.Clone();
 
@@ -33,10 +35,13 @@
             {
                 if (grid[col, currentRow - 1] == " ")
                 {
+                    Console.WriteLine(currentRow);
                     currentRow--;
                 }
+                else break;
             }
 
+            Console.WriteLine("Return me");
             // Make move and return new grid
             grid[col, currentRow] = turn;
             return grid;

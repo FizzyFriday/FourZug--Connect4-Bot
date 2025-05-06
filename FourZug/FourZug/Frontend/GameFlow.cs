@@ -1,4 +1,5 @@
 ﻿using FourZug.API;
+using FourZug.Backend;
 
 namespace FourZug.Frontend
 {
@@ -7,7 +8,7 @@ namespace FourZug.Frontend
     internal static class GameFlow
     {
         private static string[,] grid;
-        private static string turn = "";
+        private static string turn = "X";
         private static bool gameEnded = false;
 
 
@@ -16,6 +17,7 @@ namespace FourZug.Frontend
         // Program entry point
         public static void Main()
         {
+            grid = new string[7, 6];
             int colSize = 7;
             int rowSize = 6;
 
@@ -66,9 +68,13 @@ namespace FourZug.Frontend
                 int colMove = ValidateInput();
                 Console.WriteLine("");
 
-                API.API.MakeMove(grid, turn, colMove);
+                grid = API.API.MakeMove(grid, turn, colMove);
                 // Check if game ended
+
+                if (turn == "X") turn = "O";
+                else turn = "X";
             }
+            Console.WriteLine("Game end");
         }
 
         // Asks for user move repeatedly until input is acceptable

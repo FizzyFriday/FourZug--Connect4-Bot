@@ -38,6 +38,5 @@ namespace FourZug.API
         {
             return GameUtility.ValidColumns(grid);
         }
-
     }
 }
