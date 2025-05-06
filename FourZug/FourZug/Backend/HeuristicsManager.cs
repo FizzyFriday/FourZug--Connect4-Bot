@@ -1,4 +1,6 @@
-﻿namespace FourZug.Backend
+﻿using FourZug.Frontend;
+
+namespace FourZug.Backend
 {
     // Handles heuristics of a move
     internal static class HeuristicsManager
@@ -9,7 +11,8 @@
         // - PUBLIC METHODS -
         public static int GetHeuristics(Node node)
         {
-            string result = GameState(node.grid, node.turn);
+            string[,] postMoveGrid = GameUtility.MakeMove(node.grid, node.turn, node.col);
+            string result = GameState(postMoveGrid, node.turn);
 
             // Returns points if the game ends
             // If the game is a draw, this is bad for either side, hence the large loss
@@ -24,7 +27,8 @@
                 if (result == "Draw") return 500;
             }
 
-            return PositionHeuristic(node.grid);
+            int pHeuristic = PositionHeuristic(postMoveGrid);
+            return pHeuristic;
         }
 
         // Returns Win (for node not current player), Draw or StillInPlay
@@ -138,7 +142,10 @@
                     int positionPoints = pointTable[col, row];
 
                     if (containedPiece == "X") pointBalance += positionPoints;
-                    else if (containedPiece == "O") pointBalance -= positionPoints;
+                    else if (containedPiece == "O")
+                    {
+                        pointBalance -= positionPoints;
+                    }
                 }
             }
 

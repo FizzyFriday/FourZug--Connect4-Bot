@@ -5,7 +5,7 @@
     internal static class Bot
     {
         // - PARAMETERS -
-        private static int maxDepth = 3;
+        private static int maxDepth = 1;
         private static bool maximizing;
 
 
@@ -29,19 +29,25 @@
 
             // Run minimax on each child
             // X goes for max reward, so set to minimum at the start
-            int highestReward = int.MinValue;
-            if (!maximizing) highestReward = int.MaxValue;
+            int bestReward = int.MinValue;
+            if (!maximizing) bestReward = int.MaxValue;
 
             // Evaluate each move
             int bestCol = -1;
             foreach (Node directMove in root)
             {
-                int reward = Minimax(directMove, 1, !maximizing);
+                int reward = Minimax(directMove, 1, maximizing);
+                Console.WriteLine(reward);
 
                 // If the move result is better than already seen
-                if (reward > highestReward)
+                if (reward > bestReward && maximizing)
                 {
-                    highestReward = reward;
+                    bestReward = reward;
+                    bestCol = directMove.col;
+                }
+                if (reward < bestReward && !maximizing)
+                {
+                    bestReward = reward;
                     bestCol = directMove.col;
                 }
             }

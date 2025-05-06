@@ -64,12 +64,16 @@ namespace FourZug.Frontend
             // Runs until game ends
             while (boardState == "StillInPlay")
             {
-                //Console.Clear();
+                Console.Clear();
                 DisplayGame();
                 Console.WriteLine($"Player {turn}. Enter move (0-6)");
 
                 // Makes sure move is valid before allowing to continue
-                if (turn == "O") Console.WriteLine(API.API.BestMove(grid, turn));
+                if (turn == "O")
+                {
+                    int best = API.API.BestMove(grid, turn);
+                    Console.WriteLine($"Bot says best move is: {best}");
+                }
 
                 int colMove = ValidateInput();
                 Console.WriteLine("");
