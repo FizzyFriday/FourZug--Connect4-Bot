@@ -47,7 +47,7 @@ namespace FourZug.API
         //      Returns string, representing Win, Draw or StillInPlay
         public static string BoardState(string[,] grid, string turn)
         {
-            return HeuristicsManager.GameState(grid, turn);
+            return HeuristicsManager.GetGameState(grid, turn);
         }
 
     }

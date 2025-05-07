@@ -13,13 +13,12 @@
 
 
         // Represents who makes the next move (who's turn it is)
-        public string nextMoveBy { get;  }
+        public string nextMoveBy { get; }
 
         // Represents the last column move that made this board
         public int lastMove { get; }
 
-
-        public List<Node> children { get; set; }
+        private List<Node> children;
 
 
         // - PUBLIC METHODS -

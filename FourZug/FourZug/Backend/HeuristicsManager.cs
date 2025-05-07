@@ -11,14 +11,24 @@ namespace FourZug.Backend
         // - PUBLIC METHODS -
         public static int GetHeuristics(Node node)
         {
-            string lastMoveBy = "O";
-            if (node.nextMoveBy == "O") lastMoveBy = "X";
+            int sHeuristic = GetStateHeuristic(node.grid, node.nextMoveBy);
+            if (sHeuristic != 0) return sHeuristic;
 
-            string result = GameState(node.grid, lastMoveBy);
+            int pHeuristic = PositionHeuristic(node.grid);
+            return pHeuristic;
+        }
+
+        // Provides simple scoring return from GameState method
+        // Used by Bot in Minimax method for stopping search deepening
+        public static int GetStateHeuristic(string[,] grid, string nextMoveBy)
+        {
+            string lastMoveBy = "O";
+            if (nextMoveBy == "O") lastMoveBy = "X";
+
+            string result = GameState(grid, lastMoveBy);
 
             // Returns points if the game ends
             // If the game is a draw, this is bad for either side, hence the large loss
-
             if (lastMoveBy == "X")
             {
                 if (result == "Win") return 1000;
@@ -30,13 +40,22 @@ namespace FourZug.Backend
                 if (result == "Draw") return 500;
             }
 
-            int pHeuristic = PositionHeuristic(node.grid);
-            return pHeuristic;
+            // Return 0 if the game hasnt ended
+            return 0;
         }
+
+        // Used by API
+        public static string GetGameState(string[,] grid, string nextMoveBy)
+        {
+            return GameState(grid, nextMoveBy);
+        }
+
+
+        // - PRIVATE METHODS -
 
         // Returns Win (for node not current player), Draw or StillInPlay
         // Losses would have returned a Win for the parent node already (this node wouldnt exist then)
-        public static string GameState(string[,] grid, string nodeTurn)
+        private static string GameState(string[,] grid, string lastMoveBy)
         {
             // Checks a given direction and position if a connect 4 is made
             Func<string, int[], int[], bool> CheckIfConnect4 = (nodeTurn, basePos, grad) =>
@@ -72,22 +91,22 @@ namespace FourZug.Backend
 
                 // Check vertical (up)
                 int[] grad = [0, 1];
-                bool connect4made = CheckIfConnect4(nodeTurn, piecePos, grad);
+                bool connect4made = CheckIfConnect4(lastMoveBy, piecePos, grad);
                 if (connect4made) return true;
 
                 // Check diagonal (NE)
                 grad = [1, 1];
-                connect4made = CheckIfConnect4(nodeTurn, piecePos, grad);
+                connect4made = CheckIfConnect4(lastMoveBy, piecePos, grad);
                 if (connect4made) return true;
 
                 // Check horizontal (right)
                 grad = [1, 0];
-                connect4made = CheckIfConnect4(nodeTurn, piecePos, grad);
+                connect4made = CheckIfConnect4(lastMoveBy, piecePos, grad);
                 if (connect4made) return true;
 
                 // Check diagonal (SE)
                 grad = [1, -1];
-                connect4made = CheckIfConnect4(nodeTurn, piecePos, grad);
+                connect4made = CheckIfConnect4(lastMoveBy, piecePos, grad);
                 if (connect4made) return true;
 
                 return false;
@@ -98,7 +117,7 @@ namespace FourZug.Backend
             {
                 for (int row = 0; row < grid.GetLength(1); row++)
                 {
-                    if (grid[col, row] == nodeTurn)
+                    if (grid[col, row] == lastMoveBy)
                     {
                         bool isInConnect4 = CheckDirections(col, row);
                         if (isInConnect4) return "Win";
@@ -112,10 +131,6 @@ namespace FourZug.Backend
             // If no one has won and it isnt a draw, the game must still be in play
             else return "StillInPlay";
         }
-
-
-        // - PRIVATE METHODS -
-
 
         // Returns the position score of the 2 players
         // Returns points of maximizer take points of minimizer
@@ -153,7 +168,6 @@ namespace FourZug.Backend
             }
 
             return pointBalance;
-        }
-
+        } 
     }
 }

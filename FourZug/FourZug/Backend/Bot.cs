@@ -13,7 +13,7 @@ namespace FourZug.Backend
     internal static class Bot
     {
         // - PARAMETERS -
-        private static int maxDepth = 2;
+        private static int maxDepth = 4;
 
 
         // - PUBLIC METHODS -
@@ -83,7 +83,11 @@ namespace FourZug.Backend
                 Node? child = node.AddChildToTree(childCol);
                 if (child == null) continue;
 
-                //if (HeuristicsManager.GameState(node.grid, node.turn) != "StillInPlay") // Consider returning not deepening
+                // The player to last play move doesn't matter if its just checking if the game ended or not
+                int statePoints = HeuristicsManager.GetStateHeuristic(child.grid, child.nextMoveBy);
+
+                // If true, game has ended
+                if (statePoints != 0) return statePoints;
 
                 // Get best reward from deeper searches
                 int reward = Minimax(child, currentDepth + 1, !maximizing);
