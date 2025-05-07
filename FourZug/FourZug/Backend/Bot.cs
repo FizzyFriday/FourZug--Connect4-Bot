@@ -1,57 +1,57 @@
-﻿namespace FourZug.Backend
+﻿using System.Globalization;
+
+namespace FourZug.Backend
 {
     // Handles tree searching
     // Handles tree results
+
+
+    // Clarify and fix up the minimax selecting from turns
+    // Sometimes grid is null when running GameState during minimax?
+
+
     internal static class Bot
     {
         // - PARAMETERS -
         private static int maxDepth = 2;
-        private static bool maximizing;
 
 
         // - PUBLIC METHODS -
         // Manages the Minimax searching and returns final best move results
-        public static int BestMove(string[,] grid, string turn)
+        public static int BestMove(string[,] grid, string currentTurn)
         {
-            if (turn == "X") maximizing = true;
-            else if (turn == "O") maximizing = false;
+            Node root = new Node(grid, currentTurn, -1);
 
-            // Creates the root as a list of nodes as Root has no implementation
-            List<Node> root = new();
+            // If turn == "X", maximizing = true. Else, maximizing = false
+            bool maximizing = (currentTurn == "X") ? true : false;
 
-            // Gets all valid columns and creates children
-            List<int> validColumns = GameUtility.ValidColumns(grid);
-            foreach (int validCol in validColumns)
-            {
-                Node directChild = new Node(grid, turn, validCol);
-                root.Add(directChild);
-            }
-
-            // Run minimax on each child
-            // X goes for max reward, so set to minimum at the start
-            int bestReward = int.MinValue;
-            if (!maximizing) bestReward = int.MaxValue;
+            // Set best reward to worst possible for player
+            // If maximizing = true, bestReward = -infinity. Else, bestReward = +infinity;
+            int bestReward = (maximizing) ? int.MinValue : int.MaxValue;
 
             // Evaluate each move
             int bestCol = -1;
-            // Headers of the debugging display
-            Console.WriteLine("R   X   O");
-            foreach (Node directMove in root)
+            List<int> validColumns = GameUtility.ValidColumns(grid);
+
+            foreach (int col in validColumns)
             {
-                int reward = Minimax(directMove, 1, maximizing);
-                // Display the new bestmove value (root header)
-                Console.WriteLine(reward);
+                // Lazy expand child onto tree
+                Node? child = root.AddChildToTree(col);
+                if (child == null) continue;
+
+                // Begin the search
+                int reward = Minimax(child, 1, !maximizing);
 
                 // If the move result is better than already seen
                 if (reward > bestReward && maximizing)
                 {
                     bestReward = reward;
-                    bestCol = directMove.col;
+                    bestCol = child.lastMove;
                 }
                 if (reward < bestReward && !maximizing)
                 {
                     bestReward = reward;
-                    bestCol = directMove.col;
+                    bestCol = child.lastMove;
                 }
             }
 
@@ -68,30 +68,25 @@
             if (currentDepth == maxDepth)
             {
                 int reward = HeuristicsManager.GetHeuristics(node);
-                // Displays heuristic value in debug display
-                string padding = new string(' ', currentDepth*4);
-                Console.WriteLine($"{padding}{reward}");
-
                 return reward;
             }
 
             // Non leaf - deepen and send back results
             List<int> childCols = GameUtility.ValidColumns(node.grid);
 
-            int bestReward = int.MinValue;
-            if (node.turn == "O") bestReward = int.MaxValue;
+            // Set best reward to worst possible for player
+            int bestReward = (maximizing) ? int.MinValue : int.MaxValue;
 
             foreach (int childCol in childCols)
             {
                 // Lazy expands child onto tree
-                Node child = node.CreateNode(childCol);
-                node.children.Add(child);
+                Node? child = node.AddChildToTree(childCol);
+                if (child == null) continue;
 
-                int reward = Minimax(child, currentDepth + 1, maximizing);
+                //if (HeuristicsManager.GameState(node.grid, node.turn) != "StillInPlay") // Consider returning not deepening
 
-                // Displays the nodes value after child nodes
-                string padding = new string(' ', currentDepth*4);
-                Console.WriteLine($"{padding}{reward}");
+                // Get best reward from deeper searches
+                int reward = Minimax(child, currentDepth + 1, !maximizing);
 
                 // If the reward is better than already seen
                 if (maximizing) bestReward = Math.Max(reward, bestReward);

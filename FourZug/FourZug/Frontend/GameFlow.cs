@@ -7,7 +7,7 @@ namespace FourZug.Frontend
     // Handles gameplay flow
     internal static class GameFlow
     {
-        private static string[,] grid;
+        private static string[,] grid = new string[7, 6];
         private static string turn = "X";
         private static string boardState = "StillInPlay";
 
@@ -17,9 +17,8 @@ namespace FourZug.Frontend
         // Program entry point
         public static void Main()
         {
-            grid = new string[7, 6];
-            int colSize = 7;
-            int rowSize = 6;
+            int colSize = grid.GetLength(0);
+            int rowSize = grid.GetLength(1);
 
             // Fills the grid with empty spaces
             for (int c = 0; c < colSize; c++)

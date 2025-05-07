@@ -11,23 +11,26 @@ namespace FourZug.Backend
         // - PUBLIC METHODS -
         public static int GetHeuristics(Node node)
         {
-            string[,] postMoveGrid = GameUtility.MakeMove(node.grid, node.turn, node.col);
-            string result = GameState(postMoveGrid, node.turn);
+            string lastMoveBy = "O";
+            if (node.nextMoveBy == "O") lastMoveBy = "X";
+
+            string result = GameState(node.grid, lastMoveBy);
 
             // Returns points if the game ends
             // If the game is a draw, this is bad for either side, hence the large loss
-            if (node.turn == "X")
+
+            if (lastMoveBy == "X")
             {
                 if (result == "Win") return 1000;
                 if (result == "Draw") return -500;
             }
-            if (node.turn == "O")
+            if (lastMoveBy == "O")
             {
                 if (result == "Win") return -1000;
                 if (result == "Draw") return 500;
             }
 
-            int pHeuristic = PositionHeuristic(postMoveGrid);
+            int pHeuristic = PositionHeuristic(node.grid);
             return pHeuristic;
         }
 
