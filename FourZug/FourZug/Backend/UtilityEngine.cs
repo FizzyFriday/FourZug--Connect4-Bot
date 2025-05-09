@@ -18,8 +18,8 @@
             // Checks if inputted column is a valid move
             if (validColumns.IndexOf(col) == -1)
             {
-                Console.WriteLine("Column invalid");
-                return null;
+                //Console.WriteLine("Column invalid");
+                return grid;
             }
 
             // Starts 1 spot above highest index of array

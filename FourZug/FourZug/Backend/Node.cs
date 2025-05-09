@@ -1,16 +1,16 @@
 ﻿namespace FourZug.Backend
 {
-    // Acts as a lightweight DTO representing a node in the parent-pointer "tree"
+    // A lightweight DTO representing a node in the parent-pointer "tree"
     internal struct Node
     {
         // Represents grid AFTER a move
-        public string[,] grid { get; }
+        public string[,] grid;
 
         // Represents who makes the next move (who's turn it is)
-        public string nextMoveBy { get; }
+        public string nextMoveBy;
 
         // Represents the last column move that made this board
-        public int lastColMove { get; }
+        public int lastColMove;
 
         public Node(string[,] grid, string currentTurn, int lastColMove)
         {

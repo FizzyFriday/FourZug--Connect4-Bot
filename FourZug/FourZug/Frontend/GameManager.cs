@@ -1,4 +1,5 @@
 ﻿using FourZug.API;
+using FourZugBot.Frontend;
 
 namespace FourZug.Frontend
 {
@@ -27,34 +28,13 @@ namespace FourZug.Frontend
                 }
             }
 
-            //GameLoop();
+            GameLoop();
         }
 
 
         // - PRIVATE METHODS -
 
-        // Displays grid onto screen
-        private static void DisplayGame()
-        {
-            // Replace with UI Manager methods
-            // Running down the grid
-            for (int r = 5; r >= 0; r--)
-            {
-                // Display top header
-                Console.WriteLine(new string('-', 43));
-                string col = "";
-
-                // Display row contents
-                for (int c = 0; c < 7; c++)
-                {
-                    col += $"|  {grid[c, r]}  ";
-                }
-                col += "|";
-                Console.WriteLine(col);
-            }
-            // Display bottom of grid
-            Console.WriteLine(new string('-', 43));
-        }
+        
 
         // Handles gameplay loop
         private static void GameLoop()
@@ -62,24 +42,24 @@ namespace FourZug.Frontend
             // Runs until game ends
             while (boardState == "StillInPlay")
             {
-                //Console.Clear();
-                //DisplayGame();
+                UIManager.DisplayBoard();
 
                 int colMove = -1;
                 // Bot decides their move
                 if (turn == "O")
                 {
-                    Console.WriteLine("Bot is deciding their move...");
+                    // Display on screen:
+                    //Console.WriteLine("Bot is deciding their move...");
                     colMove = API.API.BestMove(grid, turn);
-                    //Console.WriteLine($"Bot says best move is: {colMove}");
                 }
 
                 // User decides their move
                 if (turn == "X")
                 {
-                    Console.WriteLine($"Player {turn}. Enter move (0-6)");
+                    UIManager.DisplayPlayerTurn();
+                    //Console.WriteLine($"Player {turn}. Enter move (0-6)");
                     colMove = ValidateInput();
-                    Console.WriteLine("");
+                    //Console.WriteLine("");
                 }
 
                 grid = API.API.MakeMove(grid, turn, colMove);
@@ -109,6 +89,7 @@ namespace FourZug.Frontend
                 try
                 {
                     // Attempt to translate to int
+                    // Input the column via the form & UImanager
                     colMove = Convert.ToInt16(Console.ReadLine());
 
                     // Check if int matches a valid column
@@ -127,8 +108,9 @@ namespace FourZug.Frontend
         // Handles the end of game display message
         private static void GameEnd()
         {
-            Console.Clear();
-            DisplayGame();
+            UIManager.DisplayBoard();
+
+            // Display end game logic in UIManager
             Console.WriteLine("");
 
             if (boardState == "Win")

@@ -1,4 +1,6 @@
-﻿namespace FourZug.Backend
+﻿using System.Xml.Linq;
+
+namespace FourZug.Backend
 {
     // Handles tree searching
     // Handles tree results
@@ -30,13 +32,12 @@
 
             // Evaluate each move
             int bestCol = -1;
-            List<int> validColumns = UtilityEngine.ValidColumns(grid);
 
-            foreach (int col in validColumns)
+            List<int> validColumns = UtilityEngine.ValidColumns(grid);
+            foreach (int validCol in validColumns)
             {
-                // Lazy expand child onto tree
-                Node? child = root.AddChildToTree(col);
-                if (child == null) continue;
+                // Get node after move
+                Node child = CreateChild(root, validCol);
 
                 // Begin the search
                 int reward = Minimax(child, 1, !maximizing);
@@ -45,12 +46,12 @@
                 if (reward > bestReward && maximizing)
                 {
                     bestReward = reward;
-                    bestCol = child.lastMove;
+                    bestCol = child.lastColMove;
                 }
                 if (reward < bestReward && !maximizing)
                 {
                     bestReward = reward;
-                    bestCol = child.lastMove;
+                    bestCol = child.lastColMove;
                 }
             }
 
@@ -70,22 +71,19 @@
                 return reward;
             }
 
-            // Non leaf - deepen and send back results
-            List<int> childCols = UtilityEngine.ValidColumns(node.grid);
-
             // Set best reward to worst possible for player
             int bestReward = (maximizing) ? int.MinValue : int.MaxValue;
 
+            List<int> childCols = UtilityEngine.ValidColumns(node.grid);
             foreach (int childCol in childCols)
             {
-                // Lazy expands child onto tree
-                Node? child = CreateChild(node, childCol);
-                if (child == null) continue;
+                // Get node after move
+                Node child = CreateChild(node, childCol);
 
                 // The player to last play move doesn't matter if its just checking if the game ended or not
                 int statePoints = HeuristicsEngine.GetStateHeuristic(child.grid, child.nextMoveBy);
 
-                // If true, game has ended
+                // If true, game has ended, and this node has statePoints value
                 if (statePoints != 0) return statePoints;
 
                 // Get best reward from deeper searches
@@ -99,25 +97,18 @@
             return bestReward;
         }
 
+        // Make sure col is valid before calling
         // Returns a created child node given a column
-        public static Node? CreateChild(Node node, int col)
+        private static Node CreateChild(Node node, int col)
         {
-            List<int> validCols = UtilityEngine.ValidColumns(node.grid);
+            // This game board is an option for the node / nextMoveBy player
+            string[,] childGrid = UtilityEngine.MakeMove(node.grid, node.nextMoveBy, col);
 
-            // Checks if column is a valid child
-            if (validCols.IndexOf(col) != -1)
-            {
-                // Get the grid of child node
-                // This game board is an option for the node / nextMoveBy player
-                string[,] childGrid = UtilityEngine.MakeMove(node.grid, node.nextMoveBy, col);
+            // If this node has the next move by X, then the child will have it by O
+            // vise versa for O to X
+            string childNextMoveBy = (node.nextMoveBy == "X") ? "O" : "X";
 
-                string childNextMoveBy = "O";
-                if (node.nextMoveBy == "O") childNextMoveBy = "X";
-
-                return new Node(childGrid, childNextMoveBy, col);
-            }
-
-            return null;
+            return new Node(childGrid, childNextMoveBy, col);
         }
     }
 }
