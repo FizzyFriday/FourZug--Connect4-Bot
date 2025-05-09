@@ -42,26 +42,24 @@ namespace FourZug.Frontend
             // Runs until game ends
             while (boardState == "StillInPlay")
             {
-                UIManager.DisplayBoard();
+                UIManager.DisplayBoard(grid);
 
                 int colMove = -1;
-                // Bot decides their move
-                if (turn == "O")
-                {
-                    // Display on screen:
-                    //Console.WriteLine("Bot is deciding their move...");
-                    colMove = API.API.BestMove(grid, turn);
-                }
 
                 // User decides their move
                 if (turn == "X")
                 {
                     UIManager.DisplayPlayerTurn();
-                    //Console.WriteLine($"Player {turn}. Enter move (0-6)");
                     colMove = ValidateInput();
-                    //Console.WriteLine("");
                 }
 
+                // Bot decides their move
+                if (turn == "O")
+                {
+                    colMove = API.API.BestMove(grid, turn);
+                }
+
+                // Make move onto board
                 grid = API.API.MakeMove(grid, turn, colMove);
 
                 // Gets if the game has ended or still in play
@@ -74,7 +72,8 @@ namespace FourZug.Frontend
                     turn = (turn == "X") ? "O" : "X";
                 }
             }
-            GameEnd();
+
+            UIManager.DisplayEndGame(boardState, turn);
         }
 
         // Asks for user move repeatedly until input is acceptable
@@ -103,24 +102,6 @@ namespace FourZug.Frontend
             }
 
             return colMove;
-        }
-
-        // Handles the end of game display message
-        private static void GameEnd()
-        {
-            UIManager.DisplayBoard();
-
-            // Display end game logic in UIManager
-            Console.WriteLine("");
-
-            if (boardState == "Win")
-            {
-                Console.WriteLine($"Player {turn} wins!");
-            }
-            else if (boardState == "Draw")
-            {
-                Console.WriteLine("The game ended with a draw");
-            }
         }
     }
 }

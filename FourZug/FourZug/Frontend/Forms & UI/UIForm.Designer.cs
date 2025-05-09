@@ -28,31 +28,32 @@
         /// </summary>
         private void InitializeComponent()
         {
-            txtDisplay = new TextBox();
+            gameBoard = new GroupBox();
             SuspendLayout();
             // 
-            // txtDisplay
+            // gameBoard
             // 
-            txtDisplay.Location = new Point(354, 120);
-            txtDisplay.Name = "txtDisplay";
-            txtDisplay.Size = new Size(100, 23);
-            txtDisplay.TabIndex = 0;
-            txtDisplay.Text = "Text";
+            gameBoard.BackColor = SystemColors.Info;
+            gameBoard.Location = new Point(21, 61);
+            gameBoard.Name = "gameBoard";
+            gameBoard.Size = new Size(435, 377);
+            gameBoard.TabIndex = 0;
+            gameBoard.TabStop = false;
             // 
             // UIForm
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
+            BackColor = SystemColors.Highlight;
             ClientSize = new Size(800, 450);
-            Controls.Add(txtDisplay);
+            Controls.Add(gameBoard);
             Name = "UIForm";
             Text = "UIForm";
             ResumeLayout(false);
-            PerformLayout();
         }
 
         #endregion
 
-        private TextBox txtDisplay;
+        private GroupBox gameBoard;
     }
 }
