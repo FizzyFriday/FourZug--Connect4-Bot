@@ -32,14 +32,14 @@
         // Returns a created child node given a column
         public Node? AddChildToTree(int col)
         {
-            List<int> validCols = GameUtility.ValidColumns(grid);
+            List<int> validCols = UtilityEngine.ValidColumns(grid);
 
             // Checks if column is a valid child
             if (validCols.IndexOf(col) != -1)
             {
                 // Get the grid of child node
                 // This game board is an option for the node / nextMoveBy player
-                string[,] childGrid = GameUtility.MakeMove(this.grid, this.nextMoveBy, col);
+                string[,] childGrid = UtilityEngine.MakeMove(this.grid, this.nextMoveBy, col);
 
                 string childNextMoveBy = "O";
                 if (this.nextMoveBy == "O") childNextMoveBy = "X";
@@ -61,3 +61,4 @@
         }
     }
 }
+

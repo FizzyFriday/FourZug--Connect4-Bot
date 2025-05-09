@@ -3,13 +3,13 @@
     // Handles tree searching
     // Handles tree results
 
-   
+
     // Bot sometimes misses a Win in 1
     // Bot sometimes will sacrifice multiple traps, although this may be sometimes strategically good?
     // Add a connection heuristic (connect 2, connect 3) that contributes a small amount?
 
-
-    internal static class Bot
+    // Originally Bot.cs
+    internal static class BotManager
     {
         // - PARAMETERS -
         public static int maxDepth = 7;
@@ -30,7 +30,7 @@
 
             // Evaluate each move
             int bestCol = -1;
-            List<int> validColumns = GameUtility.ValidColumns(grid);
+            List<int> validColumns = UtilityEngine.ValidColumns(grid);
 
             foreach (int col in validColumns)
             {
@@ -66,12 +66,12 @@
             // Leaf node - run heuristics
             if (currentDepth == maxDepth)
             {
-                int reward = HeuristicsManager.GetHeuristics(node);
+                int reward = HeuristicsEngine.GetHeuristics(node);
                 return reward;
             }
 
             // Non leaf - deepen and send back results
-            List<int> childCols = GameUtility.ValidColumns(node.grid);
+            List<int> childCols = UtilityEngine.ValidColumns(node.grid);
 
             // Set best reward to worst possible for player
             int bestReward = (maximizing) ? int.MinValue : int.MaxValue;
@@ -83,7 +83,7 @@
                 if (child == null) continue;
 
                 // The player to last play move doesn't matter if its just checking if the game ended or not
-                int statePoints = HeuristicsManager.GetStateHeuristic(child.grid, child.nextMoveBy);
+                int statePoints = HeuristicsEngine.GetStateHeuristic(child.grid, child.nextMoveBy);
 
                 // If true, game has ended
                 if (statePoints != 0) return statePoints;

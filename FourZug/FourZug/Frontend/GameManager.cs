@@ -2,9 +2,8 @@
 
 namespace FourZug.Frontend
 {
-    // Handles game display
-    // Handles gameplay flow
-    internal static class GameFlow
+    // Handles gameplay flow (Originally GameFlow.cs)
+    internal static class GameManager
     {
         private static string[,] grid = new string[7, 6];
         private static string turn = "X";
@@ -13,8 +12,8 @@ namespace FourZug.Frontend
 
         // - PUBLIC METHODS -
 
-        // Program entry point
-        public static void Main()
+        // Program entry point after Frontend/Forms/AppInit.cs
+        public static void SetupGame()
         {
             int colSize = grid.GetLength(0);
             int rowSize = grid.GetLength(1);
@@ -28,7 +27,7 @@ namespace FourZug.Frontend
                 }
             }
 
-            GameLoop();
+            //GameLoop();
         }
 
 
@@ -37,6 +36,7 @@ namespace FourZug.Frontend
         // Displays grid onto screen
         private static void DisplayGame()
         {
+            // Replace with UI Manager methods
             // Running down the grid
             for (int r = 5; r >= 0; r--)
             {
@@ -62,10 +62,10 @@ namespace FourZug.Frontend
             // Runs until game ends
             while (boardState == "StillInPlay")
             {
-                Console.Clear();
-                DisplayGame();
-                
-                int colMove=-1;
+                //Console.Clear();
+                //DisplayGame();
+
+                int colMove = -1;
                 // Bot decides their move
                 if (turn == "O")
                 {
@@ -92,7 +92,7 @@ namespace FourZug.Frontend
                 {
                     // Switches turn from X to O or O to X
                     turn = (turn == "X") ? "O" : "X";
-                } 
+                }
             }
             GameEnd();
         }
@@ -102,7 +102,7 @@ namespace FourZug.Frontend
         {
             bool accepted = false;
             int colMove = -1;
-            
+
             // While the move isn't acceptable
             while (!accepted)
             {

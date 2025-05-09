@@ -1,7 +1,8 @@
 ﻿namespace FourZug.Backend
 {
     // Handles heuristics of a move
-    internal static class HeuristicsManager
+    // Originally HeuristicsManager.cs
+    internal static class HeuristicsEngine
     {
         // - PUBLIC METHODS -
         // Gets the heuristis of a game board / node
@@ -123,7 +124,7 @@
             }
 
             // If no player has won and no move left, game is a draw
-            if (GameUtility.ValidColumns(grid).Count == 0) return "Draw";
+            if (UtilityEngine.ValidColumns(grid).Count == 0) return "Draw";
 
             // If no one has won and it isnt a draw, the game must still be in play
             else return "StillInPlay";
@@ -164,6 +165,6 @@
                 }
             }
             return pointBalance;
-        } 
+        }
     }
 }

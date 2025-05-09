@@ -1,4 +1,4 @@
-﻿using FourZug.Backend; 
+﻿using FourZug.Backend;
 
 namespace FourZug.API
 {
@@ -13,7 +13,7 @@ namespace FourZug.API
         //     Return column of best move
         public static int BestMove(string[,] grid, string turn)
         {
-            return Bot.BestMove(grid, turn);
+            return BotManager.BestMove(grid, turn);
         }
 
         // Returns the grid after making column move
@@ -25,7 +25,7 @@ namespace FourZug.API
         //     Return grid after column move
         public static string[,] MakeMove(string[,] grid, string turn, int col)
         {
-            return GameUtility.MakeMove(grid, turn, col);
+            return UtilityEngine.MakeMove(grid, turn, col);
         }
 
         // Returns the valid columns
@@ -35,7 +35,7 @@ namespace FourZug.API
         //      Return list of all valid columns
         public static List<int> ValidColumns(string[,] grid)
         {
-            return GameUtility.ValidColumns(grid);
+            return UtilityEngine.ValidColumns(grid);
         }
 
         // Returns if game has ended
@@ -46,7 +46,7 @@ namespace FourZug.API
         //      Returns string, representing Win, Draw or StillInPlay
         public static string BoardState(string[,] grid, string turn)
         {
-            return HeuristicsManager.GetGameState(grid, turn);
+            return HeuristicsEngine.GetGameState(grid, turn);
         }
 
     }
