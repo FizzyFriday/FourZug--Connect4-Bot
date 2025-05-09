@@ -67,14 +67,16 @@ namespace FourZug.Frontend
                 DisplayGame();
                 Console.WriteLine($"Player {turn}. Enter move (0-6)");
 
-                // Makes sure move is valid before allowing to continue
+                int colMove;
+                // Bot decides their move
                 if (turn == "O")
                 {
-                    int best = API.API.BestMove(grid, turn);
-                    Console.WriteLine($"Bot says best move is: {best}");
+                    colMove = API.API.BestMove(grid, turn);
+                    Console.WriteLine($"Bot says best move is: {colMove}");
                 }
 
-                int colMove = ValidateInput();
+                // Makes sure move is valid before allowing to continue
+                colMove = ValidateInput();
                 Console.WriteLine("");
 
                 grid = API.API.MakeMove(grid, turn, colMove);

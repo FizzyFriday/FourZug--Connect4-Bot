@@ -5,15 +5,29 @@ namespace FourZug.Backend
     // Handles tree searching
     // Handles tree results
 
-
-    // Clarify and fix up the minimax selecting from turns
-    // Sometimes grid is null when running GameState during minimax?
+   
+    // Bot sometimes misses a Win in 1
+    // Add a connection heuristic (connect 2, connect 3) that contributes a small amount?
 
 
     internal static class Bot
     {
         // - PARAMETERS -
-        private static int maxDepth = 4;
+        public static int maxDepth = 7;
+
+        // These are used for checking efficiency, and where to optimize
+        // Contains total time running and calling GetGameState method
+        private static double totalGameStateTime = 0;
+        private static int totalGameStateCalls = 0;
+
+        // Contains total time running and calling GetHeuristics method
+        // Majority of the time running GetGameState adds onto this count
+        private static double totalGetHeuristicTime = 0;
+        private static int totalGetHeuristicCalls = 0;
+
+        // Contains total runtime and number of leafs checked
+        private static double totalRuntime = 0;
+        private static int leafsChecked = 0;
 
 
         // - PUBLIC METHODS -
