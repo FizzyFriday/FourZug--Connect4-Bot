@@ -5,12 +5,9 @@
     internal class Node
     {
         // - PARAMETERS -
-        // Instead of a node representing board and turn before move
-        // and requiring code to get board after, node now represents after the move
 
-        // Represents grid AFTER the move
+        // Represents grid AFTER a move
         public string[,] grid { get; }
-
 
         // Represents who makes the next move (who's turn it is)
         public string nextMoveBy { get; }
@@ -62,8 +59,5 @@
 
             return null;
         }
-
-        // - PRIVATE METHODS -
-
     }
 }

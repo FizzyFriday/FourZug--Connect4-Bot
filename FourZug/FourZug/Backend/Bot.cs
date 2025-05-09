@@ -1,12 +1,11 @@
-﻿using System.Globalization;
-
-namespace FourZug.Backend
+﻿namespace FourZug.Backend
 {
     // Handles tree searching
     // Handles tree results
 
    
     // Bot sometimes misses a Win in 1
+    // Bot sometimes will sacrifice multiple traps, although this may be sometimes strategically good?
     // Add a connection heuristic (connect 2, connect 3) that contributes a small amount?
 
 
@@ -14,20 +13,6 @@ namespace FourZug.Backend
     {
         // - PARAMETERS -
         public static int maxDepth = 7;
-
-        // These are used for checking efficiency, and where to optimize
-        // Contains total time running and calling GetGameState method
-        private static double totalGameStateTime = 0;
-        private static int totalGameStateCalls = 0;
-
-        // Contains total time running and calling GetHeuristics method
-        // Majority of the time running GetGameState adds onto this count
-        private static double totalGetHeuristicTime = 0;
-        private static int totalGetHeuristicCalls = 0;
-
-        // Contains total runtime and number of leafs checked
-        private static double totalRuntime = 0;
-        private static int leafsChecked = 0;
 
 
         // - PUBLIC METHODS -
@@ -112,7 +97,6 @@ namespace FourZug.Backend
             }
 
             return bestReward;
-
         }
     }
 }

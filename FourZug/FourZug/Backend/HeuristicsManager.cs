@@ -1,14 +1,10 @@
-﻿using FourZug.Frontend;
-
-namespace FourZug.Backend
+﻿namespace FourZug.Backend
 {
     // Handles heuristics of a move
     internal static class HeuristicsManager
     {
-        // - PARAMETERS -
-
-
         // - PUBLIC METHODS -
+        // Gets the heuristis of a game board / node
         public static int GetHeuristics(Node node)
         {
             int sHeuristic = GetStateHeuristic(node.grid, node.nextMoveBy);
@@ -44,10 +40,10 @@ namespace FourZug.Backend
             return 0;
         }
 
-        // Used by API
-        public static string GetGameState(string[,] grid, string nextMoveBy)
+        // Used by API. Just remove and make GameState method public?
+        public static string GetGameState(string[,] grid, string lastMoveBy)
         {
-            return GameState(grid, nextMoveBy);
+            return GameState(grid, lastMoveBy);
         }
 
 
@@ -112,6 +108,7 @@ namespace FourZug.Backend
                 return false;
             };
 
+            // This for loop and checking the lamba functions for EVERY piece is intense
             // Check each piece node owns in grid for a connect 4
             for (int col = 0; col < grid.GetLength(0); col++)
             {
@@ -166,7 +163,6 @@ namespace FourZug.Backend
                     }
                 }
             }
-
             return pointBalance;
         } 
     }

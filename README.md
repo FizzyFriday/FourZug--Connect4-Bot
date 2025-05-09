@@ -1,2 +1,2 @@
-# Connect4-bot
-A remake of the cancelled "Connect 4 bot mcts" project, using Minimax with AB Pruning
+# FourZug
+A connect 4 bot currently in development

@@ -1,5 +1,4 @@
 ﻿using FourZug.API;
-using FourZug.Backend;
 
 namespace FourZug.Frontend
 {
@@ -65,19 +64,23 @@ namespace FourZug.Frontend
             {
                 Console.Clear();
                 DisplayGame();
-                Console.WriteLine($"Player {turn}. Enter move (0-6)");
-
-                int colMove;
+                
+                int colMove=-1;
                 // Bot decides their move
                 if (turn == "O")
                 {
+                    Console.WriteLine("Bot is deciding their move...");
                     colMove = API.API.BestMove(grid, turn);
-                    Console.WriteLine($"Bot says best move is: {colMove}");
+                    //Console.WriteLine($"Bot says best move is: {colMove}");
                 }
 
-                // Makes sure move is valid before allowing to continue
-                colMove = ValidateInput();
-                Console.WriteLine("");
+                // User decides their move
+                if (turn == "X")
+                {
+                    Console.WriteLine($"Player {turn}. Enter move (0-6)");
+                    colMove = ValidateInput();
+                    Console.WriteLine("");
+                }
 
                 grid = API.API.MakeMove(grid, turn, colMove);
 
@@ -87,8 +90,8 @@ namespace FourZug.Frontend
                 // Switches turn if the game is still going
                 if (boardState == "StillInPlay")
                 {
-                    if (turn == "X") turn = "O";
-                    else turn = "X";
+                    // Switches turn from X to O or O to X
+                    turn = (turn == "X") ? "O" : "X";
                 } 
             }
             GameEnd();
