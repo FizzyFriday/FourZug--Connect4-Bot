@@ -1,11 +1,8 @@
 ﻿namespace FourZug.Backend
 {
-    // Contains necessary information for nodes
-    // Contains helpful methods concerning tree usage
-    internal class Node
+    // Acts as a lightweight DTO representing a node in the parent-pointer "tree"
+    internal struct Node
     {
-        // - PARAMETERS -
-
         // Represents grid AFTER a move
         public string[,] grid { get; }
 
@@ -13,51 +10,13 @@
         public string nextMoveBy { get; }
 
         // Represents the last column move that made this board
-        public int lastMove { get; }
+        public int lastColMove { get; }
 
-        private List<Node> children;
-
-
-        // - PUBLIC METHODS -
-
-        // Main constructor
-        public Node(string[,] grid, string currentTurn, int lastMove)
+        public Node(string[,] grid, string currentTurn, int lastColMove)
         {
             this.grid = grid;
-            this.children = new();
             this.nextMoveBy = currentTurn;
-            this.lastMove = lastMove;
-        }
-
-        // Returns a created child node given a column
-        public Node? AddChildToTree(int col)
-        {
-            List<int> validCols = UtilityEngine.ValidColumns(grid);
-
-            // Checks if column is a valid child
-            if (validCols.IndexOf(col) != -1)
-            {
-                // Get the grid of child node
-                // This game board is an option for the node / nextMoveBy player
-                string[,] childGrid = UtilityEngine.MakeMove(this.grid, this.nextMoveBy, col);
-
-                string childNextMoveBy = "O";
-                if (this.nextMoveBy == "O") childNextMoveBy = "X";
-
-                Node child = new Node(childGrid, childNextMoveBy, col);
-
-                // Checks if this node already contains the child
-                if (this.children.Contains(child))
-                {
-                    Console.WriteLine("Node already exists in tree");
-                    return null;
-                }
-
-                this.children.Add(child);
-                return child;
-            }
-
-            return null;
+            this.lastColMove = lastColMove;
         }
     }
 }

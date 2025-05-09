@@ -79,7 +79,7 @@
             foreach (int childCol in childCols)
             {
                 // Lazy expands child onto tree
-                Node? child = node.AddChildToTree(childCol);
+                Node? child = CreateChild(node, childCol);
                 if (child == null) continue;
 
                 // The player to last play move doesn't matter if its just checking if the game ended or not
@@ -97,6 +97,27 @@
             }
 
             return bestReward;
+        }
+
+        // Returns a created child node given a column
+        public static Node? CreateChild(Node node, int col)
+        {
+            List<int> validCols = UtilityEngine.ValidColumns(node.grid);
+
+            // Checks if column is a valid child
+            if (validCols.IndexOf(col) != -1)
+            {
+                // Get the grid of child node
+                // This game board is an option for the node / nextMoveBy player
+                string[,] childGrid = UtilityEngine.MakeMove(node.grid, node.nextMoveBy, col);
+
+                string childNextMoveBy = "O";
+                if (node.nextMoveBy == "O") childNextMoveBy = "X";
+
+                return new Node(childGrid, childNextMoveBy, col);
+            }
+
+            return null;
         }
     }
 }
