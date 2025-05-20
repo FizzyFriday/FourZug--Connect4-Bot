@@ -12,9 +12,6 @@ namespace FourZug.Frontend.Forms
             // see https://aka.ms/applicationconfiguration.
             ApplicationConfiguration.Initialize();
             Application.Run(new UIForm());
-
-            // Setups up and starts the game
-            GameManager.SetupGame();
         }
     }
 }

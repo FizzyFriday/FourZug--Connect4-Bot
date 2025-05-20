@@ -1,9 +1,11 @@
 ﻿using FourZug.API;
-using FourZugBot.Frontend;
+using FourZug.Frontend.Forms;
 
 namespace FourZug.Frontend
 {
     // Handles gameplay flow (Originally GameFlow.cs)
+    // Being replaced by UIForm.cs
+
     internal static class GameManager
     {
         private static string[,] grid = new string[7, 6];
@@ -27,8 +29,18 @@ namespace FourZug.Frontend
                     grid[c, r] = " ";
                 }
             }
+        }
 
-            GameLoop();
+        // - PUBLIC METHODS -
+        public static void TakeTurn()
+        { 
+            // Take turn
+            // Make move
+            // Return grid and if game ended
+
+            // Take bot turn
+            // Make move
+            // Return grid and if game ended
         }
 
 
@@ -42,14 +54,14 @@ namespace FourZug.Frontend
             // Runs until game ends
             while (boardState == "StillInPlay")
             {
-                UIManager.DisplayBoard(grid);
+                UIForm.Instance.DisplayBoard(grid);
 
                 int colMove = -1;
 
                 // User decides their move
                 if (turn == "X")
                 {
-                    UIManager.DisplayPlayerTurn();
+                    UIForm.Instance.DisplayPlayerTurn();
                     colMove = ValidateInput();
                 }
 
@@ -73,9 +85,10 @@ namespace FourZug.Frontend
                 }
             }
 
-            UIManager.DisplayEndGame(boardState, turn);
+            UIForm.Instance.DisplayEndGame(boardState, turn);
         }
 
+        // Won't be needed when UI is complete
         // Asks for user move repeatedly until input is acceptable
         private static int ValidateInput()
         {

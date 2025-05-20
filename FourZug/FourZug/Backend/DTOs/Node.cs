@@ -1,6 +1,6 @@
-﻿namespace FourZug.Backend
+﻿namespace FourZug.Backend.DTOs
 {
-    // A lightweight DTO representing a node in the parent-pointer "tree"
+    // Represents a node in the parent-pointer "tree"
     internal struct Node
     {
         // Represents grid AFTER a move

@@ -13,46 +13,79 @@ namespace FourZug.Frontend.Forms
     // Handles UI changes
     public partial class UIForm : Form
     {
+        private string[,] grid;
+
+        // Gets called as part of the initialization process by AppInit.cs
         public UIForm()
         {
             InitializeComponent();
+            InitializeBoard();
         }
 
-        // Sets up empty spots on screen
-        public void InitializeBoard()
+
+        private void InitializeBoard()
         {
-            this.Height = 500;
+            // Create an empty board
+            const int colCount = 7, rowCount = 6;
+            grid = new string[colCount, rowCount];
+            for (int c = 0; c < colCount; c++)
+            {
+                for (int r = 0; r < rowCount; r++)
+                {
+                    grid[c, r] = " ";
+
+                }
+            }
+
+            // Handle board creation on UI
+            this.Height = 300;
             this.Width = 500;
             // Add empty spots to board
         }
 
         // Displays game onto screen
-        public void DisplayBoard(string[,] grid)
+        private void DisplayBoard(string[,] grid)
         {
             // Display game grid into table
         }
 
-        public void DisplayPlayerTurn()
+        // Ran when user selects to take a turn
+        private void UserTakeTurn(int col)
         {
-            // Display that it is players turn
-            // Highlight valid columns?
+            // If input invalid, notify user. Return.
+
+            // User makes move
+            bool gameEnded = MakeBoardMove(col, "X");
+            if (gameEnded) return;
+
+            // Bot makes move
+            int botCol = API.API.BestMove(grid, "O");
+            MakeBoardMove(botCol, "O");
         }
 
-        public void DisplayEndGame(string boardState, string lastPlayToMove)
+        // Makes a move on the board, and returns if the game ended
+        private bool MakeBoardMove(int col, string turn)
         {
-            /*
-            UIManager.DisplayGame();
-            Console.WriteLine("");
+            // Make move and display
+            this.grid = API.API.MakeMove(grid, turn, col);
+            DisplayBoard(grid);
 
-            if (boardState == "Win")
+            // Handle the board state after making move
+            string boardState = API.API.BoardState(grid, turn);
+            if (boardState != "StillInPlay")
             {
-                Console.WriteLine($"Player {turn} wins!");
+                // End the game
+                EndGame(boardState, turn);
+                return true;
             }
-            else if (boardState == "Draw")
-            {
-                Console.WriteLine("The game ended with a draw");
-            }
-            */
+            return false;
+        }
+
+
+        private void EndGame(string boardState, string turnBy)
+        {
+            // Display game has ended
+            // Prevent any more input
         }
     }
 }

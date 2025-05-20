@@ -13,7 +13,7 @@ namespace FourZug.API
         //     Return column of best move
         public static int BestMove(string[,] grid, string turn)
         {
-            return BotManager.BestMove(grid, turn);
+            return TreeManager.BestMove(grid, turn);
         }
 
         // Returns the grid after making column move
@@ -43,11 +43,10 @@ namespace FourZug.API
         //      grid - represents the game board
         //      turn - turn of current player
         // Postconditions:
-        //      Returns string, representing Win, Draw or StillInPlay
+        //      Returns string, representing Win for current player, Draw or StillInPlay
         public static string BoardState(string[,] grid, string turn)
         {
             return HeuristicsEngine.GetGameState(grid, turn);
         }
-
     }
 }

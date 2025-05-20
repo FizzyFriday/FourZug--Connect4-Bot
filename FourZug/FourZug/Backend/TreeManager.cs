@@ -1,9 +1,8 @@
-﻿using System.Xml.Linq;
+﻿using FourZug.Backend.DTOs;
 
 namespace FourZug.Backend
 {
-    // Handles tree searching
-    // Handles tree results
+    // Handles Tree related processing
 
 
     // Bot sometimes misses a Win in 1
@@ -11,10 +10,10 @@ namespace FourZug.Backend
     // Add a connection heuristic (connect 2, connect 3) that contributes a small amount?
 
     // Originally Bot.cs
-    internal static class BotManager
+    internal static class TreeManager
     {
         // - PARAMETERS -
-        public static int maxDepth = 7;
+        private static int maxDepth = 7;
 
 
         // - PUBLIC METHODS -
@@ -67,7 +66,7 @@ namespace FourZug.Backend
             // Leaf node - run heuristics
             if (currentDepth == maxDepth)
             {
-                int reward = HeuristicsEngine.GetHeuristics(node);
+                int reward = HeuristicsEngine.GetEvaluation(node);
                 return reward;
             }
 
@@ -81,7 +80,7 @@ namespace FourZug.Backend
                 Node child = CreateChild(node, childCol);
 
                 // The player to last play move doesn't matter if its just checking if the game ended or not
-                int statePoints = HeuristicsEngine.GetStateHeuristic(child.grid, child.nextMoveBy);
+                int statePoints = HeuristicsEngine.GetStateHeuristic(child);
 
                 // If true, game has ended, and this node has statePoints value
                 if (statePoints != 0) return statePoints;

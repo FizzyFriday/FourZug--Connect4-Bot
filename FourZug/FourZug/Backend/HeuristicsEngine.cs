@@ -1,4 +1,6 @@
-﻿namespace FourZug.Backend
+﻿using FourZug.Backend.DTOs;
+
+namespace FourZug.Backend
 {
     // Handles heuristics of a move
     // Originally HeuristicsManager.cs
@@ -6,9 +8,9 @@
     {
         // - PUBLIC METHODS -
         // Gets the heuristis of a game board / node
-        public static int GetHeuristics(Node node)
+        public static int GetEvaluation(Node node)
         {
-            int sHeuristic = GetStateHeuristic(node.grid, node.nextMoveBy);
+            int sHeuristic = GetStateHeuristic(node);
             if (sHeuristic != 0) return sHeuristic;
 
             int pHeuristic = PositionHeuristic(node.grid);
@@ -17,12 +19,12 @@
 
         // Provides simple scoring return from GameState method
         // Used by Bot in Minimax method for stopping search deepening
-        public static int GetStateHeuristic(string[,] grid, string nextMoveBy)
+        public static int GetStateHeuristic(Node node)
         {
             string lastMoveBy = "O";
-            if (nextMoveBy == "O") lastMoveBy = "X";
+            if (node.nextMoveBy == "O") lastMoveBy = "X";
 
-            string result = GameState(grid, lastMoveBy);
+            string result = GameState(node.grid, lastMoveBy);
 
             // Returns points if the game ends
             // If the game is a draw, this is bad for either side, hence the large loss
@@ -48,10 +50,27 @@
         }
 
 
+
         // - PRIVATE METHODS -
 
         // Returns Win (for node not current player), Draw or StillInPlay
         // Losses would have returned a Win for the parent node already (this node wouldnt exist then)
+
+        /*
+         * Since the function currently runs through the whole board every time this is ran,
+         * a lot of processing would be repeated/wasted. Why check a piece that hasn't had any new pieces
+         * connected to it and didnt end the game previously? Instead, when a move is made, 
+         * only the newly placed piece would have any impact on the game.
+         * 
+         * To rewrite the method and massively improve performance, just 1 piece should be checked (the newest one), 
+         * and in all 8 directions. (The node.lastColMove field already in the node can help)
+         * 
+         * This will cut direction checks from 4n, where n is pieces owned, to 8. It also will reduce loop iterations
+         * from 42 to 1. This will in particular boost the performance in higher depths, and high depths in early game
+         * 
+         * Estimated boost from 550k runs per second to 1.2M
+         */
+
         private static string GameState(string[,] grid, string lastMoveBy)
         {
             // Checks a given direction and position if a connect 4 is made
