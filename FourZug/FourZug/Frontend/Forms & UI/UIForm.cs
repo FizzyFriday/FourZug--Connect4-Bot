@@ -14,6 +14,7 @@ namespace FourZug.Frontend.Forms
     public partial class UIForm : Form
     {
         private string[,] grid;
+        private Panel[,] boardPanels;
 
         // Gets called as part of the initialization process by AppInit.cs
         public UIForm()
@@ -25,8 +26,15 @@ namespace FourZug.Frontend.Forms
 
         private void InitializeBoard()
         {
-            // Create an empty board
             const int colCount = 7, rowCount = 6;
+
+            // Set size of app window
+            this.Height = 500;
+            this.Width = 700;
+            boardPanels = new Panel[colCount, rowCount];
+
+
+            // Create an empty board
             grid = new string[colCount, rowCount];
             for (int c = 0; c < colCount; c++)
             {
@@ -34,13 +42,19 @@ namespace FourZug.Frontend.Forms
                 {
                     grid[c, r] = " ";
 
+                    // Add panel onto UI board
+                    Panel panel = new Panel();
+                    boardPanels[c, r] = panel;
+
+                    // Sets up the panel visuals
+                    panel.Size = new Size(50, 50);
+                    panel.Location = new Point(60 * c, 60 * r);
+                    panel.BackColor = Color.Black;
+
+                    // Adds panel onto UI (gameBoard is a named groupbox on UI)
+                    this.gameBoard.Controls.Add(panel);
                 }
             }
-
-            // Handle board creation on UI
-            this.Height = 300;
-            this.Width = 500;
-            // Add empty spots to board
         }
 
         // Displays game onto screen
@@ -52,7 +66,12 @@ namespace FourZug.Frontend.Forms
         // Ran when user selects to take a turn
         private void UserTakeTurn(int col)
         {
-            // If input invalid, notify user. Return.
+            List<int> validCols = API.API.ValidColumns(grid);
+            if (validCols.IndexOf(col) == -1)
+            {
+                // Notify of invalid column
+                return;
+            }
 
             // User makes move
             bool gameEnded = MakeBoardMove(col, "X");
@@ -80,7 +99,6 @@ namespace FourZug.Frontend.Forms
             }
             return false;
         }
-
 
         private void EndGame(string boardState, string turnBy)
         {

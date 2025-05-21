@@ -68,7 +68,7 @@ namespace FourZug.Backend
          * This will cut direction checks from 4n, where n is pieces owned, to 8. It also will reduce loop iterations
          * from 42 to 1. This will in particular boost the performance in higher depths, and high depths in early game
          * 
-         * Estimated boost from 550k runs per second to 1.2M
+         * Estimated boost from 550k runs per second to 1.2M excl bottleneck
          */
 
         private static string GameState(string[,] grid, string lastMoveBy)
@@ -148,6 +148,23 @@ namespace FourZug.Backend
             // If no one has won and it isnt a draw, the game must still be in play
             else return "StillInPlay";
         }
+
+
+
+        /* For PositionHeuristic method
+         * Similarly to GetStateHeuristic, running through the whole board on every
+         * move is a waste of processing as the values will be the same. The only change
+         * will be based on the points given from the node's move. This would reduce the
+         * processing from 42 checks to only 1
+         * 
+         * The current total position heuristic would likely not need to be saved as a Node field
+         * This is because the amount will change by X on a move/node. Only this change matters
+         * The difference from +96 -> +86 position has the same value impact as +0 -> -10 position.
+         * Only the change on this node has any impact on this node's value
+         * 
+         * Estimated boost from 600k runs per second to 25M excl bottleneck
+         * 
+         */
 
         // Returns the position score of the 2 players
         // Returns points of maximizer take points of minimizer

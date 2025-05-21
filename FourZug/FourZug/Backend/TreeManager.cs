@@ -22,17 +22,14 @@ namespace FourZug.Backend
         {
             Node root = new Node(grid, currentTurn, -1);
 
-            // If turn == "X", maximizing = true. Else, maximizing = false
+            // Set desired points by turn and set worst possible reward to bestReward
             bool maximizing = (currentTurn == "X") ? true : false;
-
-            // Set best reward to worst possible for player
-            // If maximizing = true, bestReward = -infinity. Else, bestReward = +infinity;
             int bestReward = (maximizing) ? int.MinValue : int.MaxValue;
 
             // Evaluate each move
             int bestCol = -1;
-
             List<int> validColumns = UtilityEngine.ValidColumns(grid);
+
             foreach (int validCol in validColumns)
             {
                 // Get node after move
@@ -66,8 +63,7 @@ namespace FourZug.Backend
             // Leaf node - run heuristics
             if (currentDepth == maxDepth)
             {
-                int reward = HeuristicsEngine.GetEvaluation(node);
-                return reward;
+                return HeuristicsEngine.GetEvaluation(node);
             }
 
             // Set best reward to worst possible for player
@@ -103,8 +99,7 @@ namespace FourZug.Backend
             // This game board is an option for the node / nextMoveBy player
             string[,] childGrid = UtilityEngine.MakeMove(node.grid, node.nextMoveBy, col);
 
-            // If this node has the next move by X, then the child will have it by O
-            // vise versa for O to X
+            // If node's next move by X, then for child it would be O. Vise versa for O to X
             string childNextMoveBy = (node.nextMoveBy == "X") ? "O" : "X";
 
             return new Node(childGrid, childNextMoveBy, col);
