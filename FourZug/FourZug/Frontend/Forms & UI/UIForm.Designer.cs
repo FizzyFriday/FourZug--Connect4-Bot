@@ -33,7 +33,7 @@
             // 
             // gameBoard
             // 
-            gameBoard.BackColor = SystemColors.Info;
+            gameBoard.BackColor = SystemColors.GradientInactiveCaption;
             gameBoard.Location = new Point(21, 61);
             gameBoard.Name = "gameBoard";
             gameBoard.Size = new Size(435, 377);

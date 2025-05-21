@@ -55,7 +55,7 @@ namespace FourZug.Frontend.Forms
                 {
                     grid[c, r] = " ";
 
-                    // Add panel onto UI board
+                    // Create panel
                     Panel panel = new Panel();
                     boardPanels[c, r] = panel;
 
@@ -71,12 +71,40 @@ namespace FourZug.Frontend.Forms
                     this.gameBoard.Controls.Add(panel);
                 }
             }
+
+            // For testing DisplayBoard method
+            grid[2, 3] = "X";
+            grid[4, 4] = "O";
+            grid[6, 1] = "X";
+            DisplayBoard(grid);
+
         }
 
         // Displays game onto screen
         private void DisplayBoard(string[,] grid)
         {
-            // Display game grid into table
+            // Display grid onto UI
+            for (int col = 0; col < grid.GetLength(0); col++)
+            {
+                for (int row = 0; row < grid.GetLength(1); row++)
+                {
+                    // Using the value at each index, change colour of each panel
+                    // Using the boardPanels field, and matching index
+                    string positionPiece = grid[col, row];
+
+                    // Set colour based on piece
+                    if (positionPiece == "X")
+                    {
+                        Panel parallelPanel = boardPanels[col, row];
+                        parallelPanel.BackColor = Color.Red;
+                    }
+                    if (positionPiece == "O")
+                    {
+                        Panel parallelPanel = boardPanels[col, row];
+                        parallelPanel.BackColor = Color.Orange;
+                    }
+                }
+            }
         }
 
         // Ran when user selects to take a turn
