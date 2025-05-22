@@ -26,6 +26,7 @@ namespace FourZug.Frontend.Forms
 
         private void InitializeBoard()
         {
+            txtGameResult.Enabled = false;
             const int colCount = 7, rowCount = 6;
 
             // Impacts the sizing and display of the board
@@ -51,7 +52,7 @@ namespace FourZug.Frontend.Forms
             grid = new string[colCount, rowCount];
             for (int c = 0; c < colCount; c++)
             {
-                for (int r = rowCount-1; r >= 0; r--)
+                for (int r = 0; r < rowCount; r++)
                 {
                     grid[c, r] = " ";
 
@@ -65,18 +66,21 @@ namespace FourZug.Frontend.Forms
 
                     // Using the current column and row, size of panels, and gaps between each panel
                     // The panels are placed in a perfect grid
-                    panel.Location = new Point(panelGapPx + (positionScale * c), panelGapPx + (positionScale * r));
+
+                    // Flips the grid upside down, into correct display
+                    int rowInUI = (rowCount - 1) - r;
+
+                    panel.Location = new Point(panelGapPx + (positionScale * c), panelGapPx + (positionScale * rowInUI));
 
                     // Adds panel onto UI (gameBoard is a named groupbox on UI)
                     this.gbxGameBoard.Controls.Add(panel);
                 }
             }
 
-            // For testing DisplayBoard method
-            grid[2, 3] = "X";
-            grid[4, 4] = "O";
-            grid[6, 1] = "X";
-            DisplayBoard(grid);
+            // For testing DisplayBoard
+            MakeBoardMove(1, "X");
+            MakeBoardMove(1, "O");
+            MakeBoardMove(3, "X");
 
         }
 
@@ -135,7 +139,7 @@ namespace FourZug.Frontend.Forms
 
             // Handle the board state after making move
             string boardState = API.API.BoardState(grid, turn);
-            if (boardState != "StillInPlay")
+            if (boardState == "StillInPlay")
             {
                 // End the game
                 EndGame(boardState, turn);
@@ -144,9 +148,23 @@ namespace FourZug.Frontend.Forms
             return false;
         }
 
+        // Displays the game ended and prevent input
         private void EndGame(string boardState, string turnBy)
         {
-            // Display game has ended
+            // Displays the results of game
+            if (boardState == "Draw")
+            {
+                txtGameResult.Text = "Draw";
+            }
+            if (boardState == "Win" && turnBy == "X")
+            {
+                txtGameResult.Text = "You win!";
+            }
+            else if (boardState == "Win" && turnBy == "O")
+            {
+                txtGameResult.Text = "Bot wins!";
+            }
+
             // Prevent any more input
         }
     }

@@ -48,6 +48,7 @@
             txtGameResult.ReadOnly = true;
             txtGameResult.Size = new Size(100, 23);
             txtGameResult.TabIndex = 1;
+            txtGameResult.TabStop = false;
             // 
             // UIForm
             // 
