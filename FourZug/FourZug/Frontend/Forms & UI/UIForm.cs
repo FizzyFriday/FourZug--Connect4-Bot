@@ -64,6 +64,10 @@ namespace FourZug.Frontend.Forms
                     panel.Size = new Size(panelSize, panelSize);
                     panel.BackColor = Color.Black;
 
+                    // Adds a tag as the position of panel, and add click event
+                    panel.Tag = new Tuple<int, int>(c, r);
+                    panel.Click += (s, e) => UserTakeTurn(s, e);
+
                     // Using the current column and row, size of panels, and gaps between each panel
                     // The panels are placed in a perfect grid
 
@@ -76,12 +80,6 @@ namespace FourZug.Frontend.Forms
                     this.gbxGameBoard.Controls.Add(panel);
                 }
             }
-
-            // For testing DisplayBoard
-            MakeBoardMove(1, "X");
-            MakeBoardMove(1, "O");
-            MakeBoardMove(3, "X");
-
         }
 
         // Displays game onto screen
@@ -112,14 +110,22 @@ namespace FourZug.Frontend.Forms
         }
 
         // Ran when user selects to take a turn
-        private void UserTakeTurn(int col)
+        private void UserTakeTurn(object sender, EventArgs e)
         {
+            // Converted clicked object to Panel and check if null
+            Panel? clickedPanel = sender as Panel;
+            if (clickedPanel == null) return;
+
+            // Check if tag is null
+            Tuple<int, int>? posTag = clickedPanel.Tag as Tuple<int, int>;
+            if (posTag == null) return;
+
+            // Get column of selected panel
+            int col = posTag.Item1;
+
+            // Check if column is valid
             List<int> validCols = API.API.ValidColumns(grid);
-            if (validCols.IndexOf(col) == -1)
-            {
-                // Notify of invalid column
-                return;
-            }
+            if (validCols.IndexOf(col) == -1) return;
 
             // User makes move
             bool gameEnded = MakeBoardMove(col, "X");
