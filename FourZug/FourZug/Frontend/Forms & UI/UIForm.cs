@@ -74,12 +74,10 @@ namespace FourZug.Frontend.Forms
                     panel.Tag = c;
                     panel.Click += (s, e) => UserTakeTurn(s, e);
 
-                    // Using the current column and row, size of panels, and gaps between each panel
-                    // The panels are placed in a perfect grid
-
                     // Flips the grid upside down, into correct display
                     int rowInUI = (rowCount - 1) - r;
-
+                    // Using the current column and row, size of panels, and gaps between each panel
+                    // The panels are placed in a perfect grid
                     panel.Location = new Point(panelGapPx + (positionScale * c), panelGapPx + (positionScale * rowInUI));
 
                     // Adds panel onto UI (gameBoard is a named groupbox on UI)
@@ -89,7 +87,7 @@ namespace FourZug.Frontend.Forms
         }
 
         // Displays game onto screen
-        private void DisplayBoard(string[,] grid)
+        private void DisplayBoard(string[,] grid, bool gameEnded = false)
         {
             // Display grid onto UI
             for (int col = 0; col < grid.GetLength(0); col++)
@@ -104,16 +102,18 @@ namespace FourZug.Frontend.Forms
                     if (positionPiece == "X")
                     {
                         Panel parallelPanel = boardPanels[col, row];
-                        parallelPanel.BackColor = Color.Red;
+                        parallelPanel.BackColor = Color.Blue;
                     }
                     if (positionPiece == "O")
                     {
                         Panel parallelPanel = boardPanels[col, row];
-                        parallelPanel.BackColor = Color.Orange;
+                        parallelPanel.BackColor = Color.Red;
                     }
                 }
             }
 
+            // Forces the UI to finish updating before allowing further processing
+            Application.DoEvents();
         }
 
         // Ran when user selects to take a turn
@@ -169,14 +169,18 @@ namespace FourZug.Frontend.Forms
             if (boardState == "Draw")
             {
                 txtGameResult.Text = "Draw";
+                this.BackColor = Color.Orange;
             }
             if (boardState == "Win" && turnBy == "X")
             {
                 txtGameResult.Text = "You win!";
+                this.BackColor = Color.Blue;
+
             }
             else if (boardState == "Win" && turnBy == "O")
             {
                 txtGameResult.Text = "Bot wins!";
+                this.BackColor = Color.Red;
             }
 
             this.gameEnded = true;

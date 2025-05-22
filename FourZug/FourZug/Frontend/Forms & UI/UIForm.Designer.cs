@@ -54,7 +54,7 @@
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            BackColor = SystemColors.Highlight;
+            BackColor = SystemColors.ControlDark;
             ClientSize = new Size(430, 423);
             Controls.Add(txtGameResult);
             Controls.Add(gbxGameBoard);

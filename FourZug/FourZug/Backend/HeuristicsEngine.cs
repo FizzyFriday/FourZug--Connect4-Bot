@@ -149,9 +149,9 @@ namespace FourZug.Backend
             else return "StillInPlay";
         }
 
-        // New implementation of the PositionHeuristic method
-        // Returns the points gained based on placing a piece in a position
-        private static int PositionGainHeuristic(Node node)
+        // Returns the position score of the 2 players
+        // Returns points of maximizer take points of minimizer
+        private static int PositionHeuristic(string[,] grid)
         {
             // Represents the points gained from positions taken
             // Viewing from side would correlate visually to game board and help understand array access
@@ -166,23 +166,24 @@ namespace FourZug.Backend
                 { 3, 4, 5, 5, 4, 3}
             };
 
-            // Get the row the last move fell into
-            int pieceCol = node.lastColMove;
-            int pieceRow = node.grid.GetLength(1)-1;
-
-            // Get the row the piece fell into
-            while (node.grid[pieceCol, pieceRow] == " ")
+            // Get the points gained for each player on each position
+            int pointBalance = 0;
+            for (int col = 0; col < grid.GetLength(0); col++)
             {
-                pieceRow--;
+                for (int row = 0; row < grid.GetLength(1); row++)
+                {
+                    // Add on points for the position owning player
+                    string containedPiece = grid[col, row];
+                    int positionPoints = pointTable[col, row];
+
+                    if (containedPiece == "X") pointBalance += positionPoints;
+                    else if (containedPiece == "O")
+                    {
+                        pointBalance -= positionPoints;
+                    }
+                }
             }
-
-            int pointChange = pointTable[pieceCol, pieceRow];
-
-            // If next move is from X, then last move was from O
-            // So placing this piece gained points for O, or negative points
-            // Vise versa for next move from O
-            if (node.nextMoveBy == "X") return -pointChange;
-            else return pointChange;
+            return pointBalance;
         }
     }
 }
