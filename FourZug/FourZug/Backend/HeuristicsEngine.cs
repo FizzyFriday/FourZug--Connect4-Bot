@@ -13,7 +13,7 @@ namespace FourZug.Backend
             int sHeuristic = GetStateHeuristic(node);
             if (sHeuristic != 0) return sHeuristic;
 
-            int pHeuristic = PositionGainHeuristic(node);
+            int pHeuristic = PositionHeuristic(node.grid);
             return pHeuristic;
         }
 

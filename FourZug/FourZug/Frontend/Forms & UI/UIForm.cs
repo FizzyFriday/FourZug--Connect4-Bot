@@ -16,6 +16,7 @@ namespace FourZug.Frontend.Forms
         private string[,] grid;
         private bool playersTurn;
         private bool gameEnded;
+        private int turnNum = 1;
         private Panel[,] boardPanels;
 
 
@@ -31,6 +32,7 @@ namespace FourZug.Frontend.Forms
         private void InitializeBoard()
         {
             txtGameResult.Enabled = false;
+            txtTurnNum.Text = $"Turn {turnNum}";
             const int colCount = 7, rowCount = 6;
             playersTurn = true;
             gameEnded = false;
@@ -111,6 +113,7 @@ namespace FourZug.Frontend.Forms
                     }
                 }
             }
+            txtTurnNum.Text = $"Turn {turnNum}";
 
             // Forces the UI to finish updating before allowing further processing
             Application.DoEvents();
@@ -136,14 +139,17 @@ namespace FourZug.Frontend.Forms
             if (validCols.IndexOf(col) == -1) return;
 
             // User makes move and switches turn
+            turnNum++;
             MakeBoardMove(col, "X");
             if (this.gameEnded) return;
             this.playersTurn = false;
 
             // Bot makes move
             int botCol = API.API.BestMove(grid, "O");
+            turnNum++;
             MakeBoardMove(botCol, "O");
             this.playersTurn = true;
+            
         }
 
         // Makes a move on the board, and returns if the game ended

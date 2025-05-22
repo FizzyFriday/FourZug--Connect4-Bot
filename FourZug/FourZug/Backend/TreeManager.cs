@@ -14,12 +14,21 @@ namespace FourZug.Backend
     {
         // - PARAMETERS -
         private static int maxDepth = 7;
+        private static int turnNum = 0;
 
 
         // - PUBLIC METHODS -
         // Manages the Minimax searching and returns final best move results
         public static int BestMove(string[,] grid, string currentTurn)
         {
+            turnNum += 2;
+
+            // Increases the depth getting later in the game
+            if (turnNum >= 12) maxDepth = 8;
+            else if (turnNum >= 14) maxDepth = 10;
+            else if (turnNum >= 16) maxDepth = 16;
+            else if (turnNum >= 18) maxDepth = int.MaxValue;
+
             Node root = new Node(grid, currentTurn, -1);
 
             // Set desired points by turn and set worst possible reward to bestReward
