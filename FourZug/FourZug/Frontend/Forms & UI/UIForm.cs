@@ -14,7 +14,11 @@ namespace FourZug.Frontend.Forms
     public partial class UIForm : Form
     {
         private string[,] grid;
+        private bool playersTurn;
+        private bool gameEnded;
         private Panel[,] boardPanels;
+
+
 
         // Gets called as part of the initialization process by AppInit.cs
         public UIForm()
@@ -28,6 +32,8 @@ namespace FourZug.Frontend.Forms
         {
             txtGameResult.Enabled = false;
             const int colCount = 7, rowCount = 6;
+            playersTurn = true;
+            gameEnded = false;
 
             // Impacts the sizing and display of the board
             const int panelSize = 50;
@@ -64,8 +70,8 @@ namespace FourZug.Frontend.Forms
                     panel.Size = new Size(panelSize, panelSize);
                     panel.BackColor = Color.Black;
 
-                    // Adds a tag as the position of panel, and add click event
-                    panel.Tag = new Tuple<int, int>(c, r);
+                    // Adds tag of panel's column, and add click event
+                    panel.Tag = c;
                     panel.Click += (s, e) => UserTakeTurn(s, e);
 
                     // Using the current column and row, size of panels, and gaps between each panel
@@ -107,37 +113,41 @@ namespace FourZug.Frontend.Forms
                     }
                 }
             }
+
         }
 
         // Ran when user selects to take a turn
         private void UserTakeTurn(object sender, EventArgs e)
         {
+            // Prevent a move if not player's turn or game ended
+            if (!playersTurn || gameEnded) return;
+
             // Converted clicked object to Panel and check if null
             Panel? clickedPanel = sender as Panel;
             if (clickedPanel == null) return;
 
-            // Check if tag is null
-            Tuple<int, int>? posTag = clickedPanel.Tag as Tuple<int, int>;
-            if (posTag == null) return;
-
             // Get column of selected panel
-            int col = posTag.Item1;
+            int? tag = clickedPanel.Tag as int?;
+            if (tag == null) return;
+            int col = (int)tag;
 
             // Check if column is valid
             List<int> validCols = API.API.ValidColumns(grid);
             if (validCols.IndexOf(col) == -1) return;
 
-            // User makes move
-            bool gameEnded = MakeBoardMove(col, "X");
-            if (gameEnded) return;
+            // User makes move and switches turn
+            MakeBoardMove(col, "X");
+            if (this.gameEnded) return;
+            this.playersTurn = false;
 
             // Bot makes move
             int botCol = API.API.BestMove(grid, "O");
             MakeBoardMove(botCol, "O");
+            this.playersTurn = true;
         }
 
         // Makes a move on the board, and returns if the game ended
-        private bool MakeBoardMove(int col, string turn)
+        private void MakeBoardMove(int col, string turn)
         {
             // Make move and display
             this.grid = API.API.MakeMove(grid, turn, col);
@@ -145,13 +155,11 @@ namespace FourZug.Frontend.Forms
 
             // Handle the board state after making move
             string boardState = API.API.BoardState(grid, turn);
-            if (boardState == "StillInPlay")
+            if (boardState != "StillInPlay")
             {
                 // End the game
                 EndGame(boardState, turn);
-                return true;
             }
-            return false;
         }
 
         // Displays the game ended and prevent input
@@ -171,7 +179,7 @@ namespace FourZug.Frontend.Forms
                 txtGameResult.Text = "Bot wins!";
             }
 
-            // Prevent any more input
+            this.gameEnded = true;
         }
     }
 }
