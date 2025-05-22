@@ -51,7 +51,7 @@ namespace FourZug.Frontend.Forms
             grid = new string[colCount, rowCount];
             for (int c = 0; c < colCount; c++)
             {
-                for (int r = 0; r < rowCount; r++)
+                for (int r = rowCount-1; r >= 0; r--)
                 {
                     grid[c, r] = " ";
 
