@@ -28,32 +28,44 @@
         /// </summary>
         private void InitializeComponent()
         {
-            gameBoard = new GroupBox();
+            gbxGameBoard = new GroupBox();
+            txtGameResult = new TextBox();
             SuspendLayout();
             // 
-            // gameBoard
+            // gbxGameBoard
             // 
-            gameBoard.BackColor = SystemColors.GradientInactiveCaption;
-            gameBoard.Location = new Point(21, 61);
-            gameBoard.Name = "gameBoard";
-            gameBoard.Size = new Size(435, 377);
-            gameBoard.TabIndex = 0;
-            gameBoard.TabStop = false;
+            gbxGameBoard.BackColor = SystemColors.GradientInactiveCaption;
+            gbxGameBoard.Location = new Point(12, 21);
+            gbxGameBoard.Name = "gbxGameBoard";
+            gbxGameBoard.Size = new Size(400, 336);
+            gbxGameBoard.TabIndex = 0;
+            gbxGameBoard.TabStop = false;
+            // 
+            // txtGameResult
+            // 
+            txtGameResult.Location = new Point(138, 375);
+            txtGameResult.Name = "txtGameResult";
+            txtGameResult.ReadOnly = true;
+            txtGameResult.Size = new Size(100, 23);
+            txtGameResult.TabIndex = 1;
             // 
             // UIForm
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             BackColor = SystemColors.Highlight;
-            ClientSize = new Size(800, 450);
-            Controls.Add(gameBoard);
+            ClientSize = new Size(430, 423);
+            Controls.Add(txtGameResult);
+            Controls.Add(gbxGameBoard);
             Name = "UIForm";
             Text = "UIForm";
             ResumeLayout(false);
+            PerformLayout();
         }
 
         #endregion
 
-        private GroupBox gameBoard;
+        private GroupBox gbxGameBoard;
+        private TextBox txtGameResult;
     }
 }

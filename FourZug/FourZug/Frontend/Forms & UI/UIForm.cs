@@ -30,7 +30,7 @@ namespace FourZug.Frontend.Forms
 
             // Impacts the sizing and display of the board
             const int panelSize = 50;
-            const int panelGapPx = 5;
+            const int panelGapPx = 3;
             int positionScale = panelSize + panelGapPx;
 
             // Size is determined by the number of columns/rows and their sizes + number of gaps
@@ -38,12 +38,12 @@ namespace FourZug.Frontend.Forms
             int gameBoardHeightSize = (rowCount * panelSize) + ((rowCount + 1) * panelGapPx);
 
             // Set size of game board
-            this.gameBoard.Height = gameBoardHeightSize;
-            this.gameBoard.Width = gameBoardWidthSize;
+            this.gbxGameBoard.Height = gameBoardHeightSize;
+            this.gbxGameBoard.Width = gameBoardWidthSize;
 
             // Set size of app window
-            this.Height = 500;
-            this.Width = 700;
+            this.Height = gameBoardHeightSize + 150;
+            this.Width = gameBoardWidthSize + 40;
             boardPanels = new Panel[colCount, rowCount];
 
 
@@ -68,7 +68,7 @@ namespace FourZug.Frontend.Forms
                     panel.Location = new Point(panelGapPx + (positionScale * c), panelGapPx + (positionScale * r));
 
                     // Adds panel onto UI (gameBoard is a named groupbox on UI)
-                    this.gameBoard.Controls.Add(panel);
+                    this.gbxGameBoard.Controls.Add(panel);
                 }
             }
 
