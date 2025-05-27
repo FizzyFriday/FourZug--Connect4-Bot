@@ -4,18 +4,18 @@
 
     public class UtilityEngine : IUtilityEngine
     {
+        // Make a move and return result
         public string[,] MakeMove(string[,] grid, string turn, int col)
         {
-            // Return grid result from engine
-
-            return new string[1,1];
+            string[,] boardResult = UtilityHelper.MakeMove(grid, turn, col);
+            return boardResult;
         }
 
+        //  Returns the valid column moves of a board
         public List<byte> GetValidBoardColumns(string[,] grid)
         {
-            // Return result from engine
-
-            return new List<byte>();
+            List<byte> validColumns = UtilityHelper.ValidColumns(grid);
+            return validColumns;
         }
     }
 }

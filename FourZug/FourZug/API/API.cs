@@ -18,7 +18,9 @@ namespace FourZug.API
          */
         public static int BestMove(string[,] grid, string turn)
         {
-            return (int)TreeManager.BestMove(grid, turn);
+            TreeManager treeManager = new TreeManager();
+
+            return treeManager.GetBotBestMove(grid, turn);
         }
 
 
@@ -34,7 +36,9 @@ namespace FourZug.API
          */
         public static string[,] MakeMove(string[,] grid, string turn, int col)
         {
-            return UtilityEngine.MakeMove(grid, turn, col);
+            UtilityEngine utilEngine = new UtilityEngine();
+
+            return utilEngine.MakeMove(grid, turn, col);
         }
 
 
@@ -43,11 +47,21 @@ namespace FourZug.API
          * @pre:
          *      @param - grid, represents the gameboard
          * @post:
-         *      @return - Returns a list of valid column moves
+         *      @return - Returns an int list of valid column moves
          */
         public static List<int> ValidColumns(string[,] grid)
         {
-            return UtilityEngine.ValidColumns(grid);
+            UtilityEngine utilEngine = new UtilityEngine();
+            List<byte> byteValidColumns = utilEngine.GetValidBoardColumns(grid);
+
+            // Creates an int list copy of the byte list
+            List<int> intValidColumns = new();
+            foreach (byte b in byteValidColumns)
+            {
+                intValidColumns.Add(b);
+            }
+
+            return intValidColumns;
         }
 
 
@@ -62,7 +76,9 @@ namespace FourZug.API
          */
         public static string BoardState(string[,] grid, string turn)
         {
-            return HeuristicsEngine.GetGameState(grid, turn);
+            HeuristicsEngine heuEngine = new HeuristicsEngine();
+
+            return Hengine.GetBoardStateAsString(grid, turn);
         }
     }
 }

@@ -4,12 +4,11 @@
 
     public class TreeManager : ITreeManager
     {
-        public int StartBot(string[,] grid, string currentTurn)
+        // Starts the tree search for the best move, and returns result
+        public int GetBotBestMove(string[,] grid, string currentTurn)
         {
-            // Start the tree search
-            // Return the result, explicitly cast from byte to int
-
-            return -1;
+            byte BestCol = TreeSearcher.BestMove(grid, currentTurn);
+            return (int)BestCol;
         }
     }
 }

@@ -43,7 +43,7 @@
         }
 
         // Returns all valid columns in the game
-        public static List<int> ValidColumns(string[,] grid)
+        public static List<byte> ValidColumns(string[,] grid)
         {
             List<int> validCols = new();
 
