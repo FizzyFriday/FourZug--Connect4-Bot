@@ -8,6 +8,6 @@
         string[,] MakeMove(string[,] grid, string turn, int col);
 
         // Returns all valid columns provided a game board
-        List<byte> ValidColumns(string[,] grid);
+        List<byte> GetValidBoardColumns(string[,] grid);
     }
 }

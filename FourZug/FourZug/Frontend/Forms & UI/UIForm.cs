@@ -113,7 +113,6 @@ namespace FourZug.Frontend.Forms
                     }
                 }
             }
-            txtTurnNum.Text = $"Turn {turnNum}";
 
             // Forces the UI to finish updating before allowing further processing
             Application.DoEvents();
