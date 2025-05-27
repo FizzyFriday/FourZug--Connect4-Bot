@@ -7,7 +7,7 @@ namespace FourZug.Backend.HeuristicsEngine
 
     public class HeuristicsEngine : IHeuristicsEngine
     {
-        public HeuristicsEngine()
+        public void InitComponentReferences()
         { 
             // Create the interface references for BoardEvaluator
         }

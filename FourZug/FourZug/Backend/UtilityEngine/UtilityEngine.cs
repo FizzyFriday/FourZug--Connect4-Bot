@@ -4,7 +4,7 @@
 
     public class UtilityEngine : IUtilityEngine
     {
-        public UtilityEngine()
+        public void InitComponentReferences()
         { 
             // Create the interface references for UtilityHelper
         }

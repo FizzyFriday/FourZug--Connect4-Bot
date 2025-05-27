@@ -7,6 +7,9 @@ namespace FourZug.Backend.HeuristicsEngine
 
     public interface IHeuristicsEngine
     {
+        // Creates and saves interface references of component
+        void InitComponentReferences();
+
         // Gets the evaluation of a game board / node
         short GetNodeEval(Node node);
 

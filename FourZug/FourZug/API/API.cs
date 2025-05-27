@@ -8,13 +8,25 @@ namespace FourZug.API
     // Provides a Backend interface for the frontend
     public class API : IAPI
     {
+        private readonly HeuristicsEngine heuristicsEngine;
+        private readonly TreeManager treeManager;
+        private readonly UtilityEngine utilityEngine;
+
+
         /*
          * Does all referencing between component processors and
          * interfaces of other components
          */
         public API()
-        { 
-            
+        {
+            this.heuristicsEngine = new HeuristicsEngine();
+            this.heuristicsEngine.InitComponentReferences();
+
+            this.treeManager = new TreeManager();
+            this.treeManager.InitComponentReferences();
+
+            this.utilityEngine = new UtilityEngine();
+            this.utilityEngine.InitComponentReferences();
         }
 
 
@@ -28,9 +40,7 @@ namespace FourZug.API
          */
         public int BestMove(string[,] grid, string turn)
         {
-            TreeManager treeManager = new TreeManager();
-
-            return treeManager.GetBotBestMove(grid, turn);
+            return this.treeManager.GetBotBestMove(grid, turn);
         }
 
 
@@ -46,9 +56,7 @@ namespace FourZug.API
          */
         public string[,] MakeMove(string[,] grid, string turn, int col)
         {
-            UtilityEngine utilEngine = new UtilityEngine();
-
-            return utilEngine.MakeMove(grid, turn, col);
+            return this.utilityEngine.MakeMove(grid, turn, col);
         }
 
 
@@ -61,8 +69,7 @@ namespace FourZug.API
          */
         public List<int> ValidBoardColumns(string[,] grid)
         {
-            UtilityEngine utilEngine = new UtilityEngine();
-            List<byte> byteValidColumns = utilEngine.GetValidBoardColumns(grid);
+            List<byte> byteValidColumns = this.utilityEngine.GetValidBoardColumns(grid);
 
             // Creates an int list copy of the byte list
             List<int> intValidColumns = new();
@@ -86,9 +93,7 @@ namespace FourZug.API
          */
         public string BoardState(string[,] grid, string turn)
         {
-            HeuristicsEngine heuEngine = new HeuristicsEngine();
-
-            return heuEngine.GetBoardStateAsString(grid, turn);
+            return this.heuristicsEngine.GetBoardStateAsString(grid, turn);
         }
     }
 }

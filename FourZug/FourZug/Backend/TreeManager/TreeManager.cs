@@ -1,11 +1,14 @@
-﻿namespace FourZug.Backend.TreeManager
+﻿using FourZug.Backend.HeuristicsEngine;
+using FourZug.Backend.UtilityEngine;
+
+namespace FourZug.Backend.TreeManager
 {
     // The implemented interface of the component
 
     public class TreeManager : ITreeManager
     {
 
-        public TreeManager()
+        public void InitComponentReferences()
         {
             // Create the interface references for TreeSearcher
         }
