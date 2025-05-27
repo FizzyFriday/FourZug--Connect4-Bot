@@ -4,11 +4,6 @@
 
     public class UtilityEngine : IUtilityEngine
     {
-        public void InitComponentReferences()
-        { 
-            // Create the interface references for UtilityHelper
-        }
-
         // Make a move and return result
         public string[,] MakeMove(string[,] grid, string turn, int col)
         {

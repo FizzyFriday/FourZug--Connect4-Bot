@@ -5,7 +5,7 @@
     // Contains helper methods such as getting valid moves for a grid
     internal static class UtilityHelper
     {
-        // - PUBLIC METHODS -
+
         // Makes a move onto a grid, and returns the new grid
         public static string[,] MakeMove(string[,] grid, string turn, int col)
         {

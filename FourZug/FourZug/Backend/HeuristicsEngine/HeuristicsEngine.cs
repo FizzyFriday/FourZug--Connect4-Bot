@@ -7,9 +7,10 @@ namespace FourZug.Backend.HeuristicsEngine
 
     public class HeuristicsEngine : IHeuristicsEngine
     {
+        // Calls component scripts to load their references
         public void InitComponentReferences()
-        { 
-            // Create the interface references for BoardEvaluator
+        {
+            BoardEvaluator.LoadReferences();
         }
 
         public short GetNodeEval(Node node)

@@ -9,6 +9,13 @@ namespace FourZug.Backend.HeuristicsEngine
 
     internal static class BoardEvaluator
     {
+        private static UtilityEngine.UtilityEngine? utilityEngine;
+
+        public static void LoadReferences()
+        {
+            utilityEngine = new UtilityEngine.UtilityEngine();
+        }
+
 
         // Returns Win (for node not current player), Draw or StillInPlay
         // Losses would have returned a Win for the parent node already (this node wouldnt exist then)
@@ -100,7 +107,7 @@ namespace FourZug.Backend.HeuristicsEngine
             }
 
             // If no player has won and no move left, game is a draw
-            if (UtilityEngine.ValidColumns(grid).Count == 0) return "Draw";
+            if (utilityEngine?.GetValidBoardColumns(grid).Count == 0) return "Draw";
 
             // If no one has won and it isnt a draw, the game must still be in play
             else return "StillInPlay";
@@ -137,7 +144,7 @@ namespace FourZug.Backend.HeuristicsEngine
         {
             // Represents the points gained from positions taken
             // Viewing from side would correlate visually to game board and help understand array access
-            int[,] pointTable = new int[7, 6]
+            byte[,] pointTable = new byte[7, 6]
             {
                 { 3, 4, 5, 5, 4, 3},
                 { 4, 6, 8, 8, 6, 4 },
@@ -149,7 +156,7 @@ namespace FourZug.Backend.HeuristicsEngine
             };
 
             // Get the points gained for each player on each position
-            int pointBalance = 0;
+            short pointBalance = 0;
             for (int col = 0; col < grid.GetLength(0); col++)
             {
                 for (int row = 0; row < grid.GetLength(1); row++)
@@ -158,10 +165,10 @@ namespace FourZug.Backend.HeuristicsEngine
                     string containedPiece = grid[col, row];
                     int positionPoints = pointTable[col, row];
 
-                    if (containedPiece == "X") pointBalance += positionPoints;
+                    if (containedPiece == "X") pointBalance += (short)positionPoints;
                     else if (containedPiece == "O")
                     {
-                        pointBalance -= positionPoints;
+                        pointBalance -= (short)positionPoints;
                     }
                 }
             }

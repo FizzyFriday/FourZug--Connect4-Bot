@@ -7,10 +7,10 @@ namespace FourZug.Backend.TreeManager
 
     public class TreeManager : ITreeManager
     {
-
+        // Call component scripts to create their references
         public void InitComponentReferences()
         {
-            // Create the interface references for TreeSearcher
+            TreeSearcher.LoadReferences();
         }
 
         // Starts the tree search for the best move, and returns result

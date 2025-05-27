@@ -17,11 +17,21 @@ namespace FourZug.Backend.TreeManager
         // - PARAMETERS -
         private static byte maxDepth = 7;
         private static byte turnNum = 0;
+        
+        private static HeuristicsEngine.HeuristicsEngine? heuristicsEngine;
+        private static UtilityEngine.UtilityEngine? utilityEngine;
 
 
         // - PUBLIC METHODS -
+        public static void LoadReferences()
+        {
+            heuristicsEngine = new HeuristicsEngine.HeuristicsEngine();
+            utilityEngine = new UtilityEngine.UtilityEngine();
+        }
+
+
         // Manages the Minimax searching and returns final best move results
-        public static byte BestMove(string[,] grid, string currentTurn)
+        public static sbyte BestMove(string[,] grid, string currentTurn)
         {
             turnNum += 2;
 
@@ -40,7 +50,8 @@ namespace FourZug.Backend.TreeManager
             // Evaluate each move
             // bestCol will always be positive and 0-6, except for the -1 default case
             sbyte bestCol = -1;
-            List<int> validColumns = IUtilityEngine.ValidColumns(grid);
+            List<byte>? validColumns = utilityEngine?.GetValidBoardColumns(grid);
+            if (validColumns == null) return -1;
 
             foreach (byte validCol in validColumns)
             {
@@ -63,7 +74,7 @@ namespace FourZug.Backend.TreeManager
                 }
             }
 
-            return (byte)bestCol;
+            return (sbyte)bestCol;
         }
 
 
@@ -75,13 +86,13 @@ namespace FourZug.Backend.TreeManager
             // Leaf node - run heuristics
             if (currentDepth == maxDepth)
             {
-                return HeuristicsEngine.GetEvaluation(node);
+                return heuristicsEngine.GetNodeEval(node);
             }
 
             // Set best reward to worst possible for player
             short bestReward = maximizing ? short.MinValue : short.MaxValue;
 
-            List<int> childCols = UtilityEngine.ValidColumns(node.grid);
+            List<int> childCols = utilityEngine.GetValidBoardColumns(node.grid);
             foreach (byte childCol in childCols)
             {
                 // Get node after move

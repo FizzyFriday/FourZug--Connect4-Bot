@@ -25,8 +25,8 @@ namespace FourZug.API
             this.treeManager = new TreeManager();
             this.treeManager.InitComponentReferences();
 
-            this.utilityEngine = new UtilityEngine();
-            this.utilityEngine.InitComponentReferences();
+            // UtilityEngine doesnt use other components
+            // So no referencing needed
         }
 
 

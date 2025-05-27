@@ -4,7 +4,7 @@
 
     public interface ITreeManager
     {
-        // Creates and saves interface references of component
+        // Calls component scripts to create their references
         void InitComponentReferences();
 
         // Starts the Bot and returns best move results
