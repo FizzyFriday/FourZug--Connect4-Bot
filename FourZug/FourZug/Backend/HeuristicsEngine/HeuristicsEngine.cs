@@ -1,58 +1,9 @@
-﻿using FourZug.Backend.DTOs;
-
-namespace FourZug.Backend
+﻿namespace FourZug.Backend.HeuristicsEngine
 {
-    // Handles heuristics of a move
-    // Originally HeuristicsManager.cs
+    // The implemented interface of the component
+
     internal static class HeuristicsEngine
     {
-        // - PUBLIC METHODS -
-        // Gets the heuristis of a game board / node
-        public static short GetEvaluation(Node node)
-        {
-            int sHeuristic = GetStateHeuristic(node);
-            if (sHeuristic != 0) return (short)sHeuristic;
-
-            int pHeuristic = PositionHeuristic(node.grid);
-            return (short)pHeuristic;
-        }
-
-        // Provides simple scoring return from GameState method
-        // Used by Bot in Minimax method for stopping search deepening
-        public static short GetStateHeuristic(Node node)
-        {
-            string lastMoveBy = "O";
-            if (node.nextMoveBy == "O") lastMoveBy = "X";
-
-            string result = GameState(node.grid, lastMoveBy);
-
-            // Returns points if the game ends
-            // If the game is a draw, this is bad for either side, hence the large loss
-            if (lastMoveBy == "X")
-            {
-                if (result == "Win") return 1000;
-                if (result == "Draw") return -500;
-            }
-            if (lastMoveBy == "O")
-            {
-                if (result == "Win") return -1000;
-                if (result == "Draw") return 500;
-            }
-
-            // Return 0 if the game hasnt ended
-            return 0;
-        }
-
-        // Used by API. Just remove and make GameState method public?
-        public static string GetGameState(string[,] grid, string lastMoveBy)
-        {
-            return GameState(grid, lastMoveBy);
-        }
-
-
-
-        // - PRIVATE METHODS -
-
         // Returns Win (for node not current player), Draw or StillInPlay
         // Losses would have returned a Win for the parent node already (this node wouldnt exist then)
 
@@ -71,7 +22,7 @@ namespace FourZug.Backend
          * Estimated boost from 550k runs per second to 1.2M excl bottleneck
          */
 
-        private static string GameState(string[,] grid, string lastMoveBy)
+        public static string GameState(string[,] grid, string lastMoveBy)
         {
             // Checks a given direction and position if a connect 4 is made
             Func<string, int[], int[], bool> CheckIfConnect4 = (nodeTurn, basePos, grad) =>
@@ -151,7 +102,7 @@ namespace FourZug.Backend
 
         // Returns the position score of the 2 players
         // Returns points of maximizer take points of minimizer
-        private static short PositionHeuristic(string[,] grid)
+        public static short PositionHeuristic(string[,] grid)
         {
             // Represents the points gained from positions taken
             // Viewing from side would correlate visually to game board and help understand array access

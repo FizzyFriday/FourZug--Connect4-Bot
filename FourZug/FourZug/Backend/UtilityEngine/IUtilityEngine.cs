@@ -1,8 +1,10 @@
-﻿namespace FourZug.Backend
+﻿namespace FourZug.Backend.UtilityEngine
 {
+    // The interface blueprint of the component
+
     // Contains helper methods such as getting valid moves for a grid
     // Originally GameUtility.cs
-    internal static class UtilityEngine
+    internal static class IUtilityEngine
     {
         // - PUBLIC METHODS -
         // Makes a move onto a grid, and returns the new grid

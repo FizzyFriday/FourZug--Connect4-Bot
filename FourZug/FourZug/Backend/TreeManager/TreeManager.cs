@@ -1,15 +1,7 @@
-﻿using FourZug.Backend.DTOs;
-
-namespace FourZug.Backend
+﻿namespace FourZug.Backend.TreeManager
 {
-    // Handles Tree related processing
+    // The implemented interface of the component
 
-
-    // Bot sometimes misses a Win in 1
-    // Bot sometimes will sacrifice multiple traps, although this may be sometimes strategically good?
-    // Add a connection heuristic (connect 2, connect 3) that contributes a small amount?
-
-    // Originally Bot.cs
     internal static class TreeManager
     {
         // - PARAMETERS -
@@ -32,13 +24,13 @@ namespace FourZug.Backend
             Node root = new Node(grid, currentTurn, byte.MinValue);
 
             // Set desired points by turn and set worst possible reward to bestReward
-            bool maximizing = (currentTurn == "X") ? true : false;
-            short bestReward = (maximizing) ? short.MinValue : short.MaxValue;
+            bool maximizing = currentTurn == "X" ? true : false;
+            short bestReward = maximizing ? short.MinValue : short.MaxValue;
 
             // Evaluate each move
             // bestCol will always be positive and 0-6, except for the -1 default case
             sbyte bestCol = -1;
-            List<int> validColumns = UtilityEngine.ValidColumns(grid);
+            List<int> validColumns = IUtilityEngine.ValidColumns(grid);
 
             foreach (byte validCol in validColumns)
             {
@@ -77,7 +69,7 @@ namespace FourZug.Backend
             }
 
             // Set best reward to worst possible for player
-            short bestReward = (maximizing) ? short.MinValue : short.MaxValue;
+            short bestReward = maximizing ? short.MinValue : short.MaxValue;
 
             List<int> childCols = UtilityEngine.ValidColumns(node.grid);
             foreach (byte childCol in childCols)
@@ -110,7 +102,7 @@ namespace FourZug.Backend
             string[,] childGrid = UtilityEngine.MakeMove(node.grid, node.nextMoveBy, col);
 
             // If node's next move by X, then for child it would be O. Vise versa for O to X
-            string childNextMoveBy = (node.nextMoveBy == "X") ? "O" : "X";
+            string childNextMoveBy = node.nextMoveBy == "X" ? "O" : "X";
 
             return new Node(childGrid, childNextMoveBy, col);
         }

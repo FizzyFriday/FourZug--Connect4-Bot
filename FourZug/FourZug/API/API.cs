@@ -1,4 +1,6 @@
-﻿using FourZug.Backend;
+﻿using FourZug.Backend.TreeManager;
+using FourZug.Backend.UtilityEngine;
+using FourZug.Backend.HeuristicsEngine;
 
 
 namespace FourZug.API
