@@ -1,14 +1,13 @@
 ﻿using FourZug.Backend.DTOs;
 using FourZug.Backend.UtilityEngine;
+using System.Xml.Linq;
 
 
 namespace FourZug.Backend.HeuristicsEngine
 {
     // The actual processor of the component
 
-    // Handles heuristics of a move
-    // Originally HeuristicsManager.cs
-    internal static class GameboardEvaluator
+    internal static class BoardEvaluator
     {
         // Returns Win (for node not current player), Draw or StillInPlay
         // Losses would have returned a Win for the parent node already (this node wouldnt exist then)
@@ -28,7 +27,7 @@ namespace FourZug.Backend.HeuristicsEngine
          * Estimated boost from 550k runs per second to 1.2M excl bottleneck
          */
 
-        public static string GameState(string[,] grid, string lastMoveBy)
+        public static string BoardStateAsString(string[,] grid, string lastMoveBy)
         {
             // Checks a given direction and position if a connect 4 is made
             Func<string, int[], int[], bool> CheckIfConnect4 = (nodeTurn, basePos, grad) =>
@@ -106,9 +105,34 @@ namespace FourZug.Backend.HeuristicsEngine
             else return "StillInPlay";
         }
 
+        // Converts the board state as a string into an evaluation
+        public static short BoardStateAsEval(Node node)
+        {
+            string lastMoveBy = "O";
+            if (node.nextMoveBy == "O") lastMoveBy = "X";
+
+            string result = BoardStateAsString(node.grid, lastMoveBy);
+
+            // Returns points if the game ends
+            // If the game is a draw, this is bad for either side, hence the large loss
+            if (lastMoveBy == "X")
+            {
+                if (result == "Win") return 1000;
+                if (result == "Draw") return -500;
+            }
+            if (lastMoveBy == "O")
+            {
+                if (result == "Win") return -1000;
+                if (result == "Draw") return 500;
+            }
+
+            // Return 0 if the game hasnt ended
+            return 0;
+        }
+
         // Returns the position score of the 2 players
         // Returns points of maximizer take points of minimizer
-        public static short PositionHeuristic(string[,] grid)
+        public static short PositionEval(string[,] grid)
         {
             // Represents the points gained from positions taken
             // Viewing from side would correlate visually to game board and help understand array access

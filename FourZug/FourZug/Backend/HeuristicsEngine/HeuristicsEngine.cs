@@ -9,24 +9,25 @@ namespace FourZug.Backend.HeuristicsEngine
     {
         public short GetNodeEval(Node node)
         {
-            // Reuse accidentally deleted code
+            // Gets the evaluation of board state. If != 0, then the game ended
+            short sHeuristic = BoardEvaluator.BoardStateAsEval(node);
+            if (sHeuristic != 0) return sHeuristic;
 
-            return -1;
+            // Return the value based on piece positioning
+            short pHeuristic = BoardEvaluator.PositionEval(node.grid);
+            return pHeuristic;
         }
 
+        // Return the board state as an evaluation
         public short GetNodeStateEval(Node node)
         {
-            // Only gets the state evaluation and return this value
-
-            return -1;
+            return BoardEvaluator.BoardStateAsEval(node);
         }
 
+        // Return the board state as a string
         public string GetBoardStateAsString(string[,] grid, string lastMoveBy)
         {
-            // Get the game state, and just return the string
-            // Same as the GetNodeStateEval logic, but shorter
-
-            return string.Empty;
+            return BoardEvaluator.BoardStateAsString(grid, lastMoveBy);
         }
     }
 }
