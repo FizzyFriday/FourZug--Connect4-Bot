@@ -16,7 +16,7 @@ namespace FourZug.API
          */
         public static int BestMove(string[,] grid, string turn)
         {
-            return TreeManager.BestMove(grid, turn);
+            return (int)TreeManager.BestMove(grid, turn);
         }
 
 

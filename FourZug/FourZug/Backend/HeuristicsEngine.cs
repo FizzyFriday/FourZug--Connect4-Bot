@@ -8,18 +8,18 @@ namespace FourZug.Backend
     {
         // - PUBLIC METHODS -
         // Gets the heuristis of a game board / node
-        public static int GetEvaluation(Node node)
+        public static short GetEvaluation(Node node)
         {
             int sHeuristic = GetStateHeuristic(node);
-            if (sHeuristic != 0) return sHeuristic;
+            if (sHeuristic != 0) return (short)sHeuristic;
 
             int pHeuristic = PositionHeuristic(node.grid);
-            return pHeuristic;
+            return (short)pHeuristic;
         }
 
         // Provides simple scoring return from GameState method
         // Used by Bot in Minimax method for stopping search deepening
-        public static int GetStateHeuristic(Node node)
+        public static short GetStateHeuristic(Node node)
         {
             string lastMoveBy = "O";
             if (node.nextMoveBy == "O") lastMoveBy = "X";
@@ -151,7 +151,7 @@ namespace FourZug.Backend
 
         // Returns the position score of the 2 players
         // Returns points of maximizer take points of minimizer
-        private static int PositionHeuristic(string[,] grid)
+        private static short PositionHeuristic(string[,] grid)
         {
             // Represents the points gained from positions taken
             // Viewing from side would correlate visually to game board and help understand array access

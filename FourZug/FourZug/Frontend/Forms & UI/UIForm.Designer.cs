@@ -30,7 +30,6 @@
         {
             gbxGameBoard = new GroupBox();
             txtGameResult = new TextBox();
-            txtTurnNum = new TextBox();
             SuspendLayout();
             // 
             // gbxGameBoard
@@ -44,21 +43,12 @@
             // 
             // txtGameResult
             // 
-            txtGameResult.Location = new Point(246, 375);
+            txtGameResult.Location = new Point(140, 373);
             txtGameResult.Name = "txtGameResult";
             txtGameResult.ReadOnly = true;
             txtGameResult.Size = new Size(100, 23);
             txtGameResult.TabIndex = 1;
             txtGameResult.TabStop = false;
-            // 
-            // txtTurnNum
-            // 
-            txtTurnNum.Location = new Point(66, 375);
-            txtTurnNum.Name = "txtTurnNum";
-            txtTurnNum.ReadOnly = true;
-            txtTurnNum.Size = new Size(100, 23);
-            txtTurnNum.TabIndex = 2;
-            txtTurnNum.TabStop = false;
             // 
             // UIForm
             // 
@@ -66,7 +56,6 @@
             AutoScaleMode = AutoScaleMode.Font;
             BackColor = SystemColors.ControlDark;
             ClientSize = new Size(430, 423);
-            Controls.Add(txtTurnNum);
             Controls.Add(txtGameResult);
             Controls.Add(gbxGameBoard);
             Name = "UIForm";
@@ -79,6 +68,5 @@
 
         private GroupBox gbxGameBoard;
         private TextBox txtGameResult;
-        private TextBox txtTurnNum;
     }
 }

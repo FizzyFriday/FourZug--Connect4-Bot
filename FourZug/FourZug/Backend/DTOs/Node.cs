@@ -10,9 +10,9 @@
         public string nextMoveBy;
 
         // Represents the last column move that made this board
-        public int lastColMove;
+        public byte lastColMove;
 
-        public Node(string[,] grid, string currentTurn, int lastColMove)
+        public Node(string[,] grid, string currentTurn, byte lastColMove)
         {
             this.grid = grid;
             this.nextMoveBy = currentTurn;

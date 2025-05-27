@@ -13,13 +13,13 @@ namespace FourZug.Backend
     internal static class TreeManager
     {
         // - PARAMETERS -
-        private static int maxDepth = 7;
-        private static int turnNum = 0;
+        private static byte maxDepth = 7;
+        private static byte turnNum = 0;
 
 
         // - PUBLIC METHODS -
         // Manages the Minimax searching and returns final best move results
-        public static int BestMove(string[,] grid, string currentTurn)
+        public static byte BestMove(string[,] grid, string currentTurn)
         {
             turnNum += 2;
 
@@ -27,47 +27,48 @@ namespace FourZug.Backend
             if (turnNum >= 12) maxDepth = 8;
             else if (turnNum >= 14) maxDepth = 10;
             else if (turnNum >= 16) maxDepth = 16;
-            else if (turnNum >= 18) maxDepth = int.MaxValue;
+            else if (turnNum >= 18) maxDepth = byte.MaxValue;
 
-            Node root = new Node(grid, currentTurn, -1);
+            Node root = new Node(grid, currentTurn, byte.MinValue);
 
             // Set desired points by turn and set worst possible reward to bestReward
             bool maximizing = (currentTurn == "X") ? true : false;
-            int bestReward = (maximizing) ? int.MinValue : int.MaxValue;
+            short bestReward = (maximizing) ? short.MinValue : short.MaxValue;
 
             // Evaluate each move
-            int bestCol = -1;
+            // bestCol will always be positive and 0-6, except for the -1 default case
+            sbyte bestCol = -1;
             List<int> validColumns = UtilityEngine.ValidColumns(grid);
 
-            foreach (int validCol in validColumns)
+            foreach (byte validCol in validColumns)
             {
                 // Get node after move
                 Node child = CreateChild(root, validCol);
 
                 // Begin the search
-                int reward = Minimax(child, 1, !maximizing);
+                short reward = Minimax(child, 1, !maximizing);
 
                 // If the move result is better than already seen
                 if (reward > bestReward && maximizing)
                 {
                     bestReward = reward;
-                    bestCol = child.lastColMove;
+                    bestCol = (sbyte)child.lastColMove;
                 }
                 if (reward < bestReward && !maximizing)
                 {
                     bestReward = reward;
-                    bestCol = child.lastColMove;
+                    bestCol = (sbyte)child.lastColMove;
                 }
             }
 
-            return bestCol;
+            return (byte)bestCol;
         }
 
 
         // - PRIVATE METHODS -
 
         // Runs the minimax tree searching logic
-        private static int Minimax(Node node, int currentDepth, bool maximizing)
+        private static short Minimax(Node node, int currentDepth, bool maximizing)
         {
             // Leaf node - run heuristics
             if (currentDepth == maxDepth)
@@ -76,22 +77,22 @@ namespace FourZug.Backend
             }
 
             // Set best reward to worst possible for player
-            int bestReward = (maximizing) ? int.MinValue : int.MaxValue;
+            short bestReward = (maximizing) ? short.MinValue : short.MaxValue;
 
             List<int> childCols = UtilityEngine.ValidColumns(node.grid);
-            foreach (int childCol in childCols)
+            foreach (byte childCol in childCols)
             {
                 // Get node after move
                 Node child = CreateChild(node, childCol);
 
                 // The player to last play move doesn't matter if its just checking if the game ended or not
-                int statePoints = HeuristicsEngine.GetStateHeuristic(child);
+                short statePoints = HeuristicsEngine.GetStateHeuristic(child);
 
                 // If true, game has ended, and this node has statePoints value
                 if (statePoints != 0) return statePoints;
 
                 // Get best reward from deeper searches
-                int reward = Minimax(child, currentDepth + 1, !maximizing);
+                short reward = Minimax(child, currentDepth + 1, !maximizing);
 
                 // If the reward is better than already seen
                 if (maximizing) bestReward = Math.Max(reward, bestReward);
@@ -103,7 +104,7 @@ namespace FourZug.Backend
 
         // Make sure col is valid before calling
         // Returns a created child node given a column
-        private static Node CreateChild(Node node, int col)
+        private static Node CreateChild(Node node, byte col)
         {
             // This game board is an option for the node / nextMoveBy player
             string[,] childGrid = UtilityEngine.MakeMove(node.grid, node.nextMoveBy, col);
