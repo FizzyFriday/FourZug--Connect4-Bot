@@ -6,7 +6,7 @@ using FourZug.Backend.HeuristicsEngine;
 namespace FourZug.API
 {
     // Provides a Backend interface for the frontend
-    public class API : IAPI
+    public interface IAPI
     {
         /*
          * Returns the best move given a game grid/board
@@ -16,12 +16,7 @@ namespace FourZug.API
          * @post:
          *      @return - Returns column of best move
          */
-        public int BestMove(string[,] grid, string turn)
-        {
-            TreeManager treeManager = new TreeManager();
-
-            return treeManager.GetBotBestMove(grid, turn);
-        }
+        int BestMove(string[,] grid, string turn);
 
 
         /*
@@ -34,12 +29,7 @@ namespace FourZug.API
          *      @modify - Makes move change to grid
          *      @return - Returns changed grid
          */
-        public string[,] MakeMove(string[,] grid, string turn, int col)
-        {
-            UtilityEngine utilEngine = new UtilityEngine();
-
-            return utilEngine.MakeMove(grid, turn, col);
-        }
+        string[,] MakeMove(string[,] grid, string turn, int col);
 
 
         /*
@@ -49,20 +39,7 @@ namespace FourZug.API
          * @post:
          *      @return - Returns an int list of valid column moves
          */
-        public List<int> ValidBoardColumns(string[,] grid)
-        {
-            UtilityEngine utilEngine = new UtilityEngine();
-            List<byte> byteValidColumns = utilEngine.GetValidBoardColumns(grid);
-
-            // Creates an int list copy of the byte list
-            List<int> intValidColumns = new();
-            foreach (byte b in byteValidColumns)
-            {
-                intValidColumns.Add(b);
-            }
-
-            return intValidColumns;
-        }
+        List<int> ValidBoardColumns(string[,] grid);
 
 
         /*
@@ -74,11 +51,6 @@ namespace FourZug.API
          *      @return - String, representing state of game 
          *          String can be: Win (for current player), Draw or StillInPlay
          */
-        public string BoardState(string[,] grid, string turn)
-        {
-            HeuristicsEngine heuEngine = new HeuristicsEngine();
-
-            return heuEngine.GetBoardStateAsString(grid, turn);
-        }
+        string BoardState(string[,] grid, string turn);
     }
 }
