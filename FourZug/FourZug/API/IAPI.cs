@@ -8,6 +8,11 @@ namespace FourZug.API
     // Provides a Backend interface for the frontend
     public interface IAPI
     {
+        // Implementations must have a constructor
+        // This constructor does interface referencing
+        // between components in the backend processors
+
+
         /*
          * Returns the best move given a game grid/board
          * @pre:

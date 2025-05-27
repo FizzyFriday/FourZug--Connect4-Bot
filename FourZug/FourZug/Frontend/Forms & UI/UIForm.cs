@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using FourZug.API;
 
 namespace FourZug.Frontend.Forms
 {
@@ -16,8 +17,10 @@ namespace FourZug.Frontend.Forms
         private string[,] grid;
         private bool playersTurn;
         private bool gameEnded;
-        private int turnNum = 1;
         private Panel[,] boardPanels;
+
+        // A reference to the API. Also loads the backend references
+        private FourZug.API.API api = new();
 
 
 

@@ -7,6 +7,11 @@ namespace FourZug.Backend.HeuristicsEngine
 
     public class HeuristicsEngine : IHeuristicsEngine
     {
+        public HeuristicsEngine()
+        { 
+            // Create the interface references for BoardEvaluator
+        }
+
         public short GetNodeEval(Node node)
         {
             // Gets the evaluation of board state. If != 0, then the game ended

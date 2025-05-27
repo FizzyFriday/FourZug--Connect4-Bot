@@ -9,6 +9,16 @@ namespace FourZug.API
     public class API : IAPI
     {
         /*
+         * Does all referencing between component processors and
+         * interfaces of other components
+         */
+        public API()
+        { 
+            
+        }
+
+
+        /*
          * Returns the best move given a game grid/board
          * @pre:
          *      @param - grid, represents the game board

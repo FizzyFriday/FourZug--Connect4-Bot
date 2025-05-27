@@ -9,6 +9,7 @@ namespace FourZug.Backend.HeuristicsEngine
 
     internal static class BoardEvaluator
     {
+
         // Returns Win (for node not current player), Draw or StillInPlay
         // Losses would have returned a Win for the parent node already (this node wouldnt exist then)
 

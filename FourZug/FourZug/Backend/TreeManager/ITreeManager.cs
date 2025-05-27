@@ -5,6 +5,6 @@
     public interface ITreeManager
     {
         // Starts the Bot and returns best move results
-        byte GetBotBestMove(string[,] grid, string currentTurn);
+        int GetBotBestMove(string[,] grid, string currentTurn);
     }
 }
