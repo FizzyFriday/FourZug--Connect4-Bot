@@ -83,6 +83,9 @@ namespace FourZug.Backend.TreeManager
         // Runs the minimax tree searching logic
         private static short Minimax(Node node, int currentDepth, bool maximizing)
         {
+            // Would never actually be true due to API loading all references on load
+            if (utilityEngine == null || heuristicsEngine == null) return -1;
+
             // Leaf node - run heuristics
             if (currentDepth == maxDepth)
             {
@@ -92,14 +95,14 @@ namespace FourZug.Backend.TreeManager
             // Set best reward to worst possible for player
             short bestReward = maximizing ? short.MinValue : short.MaxValue;
 
-            List<int> childCols = utilityEngine.GetValidBoardColumns(node.grid);
+            List<byte> childCols = utilityEngine.GetValidBoardColumns(node.grid);
             foreach (byte childCol in childCols)
             {
                 // Get node after move
                 Node child = CreateChild(node, childCol);
 
                 // The player to last play move doesn't matter if its just checking if the game ended or not
-                short statePoints = HeuristicsEngine.GetStateHeuristic(child);
+                short statePoints = heuristicsEngine.GetBoardState
 
                 // If true, game has ended, and this node has statePoints value
                 if (statePoints != 0) return statePoints;

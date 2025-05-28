@@ -33,7 +33,16 @@ namespace FourZug.Backend.HeuristicsEngine
         // Return the board state as a string
         public string GetBoardStateAsString(string[,] grid, string lastMoveBy)
         {
-            return BoardEvaluator.BoardStateAsString(grid, lastMoveBy);
+            return BoardEvaluator.GridStateAsString(grid, lastMoveBy);
+        }
+
+        // Return the node state as a string
+        public string GetNodeStateAsString(Node node)
+        {
+            // If next move is by X, then last was by O. Same for O to X
+            string nodeLastMoveBy = (node.nextMoveBy == "X") ? "O" : "X";
+
+            return BoardEvaluator.GridStateAsString(node.grid, nodeLastMoveBy);
         }
     }
 }

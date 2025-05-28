@@ -18,5 +18,8 @@ namespace FourZug.Backend.HeuristicsEngine
 
         // Returns string summary of game board
         string GetBoardStateAsString(string[,] grid, string lastMoveBy);
+
+        // Returns string summary of node
+        string GetNodeStateAsString(Node node);
     }
 }

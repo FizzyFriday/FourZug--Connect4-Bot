@@ -14,6 +14,9 @@ namespace FourZug.Backend.HeuristicsEngine
         public static void LoadReferences()
         {
             utilityEngine = new UtilityEngine.UtilityEngine();
+
+            // The ability to skip the interface needs to be prevented
+            List<byte> a = UtilityHelper.ValidColumns(new string[1, 1]);
         }
 
 
@@ -35,7 +38,7 @@ namespace FourZug.Backend.HeuristicsEngine
          * Estimated boost from 550k runs per second to 1.2M excl bottleneck
          */
 
-        public static string BoardStateAsString(string[,] grid, string lastMoveBy)
+        public static string GridStateAsString(string[,] grid, string lastMoveBy)
         {
             // Checks a given direction and position if a connect 4 is made
             Func<string, int[], int[], bool> CheckIfConnect4 = (nodeTurn, basePos, grad) =>
@@ -116,22 +119,26 @@ namespace FourZug.Backend.HeuristicsEngine
         // Converts the board state as a string into an evaluation
         public static short BoardStateAsEval(Node node)
         {
-            string lastMoveBy = "O";
-            if (node.nextMoveBy == "O") lastMoveBy = "X";
+            // This will never be true as API loading sets all references
+            if (utilityEngine == null) return 0;
 
-            string result = BoardStateAsString(node.grid, lastMoveBy);
+            string lastMoveBy = (node.nextMoveBy == "X") ? "O" : "X";
+
+            string result = GridStateAsString(node.grid, lastMoveBy);
 
             // Returns points if the game ends
             // If the game is a draw, this is bad for either side, hence the large loss
+            const short winGain = 1000, drawGain = -500;
+
             if (lastMoveBy == "X")
             {
-                if (result == "Win") return 1000;
-                if (result == "Draw") return -500;
+                if (result == "Win") return winGain;
+                if (result == "Draw") return drawGain;
             }
             if (lastMoveBy == "O")
             {
-                if (result == "Win") return -1000;
-                if (result == "Draw") return 500;
+                if (result == "Win") return (-1 * winGain);
+                if (result == "Draw") return (-1 * drawGain);
             }
 
             // Return 0 if the game hasnt ended
