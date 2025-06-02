@@ -1,9 +1,4 @@
-﻿using FourZug.Backend.TreeManager;
-using FourZug.Backend.UtilityEngine;
-using FourZug.Backend.HeuristicsEngine;
-
-
-namespace FourZug.API
+﻿namespace FourZug.APIAccess
 {
     // Provides a Backend interface for the frontend
     public interface IAPI

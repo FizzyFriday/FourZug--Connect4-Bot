@@ -1,22 +1,21 @@
 ﻿using FourZug.Backend.DTOs;
-using FourZug.Backend.UtilityEngine;
-using System.Xml.Linq;
 
+/*
+ * Has access permission for assemblies:
+ *     UtilityEngineAccess
+ */
 
-namespace FourZug.Backend.HeuristicsEngine
+namespace FourZug.Backend.HeuristicsEngine.HeuristicsEngineProcessors
 {
     // The actual processor of the component
 
     internal static class BoardEvaluator
     {
-        private static UtilityEngine.UtilityEngine? utilityEngine;
+        private static UtilityEngine.UtilityEngineAccess.UtilityEngine? utilityEngine;
 
         public static void LoadReferences()
         {
-            utilityEngine = new UtilityEngine.UtilityEngine();
-
-            // The ability to skip the interface needs to be prevented
-            List<byte> a = UtilityHelper.ValidColumns(new string[1, 1]);
+            utilityEngine = new();
         }
 
 
@@ -67,7 +66,7 @@ namespace FourZug.Backend.HeuristicsEngine
                 return true;
             };
 
-            // Check each 4D direction for a connect 4, provided a positon
+            // Check each 4D direction for a connect 4, provided a position
             Func<int, int, bool> CheckDirections = (col, row) =>
             {
                 int[] piecePos = [col, row];

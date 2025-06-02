@@ -1,4 +1,4 @@
-﻿namespace FourZug.Backend.TreeManager
+﻿namespace FourZug.Backend.TreeManager.TreeManagerAccess
 {
     // The interface blueprint of the component
 

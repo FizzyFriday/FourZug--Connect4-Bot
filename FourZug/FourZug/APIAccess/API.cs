@@ -1,9 +1,17 @@
-﻿using FourZug.Backend.TreeManager;
-using FourZug.Backend.UtilityEngine;
-using FourZug.Backend.HeuristicsEngine;
+﻿using FourZug.Backend.HeuristicsEngine.HeuristicsEngineAccess;
+using FourZug.Backend.UtilityEngine.UtilityEngineAccess;
+using FourZug.Backend.TreeManager.TreeManagerAccess;
+
+/*
+ * Has access permission for assemblies:
+ *     UtilityEngineAccess
+ *     HeuristicsEngineAccess
+ *     TreeManagerAccess
+ *     DTOs - if imported
+ */
 
 
-namespace FourZug.API
+namespace FourZug.APIAccess
 {
     // Provides a Backend interface for the frontend
     public class API : IAPI
@@ -25,8 +33,7 @@ namespace FourZug.API
             this.treeManager = new TreeManager();
             this.treeManager.InitComponentReferences();
 
-            // UtilityEngine doesnt use other components
-            // So no referencing needed
+            this.utilityEngine = new UtilityEngine();            
         }
 
 

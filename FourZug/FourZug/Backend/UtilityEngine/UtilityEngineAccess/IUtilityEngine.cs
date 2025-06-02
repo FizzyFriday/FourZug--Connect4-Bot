@@ -1,4 +1,4 @@
-﻿namespace FourZug.Backend.UtilityEngine
+﻿namespace FourZug.Backend.UtilityEngine.UtilityEngineAccess
 {
     // The interface blueprint of the component
 

@@ -1,4 +1,4 @@
-﻿namespace FourZug.Backend.UtilityEngine
+﻿namespace FourZug.Backend.UtilityEngine.UtilityEngineProcessors
 {
     // The actual processor of the component
 
@@ -12,15 +12,13 @@
             // Clones grid so value is used not reference
             grid = (string[,])grid.Clone();
 
-            // Returns all columns where at least top
-            // slot is empty
-            List<int> validColumns = ValidColumns(grid);
+            // Returns valid column moves
+            List<byte> validColumns = ValidColumns(grid);
 
             // Checks if inputted column is a valid move
-            if (validColumns.IndexOf(col) == -1)
+            if (validColumns.IndexOf((byte)col) == -1)
             {
-                //Console.WriteLine("Column invalid");
-                return grid;
+                throw new Exception("Invalid column move made on grid");
             }
 
             // Starts 1 spot above highest index of array
@@ -45,10 +43,10 @@
         // Returns all valid columns in the game
         public static List<byte> ValidColumns(string[,] grid)
         {
-            List<int> validCols = new();
+            List<byte> validCols = new();
 
             // Runs through all columns of grid
-            for (int col = 0; col < grid.GetLength(0); col++)
+            for (byte col = 0; col < grid.GetLength(0); col++)
             {
                 // If the toprow is empty, col is valid
                 int topRow = grid.GetLength(1) - 1;

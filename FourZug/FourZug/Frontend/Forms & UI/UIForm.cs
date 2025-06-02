@@ -8,6 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using FourZug.API;
+using FourZug.Backend.HeuristicsEngine;
 
 namespace FourZug.Frontend.Forms
 {
@@ -137,7 +138,7 @@ namespace FourZug.Frontend.Forms
             int col = (int)tag;
 
             // Check if column is valid
-            List<int> validCols = API.API.ValidColumns(grid);
+            List<int> validCols = api.ValidColumns(grid);
             if (validCols.IndexOf(col) == -1) return;
 
             // User makes move and switches turn

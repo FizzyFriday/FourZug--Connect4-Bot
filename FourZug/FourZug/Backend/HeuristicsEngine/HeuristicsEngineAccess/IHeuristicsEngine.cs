@@ -1,7 +1,7 @@
 ﻿using FourZug.Backend.DTOs;
 
 
-namespace FourZug.Backend.HeuristicsEngine
+namespace FourZug.Backend.HeuristicsEngine.HeuristicsEngineAccess
 {
     // The interface blueprint of the component
 

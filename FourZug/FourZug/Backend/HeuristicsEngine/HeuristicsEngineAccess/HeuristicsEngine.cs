@@ -1,11 +1,12 @@
 ﻿using FourZug.Backend.DTOs;
+using FourZug.Backend.HeuristicsEngine.HeuristicsEngineProcessors;
 
 
-namespace FourZug.Backend.HeuristicsEngine
+namespace FourZug.Backend.HeuristicsEngine.HeuristicsEngineAccess
 {
     // The implemented interface of the component
 
-    public class HeuristicsEngine : IHeuristicsEngine
+    internal class HeuristicsEngine : IHeuristicsEngine
     {
         // Calls component scripts to load their references
         public void InitComponentReferences()
@@ -40,7 +41,7 @@ namespace FourZug.Backend.HeuristicsEngine
         public string GetNodeStateAsString(Node node)
         {
             // If next move is by X, then last was by O. Same for O to X
-            string nodeLastMoveBy = (node.nextMoveBy == "X") ? "O" : "X";
+            string nodeLastMoveBy = node.nextMoveBy == "X" ? "O" : "X";
 
             return BoardEvaluator.GridStateAsString(node.grid, nodeLastMoveBy);
         }

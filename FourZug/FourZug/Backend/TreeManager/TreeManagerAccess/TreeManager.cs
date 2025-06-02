@@ -1,7 +1,7 @@
-﻿using FourZug.Backend.HeuristicsEngine;
-using FourZug.Backend.UtilityEngine;
+﻿using FourZug.Backend.TreeManager.TreeManagerProcessors;
 
-namespace FourZug.Backend.TreeManager
+
+namespace FourZug.Backend.TreeManager.TreeManagerAccess
 {
     // The implemented interface of the component
 

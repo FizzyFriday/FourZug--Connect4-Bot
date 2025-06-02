@@ -1,8 +1,13 @@
 ﻿using FourZug.Backend.DTOs;
-using FourZug.Backend.HeuristicsEngine;
-using FourZug.Backend.UtilityEngine;
 
-namespace FourZug.Backend.TreeManager
+/*
+ * Has access permission for assemblies:
+ *     HeuristicsEngineAccess
+ *     UtilityEngineAccess
+ */
+
+
+namespace FourZug.Backend.TreeManager.TreeManagerProcessors
 {
     // The actual processor of the component
 
@@ -18,15 +23,15 @@ namespace FourZug.Backend.TreeManager
         private static byte maxDepth = 7;
         private static byte turnNum = 0;
         
-        private static HeuristicsEngine.HeuristicsEngine? heuristicsEngine;
-        private static UtilityEngine.UtilityEngine? utilityEngine;
+        private static HeuristicsEngine.HeuristicsEngineAccess.HeuristicsEngine? heuristicsEngine;
+        private static UtilityEngine.UtilityEngineAccess.UtilityEngine? utilityEngine;
 
 
         // - PUBLIC METHODS -
         public static void LoadReferences()
         {
-            heuristicsEngine = new HeuristicsEngine.HeuristicsEngine();
-            utilityEngine = new UtilityEngine.UtilityEngine();
+            heuristicsEngine = new();
+            utilityEngine = new();
         }
 
 
@@ -74,7 +79,7 @@ namespace FourZug.Backend.TreeManager
                 }
             }
 
-            return (sbyte)bestCol;
+            return bestCol;
         }
 
 
@@ -102,7 +107,7 @@ namespace FourZug.Backend.TreeManager
                 Node child = CreateChild(node, childCol);
 
                 // The player to last play move doesn't matter if its just checking if the game ended or not
-                short statePoints = heuristicsEngine.GetBoardState
+                short statePoints = heuristicsEngine.GetNodeStateEval(child);
 
                 // If true, game has ended, and this node has statePoints value
                 if (statePoints != 0) return statePoints;
@@ -122,8 +127,10 @@ namespace FourZug.Backend.TreeManager
         // Returns a created child node given a column
         private static Node CreateChild(Node node, byte col)
         {
+            if (utilityEngine == null) return new Node();
+
             // This game board is an option for the node / nextMoveBy player
-            string[,] childGrid = UtilityEngine.MakeMove(node.grid, node.nextMoveBy, col);
+            string[,] childGrid = utilityEngine.MakeMove(node.grid, node.nextMoveBy, col);
 
             // If node's next move by X, then for child it would be O. Vise versa for O to X
             string childNextMoveBy = node.nextMoveBy == "X" ? "O" : "X";
