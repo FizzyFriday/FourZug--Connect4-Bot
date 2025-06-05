@@ -1,0 +1,13 @@
+<!-- See https://aka.ms/dotnet/msbuild/customize for more details on customizing your build -->
+<Project>
+	<PropertyGroup>
+		
+		<!-- Prevent generation of the TargetFrameworkAttribute -->
+		<GenerateTargetFrameworkAttribute>false</GenerateTargetFrameworkAttribute>
+
+		<!-- Disable auto-generation of AssemblyInfo -->
+		<GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+		
+	</PropertyGroup>
+</Project>
+

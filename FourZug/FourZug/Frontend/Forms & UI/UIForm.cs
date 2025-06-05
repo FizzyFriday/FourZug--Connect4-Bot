@@ -7,7 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using FourZug.API;
+using FourZug.APIAccess;
 using FourZug.Backend.HeuristicsEngine;
 
 namespace FourZug.Frontend.Forms
@@ -21,7 +21,7 @@ namespace FourZug.Frontend.Forms
         private Panel[,] boardPanels;
 
         // A reference to the API. Also loads the backend references
-        private FourZug.API.API api = new();
+        private FourZug.APIAccess.API api = new();
 
 
 
@@ -36,7 +36,6 @@ namespace FourZug.Frontend.Forms
         private void InitializeBoard()
         {
             txtGameResult.Enabled = false;
-            txtTurnNum.Text = $"Turn {turnNum}";
             const int colCount = 7, rowCount = 6;
             playersTurn = true;
             gameEnded = false;
@@ -138,18 +137,16 @@ namespace FourZug.Frontend.Forms
             int col = (int)tag;
 
             // Check if column is valid
-            List<int> validCols = api.ValidColumns(grid);
+            List<int> validCols = api.ValidBoardColumns(grid);
             if (validCols.IndexOf(col) == -1) return;
 
             // User makes move and switches turn
-            turnNum++;
             MakeBoardMove(col, "X");
             if (this.gameEnded) return;
             this.playersTurn = false;
 
             // Bot makes move
-            int botCol = API.API.BestMove(grid, "O");
-            turnNum++;
+            int botCol = api.BestMove(grid, "O");
             MakeBoardMove(botCol, "O");
             this.playersTurn = true;
             
@@ -159,11 +156,11 @@ namespace FourZug.Frontend.Forms
         private void MakeBoardMove(int col, string turn)
         {
             // Make move and display
-            this.grid = API.API.MakeMove(grid, turn, col);
+            this.grid = api.MakeMove(grid, turn, col);
             DisplayBoard(grid);
 
             // Handle the board state after making move
-            string boardState = API.API.BoardState(grid, turn);
+            string boardState = api.BoardState(grid, turn);
             if (boardState != "StillInPlay")
             {
                 // End the game
