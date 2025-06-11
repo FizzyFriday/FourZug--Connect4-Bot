@@ -13,18 +13,17 @@ using FourZug.Backend.TreeManager.TreeManagerProcessors;
 
 namespace FourZug.Frontend.Forms
 {
-    // Bot sometimes misses a win in 1, in specific cases
-    // Setting Bot to depth 1 (and perhaps other depths) made no difference
+    // Bot misses a win in 1, in specific cases - simplifying BoardEvaluator.GridStateAsString should be a simple solution
     // Fix CA1416 warnings
 
 
     // Handles UI changes
     public partial class UIForm : Form
     {
-        private string[,] grid;
+        private string[,]? grid;
         private bool playersTurn;
         private bool gameEnded;
-        private Panel[,] boardPanels;
+        private Panel[,]? boardPanels;
 
         // A reference to the API. Also loads the backend references
         private API api = new();
@@ -100,6 +99,8 @@ namespace FourZug.Frontend.Forms
         // Displays game onto screen
         private void DisplayBoard(string[,] grid, bool gameEnded = false)
         {
+            if (boardPanels == null) return;
+
             // Display grid onto UI
             for (int col = 0; col < grid.GetLength(0); col++)
             {
@@ -131,7 +132,7 @@ namespace FourZug.Frontend.Forms
         private void UserTakeTurn(object sender, EventArgs e)
         {
             // Prevent a move if not player's turn or game ended
-            if (!playersTurn || gameEnded) return;
+            if (!playersTurn || gameEnded || grid == null) return;
 
             // Converted clicked object to Panel and check if null
             Panel? clickedPanel = sender as Panel;
@@ -161,6 +162,8 @@ namespace FourZug.Frontend.Forms
         // Makes a move on the board, and returns if the game ended
         private void MakeBoardMove(int col, string turn)
         {
+            if (grid == null) return;
+
             // Make move and display
             this.grid = api.MakeMove(grid, turn, col);
             DisplayBoard(grid);
