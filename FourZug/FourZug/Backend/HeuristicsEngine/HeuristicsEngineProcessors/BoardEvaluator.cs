@@ -144,45 +144,43 @@ namespace FourZug.Backend.HeuristicsEngine.HeuristicsEngineProcessors
             // In order: Vertical, Diagonal (NE / SW), Horizontal, Diagonal (SE / NW)
             int[] idChangeScales = { 1, 7, 6, 5 };
 
-            for (int i = 0; i < idChangeScales.Length; i++)
+            int highestID = utilityEngine.RowColumnToID(grid.GetLength(1) - 1, grid.GetLength(0) - 1);
+
+            // Save the chain of IDs to run through
+            List<List<int>> idChainsToCheck = new();
+            for (int i = 0; i < idChangeScales.Length - 1; i++)
             {
-                int idChangeScale = idChangeScales[i];
-
-                // The search goes from AT LEAST (-3 * idChangeScale), to (3 * idChangeScale)
-
-                int searchStartID = piecePositionID -= 3 * idChangeScale;
-                while (searchStartID < 0)
+                List<int> directionIDChain = new();
+                for (int idDist = -3; idDist <= 3; idDist++)
                 {
-                    searchStartID += idChangeScale;
+                    int id = piecePositionID + (idDist * idChangeScales[i]);
+                    if (id >= 0 && id <= highestID) directionIDChain.Add(id);
                 }
 
-                int endSearchID = piecePositionID += 3 * idChangeScale;
-                int highestID = utilityEngine.RowColumnToID(grid.GetLength(1) - 1, grid.GetLength(0) - 1);
-                while (endSearchID > highestID)
-                {
-                    endSearchID -= idChangeScale;
-                }
+                idChainsToCheck.Add(directionIDChain);
+            }
 
+            // Run through each chain of IDs, to check for a connect 4
+            for (int i = 0; i < idChainsToCheck.Count; i++)
+            {
+                List<int> chain = idChainsToCheck[i];
                 int ownedPiecesInChain = 0;
 
-                // Any ID past this wouldn't have the new piece in the chain
-                // Therefore based on the game not ending previously, an ID
-                // past this won't be involved in a potential connect 4
-                int pointedID = searchStartID;
-                while (pointedID <= endSearchID)
+                // Run through all the ids in chain
+                for (int chainIndex = 0; chainIndex < chain.Count; chainIndex++)
                 {
-                    string pieceAtID = utilityEngine.PieceAtPositionID(grid, pointedID);
+                    int idInChain = chain[chainIndex];
+                    string pieceAtID = utilityEngine.PieceAtPositionID(grid, idInChain);
+
                     if (pieceAtID == lastMoveBy) ownedPiecesInChain++;
                     else ownedPiecesInChain = 0;
 
-                    // The player made a connect 4
                     if (ownedPiecesInChain == 4)
                     {
                         if (lastMoveBy == "X") return 'X';
                         else return 'O';
                     }
 
-                    pointedID += idChangeScale;
                 }
             }
 
