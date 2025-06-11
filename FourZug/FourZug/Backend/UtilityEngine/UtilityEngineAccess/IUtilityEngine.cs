@@ -11,9 +11,9 @@
         List<byte> GetValidBoardColumns(string[,] grid);
 
         // Converts a grid row and columns into an unique "id"
-        byte RowColumnToID(int row, int col);
+        int RowColumnToID(int row, int col);
 
         // Gets the piece at the row and column related to unique "id"
-        string PieceAtPositionID(byte ID);
+        string PieceAtPositionID(string[,] grid, int ID);
     }
 }
