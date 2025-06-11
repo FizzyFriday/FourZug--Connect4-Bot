@@ -156,6 +156,29 @@ namespace FourZug.Backend.HeuristicsEngine.HeuristicsEngineProcessors
                     searchStartID += idChangeScale;
                 }
 
+                int ownedPiecesInChain = 0;
+
+                // Any ID past this wouldn't have the new piece in the chain
+                // Therefore based on the game not ending previously, this wont
+                // result in a connect 4
+                int pointedID = searchStartID;
+                while (pointedID != (piecePositionID + (3 * idChangeScale)))
+                {
+                    string pieceAtID = utilityEngine.PieceAtPositionID(grid, pointedID);
+                    if (pieceAtID == lastMoveBy) ownedPiecesInChain++;
+                    else ownedPiecesInChain = 0;
+
+                    // The player made a connect 4
+                    if (ownedPiecesInChain == 4)
+                    {
+                        if (lastMoveBy == "X") return 'X';
+                        else return 'O';
+                    }
+
+                    pointedID += idChangeScale;
+
+                }
+
                 // Implement counting logic
                 break;
             }
