@@ -98,9 +98,9 @@ namespace FourZug.APIAccess
          *      @return - String, representing state of game 
          *          String can be: Win (for current player), Draw or StillInPlay
          */
-        public char GetGameWinner(string[,] grid, string turn)
+        public char GetGameWinner(string[,] grid, string turn, int lastColMove)
         {
-            return this.heuristicsEngine.BoardWinner(grid, turn);
+            return this.heuristicsEngine.BoardWinner(grid, turn, lastColMove);
         }
     }
 }

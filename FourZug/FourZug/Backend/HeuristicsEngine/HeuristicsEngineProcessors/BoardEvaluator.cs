@@ -156,13 +156,20 @@ namespace FourZug.Backend.HeuristicsEngine.HeuristicsEngineProcessors
                     searchStartID += idChangeScale;
                 }
 
+                int endSearchID = piecePositionID += 3 * idChangeScale;
+                int highestID = utilityEngine.RowColumnToID(grid.GetLength(1) - 1, grid.GetLength(0) - 1);
+                while (endSearchID > highestID)
+                {
+                    endSearchID -= idChangeScale;
+                }
+
                 int ownedPiecesInChain = 0;
 
                 // Any ID past this wouldn't have the new piece in the chain
-                // Therefore based on the game not ending previously, this wont
-                // result in a connect 4
+                // Therefore based on the game not ending previously, an ID
+                // past this won't be involved in a potential connect 4
                 int pointedID = searchStartID;
-                while (pointedID != (piecePositionID + (3 * idChangeScale)))
+                while (pointedID <= endSearchID)
                 {
                     string pieceAtID = utilityEngine.PieceAtPositionID(grid, pointedID);
                     if (pieceAtID == lastMoveBy) ownedPiecesInChain++;
@@ -176,15 +183,8 @@ namespace FourZug.Backend.HeuristicsEngine.HeuristicsEngineProcessors
                     }
 
                     pointedID += idChangeScale;
-
                 }
-
-                // Implement counting logic
-                break;
             }
-
-
-
 
             // If no player has won and no move left, game is a draw
             if (utilityEngine?.GetValidBoardColumns(grid).Count == 0) return 'D';
@@ -197,7 +197,7 @@ namespace FourZug.Backend.HeuristicsEngine.HeuristicsEngineProcessors
         {
             string nodeLastMoveBy = node.nextMoveBy == "X" ? "O" : "X";
 
-            char nodeState = BoardWinnerAsChar(node.grid, nodeLastMoveBy);
+            char nodeState = BoardWinnerAsChar_REMAKE(node.grid, nodeLastMoveBy, node.lastColMove);
 
             return EvaluateNodeUsingWinner(node, nodeState, nodeLastMoveBy);
         }

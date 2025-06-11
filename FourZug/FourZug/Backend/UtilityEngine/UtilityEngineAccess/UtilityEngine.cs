@@ -1,4 +1,5 @@
-﻿using FourZug.Backend.UtilityEngine.UtilityEngineProcessors;
+﻿using Accessibility;
+using FourZug.Backend.UtilityEngine.UtilityEngineProcessors;
 
 namespace FourZug.Backend.UtilityEngine.UtilityEngineAccess
 {
@@ -24,7 +25,8 @@ namespace FourZug.Backend.UtilityEngine.UtilityEngineAccess
         public int RowColumnToID(int row, int col)
         {
             const byte idGainFromCol = 6, idGainFromRow = 1;
-            return (idGainFromCol * col) + (idGainFromRow * row);
+            int id = (idGainFromCol * col) + (idGainFromRow * row);
+            return id;
         }
 
         // Gets the piece at the row and column related to unique "id"

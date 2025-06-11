@@ -169,7 +169,7 @@ namespace FourZug.Frontend.Forms
             DisplayBoard(grid);
 
             // Handle the board state after making move
-            char gameWinner = api.GetGameWinner(grid, turn);
+            char gameWinner = api.GetGameWinner(grid, turn, col);
             if (gameWinner != '?')
             {
                 // End the game

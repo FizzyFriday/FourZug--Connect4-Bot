@@ -51,6 +51,6 @@
          *      @return - String, representing state of game 
          *          String can be: Win (for current player), Draw or StillInPlay
          */
-        char GetGameWinner(string[,] grid, string turn);
+        char GetGameWinner(string[,] grid, string turn, int lastColMove);
     }
 }
