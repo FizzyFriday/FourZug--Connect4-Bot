@@ -18,6 +18,6 @@ namespace FourZug.Backend.HeuristicsEngine.HeuristicsEngineAccess
         (bool endsGame, short nodeEval) NodeSummary(Node node);
 
         // Return the board state as a string (Used by API)
-        string BoardStateAsString(string[,] grid, string lastMoveBy);
+        char BoardWinner(string[,] grid, string lastMoveBy);
     }
 }

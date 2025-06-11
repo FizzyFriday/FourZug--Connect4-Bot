@@ -21,7 +21,7 @@ namespace FourZug.Backend.HeuristicsEngine.HeuristicsEngineProcessors
         }
 
 
-        // Returns Win (for node not current player), Draw or StillInPlay
+        // Returns X, O, D or ?
         // Losses would have returned a Win for the parent node already (this node wouldnt exist then)
 
         /*
@@ -39,7 +39,7 @@ namespace FourZug.Backend.HeuristicsEngine.HeuristicsEngineProcessors
          * Estimated boost from 550k runs per second to 1.2M excl bottleneck
          */
 
-        public static string GridStateAsString(string[,] grid, string lastMoveBy)
+        public static char BoardWinnerAsChar(string[,] grid, string lastMoveBy)
         {
 
 
@@ -107,45 +107,45 @@ namespace FourZug.Backend.HeuristicsEngine.HeuristicsEngineProcessors
                     if (grid[col, row] == lastMoveBy)
                     {
                         bool isInConnect4 = CheckDirections(col, row);
-                        if (isInConnect4) return "Win";
+                        if (isInConnect4)
+                        {
+                            if (lastMoveBy == "X") return 'X';
+                            else return 'O';
+                        }
                     }
                 }
             }
 
             // If no player has won and no move left, game is a draw
-            if (utilityEngine?.GetValidBoardColumns(grid).Count == 0) return "Draw";
+            if (utilityEngine?.GetValidBoardColumns(grid).Count == 0) return 'D';
 
             // If no one has won and it isnt a draw, the game must still be in play
-            else return "StillInPlay";
+            else return '?';
         }
 
         public static short EvaluateNode(Node node)
         {
             string nodeLastMoveBy = node.nextMoveBy == "X" ? "O" : "X";
 
-            string nodeState = GridStateAsString(node.grid, nodeLastMoveBy);
+            char nodeState = BoardWinnerAsChar(node.grid, nodeLastMoveBy);
 
-            return EvaluateNodeUsingState(node, nodeState, nodeLastMoveBy);
+            return EvaluateNodeUsingWinner(node, nodeState, nodeLastMoveBy);
         }
 
-        public static short EvaluateNodeUsingState(Node node, string nodeState, string nodeLastMoveBy)
+        public static short EvaluateNodeUsingWinner(Node node, char nodeWinner, string nodeLastMoveBy)
         {
-            if (nodeState != "StillInPlay")
+            const short winGain = 1000, drawGain = -500;
+            if (nodeWinner == 'X') return winGain;
+            if (nodeWinner == 'O') return (-1 * winGain);
+
+            if (nodeWinner == 'D')
             {
-                const short winGain = 1000, drawGain = -500;
-                if (nodeLastMoveBy == "X")
-                {
-                    if (nodeState == "Win") return winGain;
-                    if (nodeState == "Draw") return drawGain;
-                }
-                if (nodeLastMoveBy == "O")
-                {
-                    if (nodeState == "Win") return (-1 * winGain);
-                    if (nodeState == "Draw") return (-1 * drawGain);
-                }
+                if (nodeLastMoveBy == "X") return (-1 * drawGain);
+                else return drawGain;
             }
 
-            return PositionEval(node.grid);
+            // (If nodeWinner == '?')
+            else return PositionEval(node.grid);
         }
 
 

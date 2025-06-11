@@ -27,18 +27,18 @@ namespace FourZug.Backend.HeuristicsEngine.HeuristicsEngineAccess
             // If next move is by X, then last was by O. Same for O to X
             string nodeLastMoveBy = node.nextMoveBy == "X" ? "O" : "X";
 
-            string nodeState = BoardEvaluator.GridStateAsString(node.grid, nodeLastMoveBy);
+            char nodeWinner = BoardEvaluator.BoardWinnerAsChar(node.grid, nodeLastMoveBy);
 
-            short nodeEval = BoardEvaluator.EvaluateNodeUsingState(node, nodeState, nodeLastMoveBy);
+            short nodeEval = BoardEvaluator.EvaluateNodeUsingWinner(node, nodeWinner, nodeLastMoveBy);
 
-            if (nodeState != "StillInPlay") return (true, nodeEval);
+            if (nodeWinner != '?') return (true, nodeEval);
             else return (false, nodeEval);
         }
 
-        // Return the board state as a string (Used by API)
-        public string BoardStateAsString(string[,] grid, string lastMoveBy)
+        // Return the game winner (Used by API)
+        public char BoardWinner(string[,] grid, string lastMoveBy)
         {
-            return BoardEvaluator.GridStateAsString(grid, lastMoveBy);
+            return BoardEvaluator.BoardWinnerAsChar(grid, lastMoveBy);
         }
     }
 }

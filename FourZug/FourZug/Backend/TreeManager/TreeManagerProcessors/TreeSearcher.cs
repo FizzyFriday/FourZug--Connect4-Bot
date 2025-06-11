@@ -15,10 +15,10 @@ namespace FourZug.Backend.TreeManager.TreeManagerProcessors
     internal static class TreeSearcher
     {
         // - PARAMETERS -
-        private static byte maxDepth = 1;
+        private static byte maxDepth = 7;
         private static byte turnNum = 0;
 
-        private static int nodesMade = 1;
+        private static int nodesMade = 1; // 1 because of root
         
         private static IHeuristicsEngine? heuristicsEngine;
         private static IUtilityEngine? utilityEngine;
@@ -34,6 +34,7 @@ namespace FourZug.Backend.TreeManager.TreeManagerProcessors
         // Manages the Minimax searching, returning best move for grid
         public static sbyte BestMove(string[,] grid, string currentTurn)
         {
+            // This should be based on pieces in grid, not a set increment
             turnNum += 2;
 
             // Increases the depth getting later in the game

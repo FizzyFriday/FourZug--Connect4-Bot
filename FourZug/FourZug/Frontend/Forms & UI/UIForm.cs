@@ -169,30 +169,30 @@ namespace FourZug.Frontend.Forms
             DisplayBoard(grid);
 
             // Handle the board state after making move
-            string boardState = api.BoardState(grid, turn);
-            if (boardState != "StillInPlay")
+            char gameWinner = api.GetGameWinner(grid, turn);
+            if (gameWinner != '?')
             {
                 // End the game
-                EndGame(boardState, turn);
+                EndGame(gameWinner);
             }
         }
 
         // Displays the game ended and prevent input
-        private void EndGame(string boardState, string turnBy)
+        private void EndGame(char gameWinner)
         {
             // Displays the results of game
-            if (boardState == "Draw")
+            if (gameWinner == 'D')
             {
                 txtGameResult.Text = "Draw";
                 this.BackColor = Color.Orange;
             }
-            if (boardState == "Win" && turnBy == "X")
+            else if (gameWinner == 'X')
             {
                 txtGameResult.Text = "You win!";
                 this.BackColor = Color.Blue;
 
             }
-            else if (boardState == "Win" && turnBy == "O")
+            else if (gameWinner == 'O')
             {
                 txtGameResult.Text = "Bot wins!";
                 this.BackColor = Color.Red;
