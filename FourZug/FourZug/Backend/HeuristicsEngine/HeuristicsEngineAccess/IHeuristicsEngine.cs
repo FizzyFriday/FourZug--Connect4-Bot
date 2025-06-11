@@ -1,4 +1,5 @@
 ﻿using FourZug.Backend.DTOs;
+using FourZug.Backend.UtilityEngine.UtilityEngineAccess;
 
 
 namespace FourZug.Backend.HeuristicsEngine.HeuristicsEngineAccess
@@ -8,7 +9,7 @@ namespace FourZug.Backend.HeuristicsEngine.HeuristicsEngineAccess
     public interface IHeuristicsEngine
     {
         // Creates and saves interface references of component
-        void InitComponentReferences();
+        void InitComponentReferences(IUtilityEngine utilityEngine);
 
         // Gets the evaluation of a game board / node
         short GetNodeEval(Node node);

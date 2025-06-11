@@ -28,12 +28,12 @@ namespace FourZug.APIAccess
         public API()
         {
             this.heuristicsEngine = new HeuristicsEngine();
-            this.heuristicsEngine.InitComponentReferences();
-
             this.treeManager = new TreeManager();
-            this.treeManager.InitComponentReferences();
+            this.utilityEngine = new UtilityEngine();
 
-            this.utilityEngine = new UtilityEngine();            
+            // Inject contract dependencies into the components
+            this.heuristicsEngine.InitComponentReferences(utilityEngine);
+            this.treeManager.InitComponentReferences();         
         }
 
 

@@ -1,4 +1,7 @@
 ﻿using FourZug.Backend.DTOs;
+using FourZug.Backend.HeuristicsEngine.HeuristicsEngineAccess;
+using FourZug.Backend.UtilityEngine.UtilityEngineAccess;
+using System.Windows.Forms.VisualStyles;
 
 /*
  * Has access permission for assemblies:
@@ -9,48 +12,41 @@
 
 namespace FourZug.Backend.TreeManager.TreeManagerProcessors
 {
-    // The actual processor of the component
-
-
-    // Bot sometimes misses a Win in 1
-    // Bot sometimes will sacrifice multiple traps, although this may be sometimes strategically good?
-    // Add a connection heuristic (connect 2, connect 3) that contributes a small amount?
-
-    // Originally Bot.cs
     internal static class TreeSearcher
     {
         // - PARAMETERS -
         private static byte maxDepth = 7;
         private static byte turnNum = 0;
+
+        private static int nodesMade = 1;
         
-        private static HeuristicsEngine.HeuristicsEngineAccess.HeuristicsEngine? heuristicsEngine;
-        private static UtilityEngine.UtilityEngineAccess.UtilityEngine? utilityEngine;
+        private static IHeuristicsEngine? heuristicsEngine;
+        private static IUtilityEngine? utilityEngine;
 
 
-        // - PUBLIC METHODS -
-        public static void LoadReferences()
+        public static void LoadReferences(IHeuristicsEngine heuEngine, IUtilityEngine utilEngine)
         {
-            heuristicsEngine = new();
-            utilityEngine = new();
+            heuristicsEngine = heuEngine;
+            utilityEngine = utilEngine;
         }
 
 
-        // Manages the Minimax searching and returns final best move results
+        // Manages the Minimax searching, returning best move for grid
         public static sbyte BestMove(string[,] grid, string currentTurn)
         {
             turnNum += 2;
 
             // Increases the depth getting later in the game
-            if (turnNum >= 12) maxDepth = 8;
-            else if (turnNum >= 14) maxDepth = 10;
-            else if (turnNum >= 16) maxDepth = 16;
-            else if (turnNum >= 18) maxDepth = byte.MaxValue;
+            if (turnNum >= 12) maxDepth = 8; // 8
+            else if (turnNum >= 14) maxDepth = 10; // 10
+            else if (turnNum >= 16) maxDepth = 16; // 16
+            else if (turnNum >= 18) maxDepth = 30;
 
             Node root = new Node(grid, currentTurn, byte.MinValue);
 
             // Set desired points by turn and set worst possible reward to bestReward
-            bool maximizing = currentTurn == "X" ? true : false;
-            short bestReward = maximizing ? short.MinValue : short.MaxValue;
+            bool isMaximizing = currentTurn == "X" ? true : false;
+            short bestReward = isMaximizing ? short.MinValue : short.MaxValue;
 
             // Evaluate each move
             // bestCol will always be positive and 0-6, except for the -1 default case
@@ -64,15 +60,15 @@ namespace FourZug.Backend.TreeManager.TreeManagerProcessors
                 Node child = CreateChild(root, validCol);
 
                 // Begin the search
-                short reward = Minimax(child, 1, !maximizing);
+                short reward = Minimax(child, 1, !isMaximizing);
 
                 // If the move result is better than already seen
-                if (reward > bestReward && maximizing)
+                if (reward > bestReward && isMaximizing)
                 {
                     bestReward = reward;
                     bestCol = (sbyte)child.lastColMove;
                 }
-                if (reward < bestReward && !maximizing)
+                if (reward < bestReward && !isMaximizing)
                 {
                     bestReward = reward;
                     bestCol = (sbyte)child.lastColMove;
@@ -82,8 +78,6 @@ namespace FourZug.Backend.TreeManager.TreeManagerProcessors
             return bestCol;
         }
 
-
-        // - PRIVATE METHODS -
 
         // Runs the minimax tree searching logic
         private static short Minimax(Node node, int currentDepth, bool maximizing)
@@ -106,11 +100,21 @@ namespace FourZug.Backend.TreeManager.TreeManagerProcessors
                 // Get node after move
                 Node child = CreateChild(node, childCol);
 
+
+
+                // For more readability, the GetBoardStateAsString can be used
+                // However it would need to also return the game ending evaluation,
+                // resulting in 2 calls being required and reduced performance
+                // Solution: add another contract, returning a Tuple containing both information
+
                 // The player to last play move doesn't matter if its just checking if the game ended or not
                 short statePoints = heuristicsEngine.GetNodeStateEval(child);
 
                 // If true, game has ended, and this node has statePoints value
                 if (statePoints != 0) return statePoints;
+
+
+
 
                 // Get best reward from deeper searches
                 short reward = Minimax(child, currentDepth + 1, !maximizing);
@@ -129,13 +133,25 @@ namespace FourZug.Backend.TreeManager.TreeManagerProcessors
         {
             if (utilityEngine == null) return new Node();
 
-            // This game board is an option for the node / nextMoveBy player
-            string[,] childGrid = utilityEngine.MakeMove(node.grid, node.nextMoveBy, col);
+            // If this fails, it was because col parameter was invalid
+            try
+            {
+                // This game board is an option for the node / nextMoveBy player
+                string[,] childGrid = utilityEngine.MakeMove(node.grid, node.nextMoveBy, col);
 
-            // If node's next move by X, then for child it would be O. Vise versa for O to X
-            string childNextMoveBy = node.nextMoveBy == "X" ? "O" : "X";
+                // If node's next move by X, then for child it would be O. Vise versa for O to X
+                string childNextMoveBy = node.nextMoveBy == "X" ? "O" : "X";
 
-            return new Node(childGrid, childNextMoveBy, col);
+                nodesMade++;
+
+                return new Node(childGrid, childNextMoveBy, col);
+            }
+            catch {
+                return new Node();
+            }
+            
+
+            
         }
     }
 }

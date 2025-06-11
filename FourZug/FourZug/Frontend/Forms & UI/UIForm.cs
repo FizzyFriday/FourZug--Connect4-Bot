@@ -12,6 +12,11 @@ using FourZug.Backend.HeuristicsEngine;
 
 namespace FourZug.Frontend.Forms
 {
+    // Bot sometimes misses a win in 1, in specific cases
+    // Setting Bot to depth 1 (and perhaps other depths) made no difference
+    // Fix CA1416 warnings
+
+
     // Handles UI changes
     public partial class UIForm : Form
     {
@@ -21,7 +26,7 @@ namespace FourZug.Frontend.Forms
         private Panel[,] boardPanels;
 
         // A reference to the API. Also loads the backend references
-        private FourZug.APIAccess.API api = new();
+        private API api = new();
 
 
 
@@ -188,6 +193,8 @@ namespace FourZug.Frontend.Forms
                 txtGameResult.Text = "Bot wins!";
                 this.BackColor = Color.Red;
             }
+
+            txtGameResult = 
 
             this.gameEnded = true;
         }

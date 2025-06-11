@@ -1,4 +1,5 @@
 ﻿using FourZug.Backend.DTOs;
+using FourZug.Backend.UtilityEngine.UtilityEngineAccess;
 
 /*
  * Has access permission for assemblies:
@@ -11,11 +12,11 @@ namespace FourZug.Backend.HeuristicsEngine.HeuristicsEngineProcessors
 
     internal static class BoardEvaluator
     {
-        private static UtilityEngine.UtilityEngineAccess.UtilityEngine? utilityEngine;
+        private static IUtilityEngine? utilityEngine;
 
-        public static void LoadReferences()
+        public static void LoadReferences(IUtilityEngine utilEngine)
         {
-            utilityEngine = new();
+            utilityEngine = utilEngine;
         }
 
 

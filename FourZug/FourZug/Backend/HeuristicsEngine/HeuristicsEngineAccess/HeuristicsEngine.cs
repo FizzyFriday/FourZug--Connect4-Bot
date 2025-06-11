@@ -1,5 +1,6 @@
 ﻿using FourZug.Backend.DTOs;
 using FourZug.Backend.HeuristicsEngine.HeuristicsEngineProcessors;
+using FourZug.Backend.UtilityEngine.UtilityEngineAccess;
 
 
 namespace FourZug.Backend.HeuristicsEngine.HeuristicsEngineAccess
@@ -9,9 +10,9 @@ namespace FourZug.Backend.HeuristicsEngine.HeuristicsEngineAccess
     internal class HeuristicsEngine : IHeuristicsEngine
     {
         // Calls component scripts to load their references
-        public void InitComponentReferences()
+        public void InitComponentReferences(IUtilityEngine utilityEngine)
         {
-            BoardEvaluator.LoadReferences();
+            BoardEvaluator.LoadReferences(utilityEngine);
         }
 
         public short GetNodeEval(Node node)
