@@ -33,7 +33,7 @@ namespace FourZug.APIAccess
 
             // Inject contract dependencies into the components
             this.heuristicsEngine.InitComponentReferences(utilityEngine);
-            this.treeManager.InitComponentReferences();         
+            this.treeManager.InitComponentReferences(heuristicsEngine, utilityEngine);         
         }
 
 
@@ -78,7 +78,7 @@ namespace FourZug.APIAccess
         {
             List<byte> byteValidColumns = this.utilityEngine.GetValidBoardColumns(grid);
 
-            // Creates an int list copy of the byte list
+            // Creates an List<int> copy of the byte list
             List<int> intValidColumns = new();
             foreach (byte b in byteValidColumns)
             {
@@ -100,7 +100,7 @@ namespace FourZug.APIAccess
          */
         public string BoardState(string[,] grid, string turn)
         {
-            return this.heuristicsEngine.GetBoardStateAsString(grid, turn);
+            return this.heuristicsEngine.BoardStateAsString(grid, turn);
         }
     }
 }

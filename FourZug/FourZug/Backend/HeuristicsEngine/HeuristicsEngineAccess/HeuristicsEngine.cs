@@ -21,24 +21,8 @@ namespace FourZug.Backend.HeuristicsEngine.HeuristicsEngineAccess
             return BoardEvaluator.EvaluateNode(node);
         }
 
-        public bool isGameEnding(Node node)
-        {
-            string nodeLastMoveBy = node.nextMoveBy == "X" ? "O" : "X";
-
-            string nodeState = BoardEvaluator.GridStateAsString(node.grid, nodeLastMoveBy);
-
-            if (nodeState == "StillInPlay") return false;
-            else return true;
-        }
-
-        // Return the board state as a string (Used by API)
-        public string GetBoardStateAsString(string[,] grid, string lastMoveBy)
-        {
-            return BoardEvaluator.GridStateAsString(grid, lastMoveBy);
-        }
-
-        // Returns the state of the game and the evlaluation of a node
-        public (string nodeGameState, short nodeEval) NodeSummary(Node node)
+        // Returns if game ends and the evaluation of a node
+        public (bool endsGame, short nodeEval) NodeSummary(Node node)
         {
             // If next move is by X, then last was by O. Same for O to X
             string nodeLastMoveBy = node.nextMoveBy == "X" ? "O" : "X";
@@ -47,7 +31,14 @@ namespace FourZug.Backend.HeuristicsEngine.HeuristicsEngineAccess
 
             short nodeEval = BoardEvaluator.EvaluateNodeUsingState(node, nodeState, nodeLastMoveBy);
 
-            return (nodeState, nodeEval);
+            if (nodeState != "StillInPlay") return (true, nodeEval);
+            else return (false, nodeEval);
+        }
+
+        // Return the board state as a string (Used by API)
+        public string BoardStateAsString(string[,] grid, string lastMoveBy)
+        {
+            return BoardEvaluator.GridStateAsString(grid, lastMoveBy);
         }
     }
 }

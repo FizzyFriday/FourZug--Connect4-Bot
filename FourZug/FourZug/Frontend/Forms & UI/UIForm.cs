@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using FourZug.APIAccess;
 using FourZug.Backend.HeuristicsEngine;
+using FourZug.Backend.TreeManager.TreeManagerProcessors;
 
 namespace FourZug.Frontend.Forms
 {
@@ -193,8 +194,6 @@ namespace FourZug.Frontend.Forms
                 txtGameResult.Text = "Bot wins!";
                 this.BackColor = Color.Red;
             }
-
-            txtGameResult = 
 
             this.gameEnded = true;
         }

@@ -15,7 +15,7 @@ namespace FourZug.Backend.TreeManager.TreeManagerProcessors
     internal static class TreeSearcher
     {
         // - PARAMETERS -
-        private static byte maxDepth = 7;
+        private static byte maxDepth = 1;
         private static byte turnNum = 0;
 
         private static int nodesMade = 1;
@@ -48,8 +48,7 @@ namespace FourZug.Backend.TreeManager.TreeManagerProcessors
             bool isMaximizing = currentTurn == "X" ? true : false;
             short bestReward = isMaximizing ? short.MinValue : short.MaxValue;
 
-            // Evaluate each move
-            // bestCol will always be positive and 0-6, except for the -1 default case
+
             sbyte bestCol = -1;
             List<byte>? validColumns = utilityEngine?.GetValidBoardColumns(grid);
             if (validColumns == null) return -1;
@@ -80,7 +79,7 @@ namespace FourZug.Backend.TreeManager.TreeManagerProcessors
 
 
         // Runs the minimax tree searching logic
-        private static short Minimax(Node node, int currentDepth, bool maximizing)
+        private static short Minimax(Node node, int currentDepth, bool isMaximizing)
         {
             // Would never actually be true due to API loading all references on load
             if (utilityEngine == null || heuristicsEngine == null) return -1;
@@ -92,7 +91,7 @@ namespace FourZug.Backend.TreeManager.TreeManagerProcessors
             }
 
             // Set best reward to worst possible for player
-            short bestReward = maximizing ? short.MinValue : short.MaxValue;
+            short bestReward = isMaximizing ? short.MinValue : short.MaxValue;
 
             List<byte> childCols = utilityEngine.GetValidBoardColumns(node.grid);
             foreach (byte childCol in childCols)
@@ -100,17 +99,16 @@ namespace FourZug.Backend.TreeManager.TreeManagerProcessors
                 // Get node after move
                 Node child = CreateChild(node, childCol);
 
-                // If the game ends from this node, return its evaluation
-                // This still uses 2 calls, making nodeSummary lose its usefulness
+                // If the game ends from this node, return its eval
                 var nodeSummary = heuristicsEngine.NodeSummary(child);
-                if (heuristicsEngine.isGameEnding(node)) return nodeSummary.nodeEval;
+                if (nodeSummary.endsGame) return nodeSummary.nodeEval;
 
                 // Get best reward from deeper searches
-                short reward = Minimax(child, currentDepth + 1, !maximizing);
+                short reward = Minimax(child, currentDepth + 1, !isMaximizing);
 
                 // If the reward is better than already seen
-                if (maximizing) bestReward = Math.Max(reward, bestReward);
-                if (!maximizing) bestReward = Math.Min(reward, bestReward);
+                if (isMaximizing) bestReward = Math.Max(reward, bestReward);
+                if (!isMaximizing) bestReward = Math.Min(reward, bestReward);
             }
 
             return bestReward;
@@ -138,9 +136,6 @@ namespace FourZug.Backend.TreeManager.TreeManagerProcessors
             catch {
                 return new Node();
             }
-            
-
-            
         }
     }
 }

@@ -14,13 +14,10 @@ namespace FourZug.Backend.HeuristicsEngine.HeuristicsEngineAccess
         // Provides evaluation based on game state of board
         short NodeEval(Node node);
 
-        // Returns if this node would end the game
-        bool isGameEnding(Node node);
-
         // Returns if the game ends or not, and its evaluation
-        (string nodeGameState, short nodeEval) NodeSummary(Node node);
+        (bool endsGame, short nodeEval) NodeSummary(Node node);
 
         // Return the board state as a string (Used by API)
-        string GetBoardStateAsString(string[,] grid, string lastMoveBy);
+        string BoardStateAsString(string[,] grid, string lastMoveBy);
     }
 }
