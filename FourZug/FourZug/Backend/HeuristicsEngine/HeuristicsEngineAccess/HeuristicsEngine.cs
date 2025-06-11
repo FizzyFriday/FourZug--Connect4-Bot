@@ -15,36 +15,39 @@ namespace FourZug.Backend.HeuristicsEngine.HeuristicsEngineAccess
             BoardEvaluator.LoadReferences(utilityEngine);
         }
 
-        public short GetNodeEval(Node node)
+        // Returns the evaluation of a node
+        public short NodeEval(Node node)
         {
-            // Gets the evaluation of board state. If != 0, then the game ended
-            short sHeuristic = BoardEvaluator.BoardStateAsEval(node);
-            if (sHeuristic != 0) return sHeuristic;
-
-            // Return the value based on piece positioning
-            short pHeuristic = BoardEvaluator.PositionEval(node.grid);
-            return pHeuristic;
+            return BoardEvaluator.EvaluateNode(node);
         }
 
-        // Return the board state as an evaluation
-        public short GetNodeStateEval(Node node)
+        public bool isGameEnding(Node node)
         {
-            return BoardEvaluator.BoardStateAsEval(node);
+            string nodeLastMoveBy = node.nextMoveBy == "X" ? "O" : "X";
+
+            string nodeState = BoardEvaluator.GridStateAsString(node.grid, nodeLastMoveBy);
+
+            if (nodeState == "StillInPlay") return false;
+            else return true;
         }
 
-        // Return the board state as a string
+        // Return the board state as a string (Used by API)
         public string GetBoardStateAsString(string[,] grid, string lastMoveBy)
         {
             return BoardEvaluator.GridStateAsString(grid, lastMoveBy);
         }
 
-        // Return the node state as a string
-        public string GetNodeStateAsString(Node node)
+        // Returns the state of the game and the evlaluation of a node
+        public (string nodeGameState, short nodeEval) NodeSummary(Node node)
         {
             // If next move is by X, then last was by O. Same for O to X
             string nodeLastMoveBy = node.nextMoveBy == "X" ? "O" : "X";
 
-            return BoardEvaluator.GridStateAsString(node.grid, nodeLastMoveBy);
+            string nodeState = BoardEvaluator.GridStateAsString(node.grid, nodeLastMoveBy);
+
+            short nodeEval = BoardEvaluator.EvaluateNodeUsingState(node, nodeState, nodeLastMoveBy);
+
+            return (nodeState, nodeEval);
         }
     }
 }

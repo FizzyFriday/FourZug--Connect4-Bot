@@ -11,16 +11,16 @@ namespace FourZug.Backend.HeuristicsEngine.HeuristicsEngineAccess
         // Creates and saves interface references of component
         void InitComponentReferences(IUtilityEngine utilityEngine);
 
-        // Gets the evaluation of a game board / node
-        short GetNodeEval(Node node);
-
         // Provides evaluation based on game state of board
-        short GetNodeStateEval(Node node);
+        short NodeEval(Node node);
 
-        // Returns string summary of game board
+        // Returns if this node would end the game
+        bool isGameEnding(Node node);
+
+        // Returns if the game ends or not, and its evaluation
+        (string nodeGameState, short nodeEval) NodeSummary(Node node);
+
+        // Return the board state as a string (Used by API)
         string GetBoardStateAsString(string[,] grid, string lastMoveBy);
-
-        // Returns string summary of node
-        string GetNodeStateAsString(Node node);
     }
 }

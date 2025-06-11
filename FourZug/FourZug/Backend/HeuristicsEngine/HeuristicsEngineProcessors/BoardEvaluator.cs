@@ -1,5 +1,6 @@
 ﻿using FourZug.Backend.DTOs;
 using FourZug.Backend.UtilityEngine.UtilityEngineAccess;
+using System.Xml.Linq;
 
 /*
  * Has access permission for assemblies:
@@ -40,6 +41,8 @@ namespace FourZug.Backend.HeuristicsEngine.HeuristicsEngineProcessors
 
         public static string GridStateAsString(string[,] grid, string lastMoveBy)
         {
+
+
             // Checks a given direction and position if a connect 4 is made
             Func<string, int[], int[], bool> CheckIfConnect4 = (nodeTurn, basePos, grad) =>
             {
@@ -116,38 +119,39 @@ namespace FourZug.Backend.HeuristicsEngine.HeuristicsEngineProcessors
             else return "StillInPlay";
         }
 
-        // Converts the board state as a string into an evaluation
-        public static short BoardStateAsEval(Node node)
+        public static short EvaluateNode(Node node)
         {
-            // This will never be true as API loading sets all references
-            if (utilityEngine == null) return 0;
+            string nodeLastMoveBy = node.nextMoveBy == "X" ? "O" : "X";
 
-            string lastMoveBy = (node.nextMoveBy == "X") ? "O" : "X";
+            string nodeState = GridStateAsString(node.grid, nodeLastMoveBy);
 
-            string result = GridStateAsString(node.grid, lastMoveBy);
-
-            // Returns points if the game ends
-            // If the game is a draw, this is bad for either side, hence the large loss
-            const short winGain = 1000, drawGain = -500;
-
-            if (lastMoveBy == "X")
-            {
-                if (result == "Win") return winGain;
-                if (result == "Draw") return drawGain;
-            }
-            if (lastMoveBy == "O")
-            {
-                if (result == "Win") return (-1 * winGain);
-                if (result == "Draw") return (-1 * drawGain);
-            }
-
-            // Return 0 if the game hasnt ended
-            return 0;
+            return EvaluateNodeUsingState(node, nodeState, nodeLastMoveBy);
         }
+
+        public static short EvaluateNodeUsingState(Node node, string nodeState, string nodeLastMoveBy)
+        {
+            if (nodeState != "StillInPlay")
+            {
+                const short winGain = 1000, drawGain = -500;
+                if (nodeLastMoveBy == "X")
+                {
+                    if (nodeState == "Win") return winGain;
+                    if (nodeState == "Draw") return drawGain;
+                }
+                if (nodeLastMoveBy == "O")
+                {
+                    if (nodeState == "Win") return (-1 * winGain);
+                    if (nodeState == "Draw") return (-1 * drawGain);
+                }
+            }
+
+            return PositionEval(node.grid);
+        }
+
 
         // Returns the position score of the 2 players
         // Returns points of maximizer take points of minimizer
-        public static short PositionEval(string[,] grid)
+        private static short PositionEval(string[,] grid)
         {
             // Represents the points gained from positions taken
             // Viewing from side would correlate visually to game board and help understand array access

@@ -88,7 +88,7 @@ namespace FourZug.Backend.TreeManager.TreeManagerProcessors
             // Leaf node - run heuristics
             if (currentDepth == maxDepth)
             {
-                return heuristicsEngine.GetNodeEval(node);
+                return heuristicsEngine.NodeEval(node);
             }
 
             // Set best reward to worst possible for player
@@ -100,21 +100,10 @@ namespace FourZug.Backend.TreeManager.TreeManagerProcessors
                 // Get node after move
                 Node child = CreateChild(node, childCol);
 
-
-
-                // For more readability, the GetBoardStateAsString can be used
-                // However it would need to also return the game ending evaluation,
-                // resulting in 2 calls being required and reduced performance
-                // Solution: add another contract, returning a Tuple containing both information
-
-                // The player to last play move doesn't matter if its just checking if the game ended or not
-                short statePoints = heuristicsEngine.GetNodeStateEval(child);
-
-                // If true, game has ended, and this node has statePoints value
-                if (statePoints != 0) return statePoints;
-
-
-
+                // If the game ends from this node, return its evaluation
+                // This still uses 2 calls, making nodeSummary lose its usefulness
+                var nodeSummary = heuristicsEngine.NodeSummary(child);
+                if (heuristicsEngine.isGameEnding(node)) return nodeSummary.nodeEval;
 
                 // Get best reward from deeper searches
                 short reward = Minimax(child, currentDepth + 1, !maximizing);
