@@ -144,78 +144,24 @@ namespace FourZug.Backend.HeuristicsEngine.HeuristicsEngineProcessors
             // In order: Vertical, Diagonal (NE / SW), Horizontal, Diagonal (SE / NW)
             int[] idChangeScales = { 1, 7, 6, 5 };
 
-            // Checks a given direction and position if a connect 4 is made
-            Func<string, int[], int[], bool> CheckIfConnect4 = (nodeTurn, basePos, grad) =>
+            for (int i = 0; i < idChangeScales.Length; i++)
             {
-                // Checks if the end of the potential connect 4 will go out of array
-                int endCol = basePos[0] + (3 * grad[0]);
-                int endRow = basePos[1] + (3 * grad[1]);
+                int idChangeScale = idChangeScales[i];
 
-                if (endCol >= grid.GetLength(0) || endCol < 0) return false;
-                if (endRow >= grid.GetLength(1) || endRow < 0) return false;
+                // The search goes from AT LEAST (-3 * idChangeScale), to (3 * idChangeScale)
 
-                // Check the 3 other spots using provided direction gradient
-                for (int dist = 1; dist <= 3; dist++)
+                int searchStartID = piecePositionID -= 3 * idChangeScale;
+                while (searchStartID < 0)
                 {
-                    // Gets new position using provided direction gradient
-                    int newCol = basePos[0] + (dist * grad[0]);
-                    int newRow = basePos[1] + (dist * grad[1]);
-
-                    // If piece doesnt match, no connect 4 made
-                    if (grid[newCol, newRow] != nodeTurn)
-                    {
-                        return false;
-                    }
+                    searchStartID += idChangeScale;
                 }
 
-                return true;
-            };
-
-            // Check each 4D direction for a connect 4, provided a position
-            Func<int, int, bool> CheckDirections = (col, row) =>
-            {
-                int[] piecePos = [col, row];
-
-                // Check vertical (up)
-                int[] grad = [0, 1];
-                bool connect4made = CheckIfConnect4(lastMoveBy, piecePos, grad);
-                if (connect4made) return true;
-
-                // Check diagonal (NE)
-                grad = [1, 1];
-                connect4made = CheckIfConnect4(lastMoveBy, piecePos, grad);
-                if (connect4made) return true;
-
-                // Check horizontal (right)
-                grad = [1, 0];
-                connect4made = CheckIfConnect4(lastMoveBy, piecePos, grad);
-                if (connect4made) return true;
-
-                // Check diagonal (SE)
-                grad = [1, -1];
-                connect4made = CheckIfConnect4(lastMoveBy, piecePos, grad);
-                if (connect4made) return true;
-
-                return false;
-            };
-
-            // This for loop and checking the lamba functions for EVERY piece is intense
-            // Check each piece node owns in grid for a connect 4
-            for (int col = 0; col < grid.GetLength(0); col++)
-            {
-                for (int row = 0; row < grid.GetLength(1); row++)
-                {
-                    if (grid[col, row] == lastMoveBy)
-                    {
-                        bool isInConnect4 = CheckDirections(col, row);
-                        if (isInConnect4)
-                        {
-                            if (lastMoveBy == "X") return 'X';
-                            else return 'O';
-                        }
-                    }
-                }
+                // Implement counting logic
+                break;
             }
+
+
+
 
             // If no player has won and no move left, game is a draw
             if (utilityEngine?.GetValidBoardColumns(grid).Count == 0) return 'D';
