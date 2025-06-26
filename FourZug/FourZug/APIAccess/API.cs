@@ -76,16 +76,7 @@ namespace FourZug.APIAccess
          */
         public List<int> ValidBoardColumns(string[,] grid)
         {
-            List<byte> byteValidColumns = this.utilityEngine.GetValidBoardColumns(grid);
-
-            // Creates an List<int> copy of the byte list
-            List<int> intValidColumns = new();
-            foreach (byte b in byteValidColumns)
-            {
-                intValidColumns.Add(b);
-            }
-
-            return intValidColumns;
+            return this.utilityEngine.GetValidMoves(grid);
         }
 
 

@@ -8,37 +8,47 @@ namespace FourZug.Backend.UtilityEngine.UtilityEngineAccess
     public class UtilityEngine : IUtilityEngine
     {
         // Makes a move using string bits
-        string[] MakeMove(string[] stringBits, string turn, int col)
+        public string[] MakeMove(string[] stringBits, string bitsTurn, byte posID)
         {
-            return null;
+            return UtilityHelper.MakeMove(stringBits, bitsTurn, posID);
         }
 
-        // Make a move and return result
+        // Make a move and return result. Used by API player move input.
         public string[,] MakeMove(string[,] grid, string turn, int col)
         {
-            string[,] boardResult = UtilityHelper.MakeMove(grid, turn, col);
-            return boardResult;
+            string bitsTurn = UtilityHelper.PieceStringBitConvert(turn);
+            string[] stringBits = Flatten2DGrid(grid);
+
+            byte posID = UtilityHelper.NextEmptyIDInCol(stringBits, col);
+            string[] newStringBits = UtilityHelper.MakeMove(stringBits, turn, posID);
+            return Unflatten1DGrid(newStringBits);
+        }
+
+        public List<byte> ValidMoveIDs(string[] stringBits)
+        {
+            return UtilityHelper.ValidMoveIDs(stringBits);
         }
 
         //  Returns the valid column moves of a board
-        public List<byte> GetValidBoardColumns(string[,] grid)
+        public List<int> GetValidMoves(string[,] grid)
         {
-            List<byte> validColumns = UtilityHelper.ValidColumns(grid);
+            string[] stringBits = Flatten2DGrid(grid);
+            List<byte> validIDs = UtilityHelper.ValidMoveIDs(stringBits);
+
+            List<int> validColumns = new();
+            foreach (byte validID in validIDs)
+            {
+                int col = UtilityHelper.IDToColRow(validID).col;
+                validColumns.Add(col);
+            }
+
             return validColumns;
         }
 
         // Converts a grid row and columns into an unique "id"
-        public int RowColumnToID(int row, int col)
+        public byte RowColumnToID(int row, int col)
         {
-            const byte idGainFromCol = 6;
-            int id = (idGainFromCol * col) + (row);
-
-            return id;
-        }
-
-        public bool isValidID(int id)
-        { 
-        
+            return UtilityHelper.ColRowToID(col, row);
         }
 
         // Converts 2D string grid to 1D byte grid
@@ -71,6 +81,7 @@ namespace FourZug.Backend.UtilityEngine.UtilityEngineAccess
             return grid;
         }
 
+        // Remove contract?
         public string StringToStringBits(string str)
         {
             return UtilityHelper.PieceStringBitConvert(str);
