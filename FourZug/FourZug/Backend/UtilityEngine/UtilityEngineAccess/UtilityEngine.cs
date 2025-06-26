@@ -81,6 +81,11 @@ namespace FourZug.Backend.UtilityEngine.UtilityEngineAccess
             return grid;
         }
 
+        public (int col, int row) ColRowFromID(byte id)
+        {
+            return UtilityHelper.IDToColRow(id);
+        }
+
         // Remove contract?
         public string StringToStringBits(string str)
         {

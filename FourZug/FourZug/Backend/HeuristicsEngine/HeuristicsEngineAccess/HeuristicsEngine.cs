@@ -25,9 +25,9 @@ namespace FourZug.Backend.HeuristicsEngine.HeuristicsEngineAccess
         public (bool endsGame, short nodeEval) NodeSummary(Node node)
         {
             // If next move is by X, then last was by O. Same for O to X
-            string nodeLastMoveBy = node.nextMoveBy == "X" ? "O" : "X";
+            string nodeLastMoveBy = node.nextBitsMove == "10" ? "01" : "10";
 
-            char nodeWinner = BoardEvaluator.BoardWinnerAsChar_REMAKE(node.grid, nodeLastMoveBy, node.lastColMove);
+            char nodeWinner = BoardEvaluator.BoardWinnerAsChar_REMAKE(node.stringBits, nodeLastMoveBy, node.lastIDMove);
 
             short nodeEval = BoardEvaluator.EvaluateNodeUsingWinner(node, nodeWinner, nodeLastMoveBy);
 

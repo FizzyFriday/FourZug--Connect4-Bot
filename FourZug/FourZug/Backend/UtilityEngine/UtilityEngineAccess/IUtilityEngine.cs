@@ -23,6 +23,8 @@
         // Converts a grid row and columns into an unique "id"
         byte RowColumnToID(int row, int col);
 
-        string StringToStringBits(string str);
+        (int col, int row) ColRowFromID(byte id);
+
+        public string StringToStringBits(string str);
     }
 }

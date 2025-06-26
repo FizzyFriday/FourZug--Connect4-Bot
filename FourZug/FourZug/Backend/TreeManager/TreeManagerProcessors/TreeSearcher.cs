@@ -32,7 +32,7 @@ namespace FourZug.Backend.TreeManager.TreeManagerProcessors
 
 
         // Manages the Minimax searching, returning best move for grid
-        public static sbyte BestMove(string[,] gameGrid, string currentTurn)
+        public static byte BestMove(string[,] gameGrid, string currentTurn)
         {
             if (utilityEngine == null) return 0;
 
@@ -54,18 +54,14 @@ namespace FourZug.Backend.TreeManager.TreeManagerProcessors
             bool isMaximizing = currentTurn == "X" ? true : false;
             short bestReward = isMaximizing ? short.MinValue : short.MaxValue;
 
+            byte bestMoveID = 0;
+            List<byte> validIDs = utilityEngine.ValidMoveIDs(stringBits);
+            if (validIDs.Count() == 0) return 0;
 
-            sbyte bestCol = -1;
-            string[,] grid = utilityEngine.Unflatten1DGrid(stringBits);
-
-            // Change GetValidBoardColumns to use string bits
-            List<byte>? validColumns = utilityEngine?.GetValidBoardColumns(grid);
-            if (validColumns == null) return -1;
-
-            foreach (byte validCol in validColumns)
+            foreach (byte validID in validIDs)
             {
                 // Get node after move
-                Node child = CreateChild(root, validCol);
+                Node child = CreateChild(root, validID);
 
                 // Begin the search
                 short reward = Minimax(child, 1, !isMaximizing);
@@ -74,16 +70,16 @@ namespace FourZug.Backend.TreeManager.TreeManagerProcessors
                 if (reward > bestReward && isMaximizing)
                 {
                     bestReward = reward;
-                    bestCol = (sbyte)child.lastColMove;
+                    bestMoveID = child.lastIDMove;
                 }
                 if (reward < bestReward && !isMaximizing)
                 {
                     bestReward = reward;
-                    bestCol = (sbyte)child.lastColMove;
+                    bestMoveID = child.lastIDMove;
                 }
             }
 
-            return bestCol;
+            return (byte)utilityEngine.ColRowFromID(bestMoveID).col;
         }
 
 
@@ -102,12 +98,11 @@ namespace FourZug.Backend.TreeManager.TreeManagerProcessors
             // Set best reward to worst possible for player
             short bestReward = isMaximizing ? short.MinValue : short.MaxValue;
 
-            string[,] grid = utilityEngine.Unflatten1DGrid(node.stringBits);
-            List<byte> childCols = utilityEngine.GetValidBoardColumns(grid);
-            foreach (byte childCol in childCols)
+            List<byte> childMoveIDs = utilityEngine.ValidMoveIDs(node.stringBits);
+            foreach (byte childMoveID in childMoveIDs)
             {
                 // Get node after move
-                Node child = CreateChild(node, childCol);
+                Node child = CreateChild(node, childMoveID);
 
                 // If the game ends from this node, return its eval
                 var nodeSummary = heuristicsEngine.NodeSummary(child);
@@ -126,7 +121,7 @@ namespace FourZug.Backend.TreeManager.TreeManagerProcessors
 
         // Make sure col is valid before calling
         // Returns a created child node given a column
-        private static Node CreateChild(Node node, byte col)
+        private static Node CreateChild(Node node, byte idMove)
         {
             if (utilityEngine == null) return null;
 
@@ -134,14 +129,14 @@ namespace FourZug.Backend.TreeManager.TreeManagerProcessors
             try
             {
                 // This game board is an option for the node / nextMoveBy player
-                string[] childStringBits = utilityEngine.MakeMove(node.stringBits, node.nextMoveBy, col);
+                string[] childStringBits = utilityEngine.MakeMove(node.stringBits, node.nextBitsMove, idMove);
 
                 // If node's next move by X, then for child it would be O. Vise versa for O to X
-                string childNextMoveBy = node.nextMoveBy == "10" ? "01" : "10";
+                string childNextMoveBy = node.nextBitsMove == "10" ? "01" : "10";
 
                 nodesMade++;
 
-                return new Node(childStringBits, childNextMoveBy, col);
+                return new Node(childStringBits, childNextMoveBy, idMove);
             }
             catch {
                 return null;
