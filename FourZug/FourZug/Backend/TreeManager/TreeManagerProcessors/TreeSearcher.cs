@@ -32,8 +32,10 @@ namespace FourZug.Backend.TreeManager.TreeManagerProcessors
 
 
         // Manages the Minimax searching, returning best move for grid
-        public static sbyte BestMove(string[,] grid, string currentTurn)
+        public static sbyte BestMove(string[,] gameGrid, string currentTurn)
         {
+            if (utilityEngine == null) return 0;
+
             // This should be based on pieces in grid, not a set increment
             turnNum += 2;
 
@@ -43,7 +45,9 @@ namespace FourZug.Backend.TreeManager.TreeManagerProcessors
             else if (turnNum >= 16) maxDepth = 16; // 16
             else if (turnNum >= 18) maxDepth = 30;
 
-            Node root = new Node(grid, currentTurn, byte.MinValue);
+            string[] stringBits = utilityEngine.Flatten2DGrid(gameGrid);
+
+            Node root = new Node(stringBits, currentTurn, byte.MinValue);
 
             // Set desired points by turn and set worst possible reward to bestReward
             bool isMaximizing = currentTurn == "X" ? true : false;
@@ -51,6 +55,9 @@ namespace FourZug.Backend.TreeManager.TreeManagerProcessors
 
 
             sbyte bestCol = -1;
+            string[,] grid = utilityEngine.Unflatten1DGrid(stringBits);
+
+            // Change GetValidBoardColumns to use string bits
             List<byte>? validColumns = utilityEngine?.GetValidBoardColumns(grid);
             if (validColumns == null) return -1;
 
@@ -94,7 +101,8 @@ namespace FourZug.Backend.TreeManager.TreeManagerProcessors
             // Set best reward to worst possible for player
             short bestReward = isMaximizing ? short.MinValue : short.MaxValue;
 
-            List<byte> childCols = utilityEngine.GetValidBoardColumns(node.grid);
+            string[,] grid = utilityEngine.Unflatten1DGrid(node.stringBits);
+            List<byte> childCols = utilityEngine.GetValidBoardColumns(grid);
             foreach (byte childCol in childCols)
             {
                 // Get node after move
@@ -119,23 +127,23 @@ namespace FourZug.Backend.TreeManager.TreeManagerProcessors
         // Returns a created child node given a column
         private static Node CreateChild(Node node, byte col)
         {
-            if (utilityEngine == null) return new Node();
+            if (utilityEngine == null) return null;
 
             // If this fails, it was because col parameter was invalid
             try
             {
                 // This game board is an option for the node / nextMoveBy player
-                string[,] childGrid = utilityEngine.MakeMove(node.grid, node.nextMoveBy, col);
+                string[] childStringBits = utilityEngine.MakeMove(node.stringBits, node.nextMoveBy, col);
 
                 // If node's next move by X, then for child it would be O. Vise versa for O to X
                 string childNextMoveBy = node.nextMoveBy == "X" ? "O" : "X";
 
                 nodesMade++;
 
-                return new Node(childGrid, childNextMoveBy, col);
+                return new Node(childStringBits, childNextMoveBy, col);
             }
             catch {
-                return new Node();
+                return null;
             }
         }
     }

@@ -4,6 +4,9 @@
 
     public interface IUtilityEngine
     {
+        // Makes a move using string bits
+        string[] MakeMove(string[] stringBits, string turn, int col);
+
         // Makes a move onto a grid, and returns the new grid
         string[,] MakeMove(string[,] grid, string turn, int col);
 
@@ -21,7 +24,5 @@
 
         // Converts a 1D array of strings representing bits to 2D grid
         string[,] Unflatten1DGrid(string[] grid);
-
-
     }
 }

@@ -123,22 +123,18 @@ namespace FourZug.Backend.HeuristicsEngine.HeuristicsEngineProcessors
             else return '?';
         }
 
-        public static char BoardWinnerAsChar_REMAKE(string[,] grid, string lastMoveBy, int lastColMove)
+        public static char BoardWinnerAsChar_REMAKE(string[] stringBits, string lastMoveBy, int lastColMove)
         {
             if (utilityEngine == null) return ' ';
-            int lastRowMove = -1;
 
-            // Get the row the last piece fell into
-            for (int row = grid.GetLength(1) - 1; row >= 0; row--)
+            int lastMoveID = -1;
+
+            // Find the position the piece into, saving the ID
+            int topRowID = (lastColMove * 6) + 5;
+            for (int id = topRowID; id >= (lastColMove * 6); id--)
             {
-                if (grid[lastColMove, row] != " ")
-                {
-                    lastRowMove = row;
-                    break;
-                }
+                if (stringBits[id] != " ") lastMoveID = id;
             }
-
-            int piecePositionID = utilityEngine.RowColumnToID(lastRowMove, lastColMove);
 
             // Determines what to change ID by (+-) for checking each direction for connect 4
             // In order: Vertical, Diagonal (NE / SW), Horizontal, Diagonal (SE / NW)

@@ -7,6 +7,12 @@ namespace FourZug.Backend.UtilityEngine.UtilityEngineAccess
 
     public class UtilityEngine : IUtilityEngine
     {
+        // Makes a move using string bits
+        string[] MakeMove(string[] stringBits, string turn, int col)
+        {
+            return null;
+        }
+
         // Make a move and return result
         public string[,] MakeMove(string[,] grid, string turn, int col)
         {
