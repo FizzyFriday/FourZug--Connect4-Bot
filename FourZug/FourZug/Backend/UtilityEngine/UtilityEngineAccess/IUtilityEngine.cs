@@ -15,5 +15,13 @@
 
         // Gets the piece at the row and column related to unique "id"
         string PieceAtPositionID(string[,] grid, int ID);
+
+        // Converts 2D string grid to 1D byte grid
+        byte[] StringGridToByteGrid(string[,] grid);
+
+        // Converts 1D byte grid to 2D string grid
+        string[,] ByteGridToStringGrid(byte[] grid);
+
+
     }
 }

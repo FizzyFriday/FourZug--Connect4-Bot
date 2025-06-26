@@ -37,5 +37,17 @@ namespace FourZug.Backend.UtilityEngine.UtilityEngineAccess
             int col = ID / idGainFromCol, row = ID % idGainFromCol;
             return grid[col, row];
         }
+
+        // Converts 2D string grid to 1D byte grid
+        byte[] StringGridToByteGrid(string[,] grid)
+        {
+            return null;
+        }
+
+        // Converts 1D byte grid to 2D string grid
+        string[,] ByteGridToStringGrid(byte[] grid)
+        {
+            return null;
+        }
     }
 }
