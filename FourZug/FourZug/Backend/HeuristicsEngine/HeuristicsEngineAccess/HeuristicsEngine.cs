@@ -9,9 +9,12 @@ namespace FourZug.Backend.HeuristicsEngine.HeuristicsEngineAccess
 
     internal class HeuristicsEngine : IHeuristicsEngine
     {
+        private IUtilityEngine? utilityEngine;
+
         // Calls component scripts to load their references
         public void InitComponentReferences(IUtilityEngine utilityEngine)
         {
+            this.utilityEngine = utilityEngine;
             BoardEvaluator.LoadReferences(utilityEngine);
         }
 
@@ -27,7 +30,7 @@ namespace FourZug.Backend.HeuristicsEngine.HeuristicsEngineAccess
             // If next move is by X, then last was by O. Same for O to X
             string nodeLastMoveBy = node.nextBitsMove == "10" ? "01" : "10";
 
-            char nodeWinner = BoardEvaluator.BoardWinnerAsChar_REMAKE(node.stringBits, nodeLastMoveBy, node.lastIDMove);
+            char nodeWinner = BoardEvaluator.BoardWinnerAsChar(node.stringBits, nodeLastMoveBy, node.lastIDMove);
 
             short nodeEval = BoardEvaluator.EvaluateNodeUsingWinner(node, nodeWinner, nodeLastMoveBy);
 
@@ -38,7 +41,15 @@ namespace FourZug.Backend.HeuristicsEngine.HeuristicsEngineAccess
         // Return the game winner (Used by API)
         public char BoardWinner(string[,] grid, string lastMoveBy, int lastColMove)
         {
-            return BoardEvaluator.BoardWinnerAsChar_REMAKE(grid, lastMoveBy, lastColMove);
+            if (utilityEngine == null) return ' ';
+
+            string[] stringBits = utilityEngine.Flatten2DGrid(grid);
+
+            byte pieceID = (byte)(utilityEngine.NextEmptyIDInCol(stringBits, lastColMove) - 1);
+
+            string lastBitsMove = utilityEngine.StringToStringBits(lastMoveBy);
+
+            return BoardEvaluator.BoardWinnerAsChar(stringBits, lastBitsMove, pieceID);
         }
     }
 }

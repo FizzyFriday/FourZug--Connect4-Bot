@@ -46,7 +46,7 @@ namespace FourZug.Backend.UtilityEngine.UtilityEngineAccess
         }
 
         // Converts a grid row and columns into an unique "id"
-        public byte RowColumnToID(int row, int col)
+        public byte ColRowToID(int col, int row)
         {
             return UtilityHelper.ColRowToID(col, row);
         }
@@ -54,13 +54,13 @@ namespace FourZug.Backend.UtilityEngine.UtilityEngineAccess
         // Converts 2D string grid to 1D byte grid
         public string[] Flatten2DGrid(string[,] grid)
         {
-            string[] stringBits = new string[grid.GetLength(0) + grid.GetLength(1)];
+            string[] stringBits = new string[grid.GetLength(0) * grid.GetLength(1)];
 
             for (int row = 0; row < 5; row++)
             {
                 for (int col = 0; col < 6; col++)
                 {
-                    int posID = RowColumnToID(row, col);
+                    int posID = ColRowToID(row, col);
                     // Do string to byte conversion
                     stringBits[posID] = UtilityHelper.PieceStringBitConvert(grid[col, row]);
                 }
@@ -90,6 +90,11 @@ namespace FourZug.Backend.UtilityEngine.UtilityEngineAccess
         public string StringToStringBits(string str)
         {
             return UtilityHelper.PieceStringBitConvert(str);
+        }
+
+        public byte NextEmptyIDInCol(string[] stringBits, int col)
+        {
+            return UtilityHelper.NextEmptyIDInCol(stringBits, col);
         }
     }
 }

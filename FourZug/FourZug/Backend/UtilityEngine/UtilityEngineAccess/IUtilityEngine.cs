@@ -21,10 +21,12 @@
         string[,] Unflatten1DGrid(string[] grid);
 
         // Converts a grid row and columns into an unique "id"
-        byte RowColumnToID(int row, int col);
+        byte ColRowToID (int col, int row = -1);
 
         (int col, int row) ColRowFromID(byte id);
 
         public string StringToStringBits(string str);
+
+        public byte NextEmptyIDInCol(string[] stringBits, int col);
     }
 }

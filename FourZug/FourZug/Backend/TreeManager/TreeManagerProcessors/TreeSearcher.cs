@@ -51,7 +51,7 @@ namespace FourZug.Backend.TreeManager.TreeManagerProcessors
             Node root = new Node(stringBits, currentBitsTurn, byte.MinValue);
 
             // Set desired points by turn and set worst possible reward to bestReward
-            bool isMaximizing = currentTurn == "X" ? true : false;
+            bool isMaximizing = root.nextBitsMove == "10" ? true : false;
             short bestReward = isMaximizing ? short.MinValue : short.MaxValue;
 
             byte bestMoveID = 0;
