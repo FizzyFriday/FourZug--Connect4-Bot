@@ -60,14 +60,15 @@ namespace FourZug.Backend.HeuristicsEngine.HeuristicsEngineProcessors
             else return '?';
         }
 
-        private static bool validConnectionID(int positionID, int pointedID)
+        private static bool validConnectionID(byte positionID, int pointedID)
         {
             // Handles invalid IDs
             if (pointedID < 0 || pointedID > 41) return false;
 
-            int posCol = positionID / 6, posRow = positionID % 6;
-            int pointCol = pointedID / 6, pointRow = pointedID % 6;
-            int colDist = Math.Abs(posCol - pointCol), rowDist = Math.Abs(posRow - pointRow);
+            var posColRow = utilityEngine.ColRowFromID(positionID);
+            var pointColRow = utilityEngine.ColRowFromID((byte)pointedID);
+
+            int colDist = Math.Abs(posColRow.col - pointColRow.col), rowDist = Math.Abs(posColRow.row - pointColRow.row);
 
             // Checks for diagonal 1 to 1
             if (colDist != 0 && rowDist != 0)

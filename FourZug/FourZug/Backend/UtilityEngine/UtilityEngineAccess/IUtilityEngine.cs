@@ -25,8 +25,6 @@
 
         (int col, int row) ColRowFromID(byte id);
 
-        public string StringToStringBits(string str);
-
-        public byte NextEmptyIDInCol(string[] stringBits, int col);
+        public sbyte NextEmptyIDInCol(string[] stringBits, int col);
     }
 }

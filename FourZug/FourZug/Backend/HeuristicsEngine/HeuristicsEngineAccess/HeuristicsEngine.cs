@@ -47,7 +47,7 @@ namespace FourZug.Backend.HeuristicsEngine.HeuristicsEngineAccess
 
             byte pieceID = (byte)(utilityEngine.NextEmptyIDInCol(stringBits, lastColMove) - 1);
 
-            string lastBitsMove = utilityEngine.StringToStringBits(lastMoveBy);
+            string lastBitsMove = (lastMoveBy == "X") ? "10" : "01";
 
             return BoardEvaluator.BoardWinnerAsChar(stringBits, lastBitsMove, pieceID);
         }

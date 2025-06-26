@@ -145,7 +145,7 @@ namespace FourZug.Frontend.Forms
 
             // Check if column is valid
             List<int> validCols = api.ValidBoardColumns(grid);
-            if (validCols.IndexOf(col) == -1) return;
+            if (!validCols.Contains(col)) return;
 
             // User makes move and switches turn
             MakeBoardMove(col, "X");
@@ -153,9 +153,9 @@ namespace FourZug.Frontend.Forms
             this.playersTurn = false;
 
             // Bot makes move
-            int botCol = api.BestMove(grid, "O");
-            MakeBoardMove(botCol, "O");
-            this.playersTurn = true;
+            //int botCol = api.BestMove(grid, "O");
+            //MakeBoardMove(botCol, "O");
+            //this.playersTurn = true;
             
         }
 
@@ -166,6 +166,7 @@ namespace FourZug.Frontend.Forms
 
             // Make move and display
             this.grid = api.MakeMove(grid, turn, col);
+            Application.DoEvents();
             DisplayBoard(grid);
 
             // Handle the board state after making move
@@ -173,7 +174,7 @@ namespace FourZug.Frontend.Forms
             if (gameWinner != '?')
             {
                 // End the game
-                EndGame(gameWinner);
+                //EndGame(gameWinner);
             }
         }
 
