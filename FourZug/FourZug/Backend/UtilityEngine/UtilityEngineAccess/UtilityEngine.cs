@@ -36,12 +36,9 @@ namespace FourZug.Backend.UtilityEngine.UtilityEngineAccess
             return id;
         }
 
-        // Gets the piece at the row and column related to unique "id"
-        public string PieceAtPositionID(string[,] grid, int ID)
-        {
-            const byte idGainFromCol = 6;
-            int col = ID / idGainFromCol, row = ID % idGainFromCol;
-            return grid[col, row];
+        public bool isValidID(int id)
+        { 
+        
         }
 
         // Converts 2D string grid to 1D byte grid
@@ -72,6 +69,11 @@ namespace FourZug.Backend.UtilityEngine.UtilityEngineAccess
                 grid[idCol, idRow] = UtilityHelper.PieceStringBitConvert(stringBits[id]);
             }
             return grid;
+        }
+
+        public string StringToStringBits(string str)
+        {
+            return UtilityHelper.PieceStringBitConvert(str);
         }
     }
 }

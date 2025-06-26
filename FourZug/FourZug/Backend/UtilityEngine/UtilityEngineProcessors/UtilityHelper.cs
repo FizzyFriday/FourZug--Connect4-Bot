@@ -45,6 +45,19 @@
             return grid;
         }
 
+        public static List<int> ValidMoveIDs(string[] stringBits)
+        {
+            List<int> validIds = new();
+            byte topRow = 5;
+
+            for (byte col = 0; col <= 6; col++)
+            {
+                int id = ColRowToID(col, topRow);
+                if (stringBits[id] == "00") validIds.Add(id);
+            }
+            return validIds;
+        }
+
         // Returns all valid columns in the game
         public static List<byte> ValidColumns(string[,] grid)
         {
@@ -78,6 +91,18 @@
             else if (c == "00") return " ";
 
             return "";
+        }
+
+        public static (int col, int row) IDToColRow(int id)
+        {
+            int row = id / 6, col = id % 6;
+            return (col, row);
+        }
+
+        public static int ColRowToID(int col, int row)
+        {
+            int id = (col * 6) + row;
+            return id;
         }
     }
 }

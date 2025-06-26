@@ -47,7 +47,8 @@ namespace FourZug.Backend.TreeManager.TreeManagerProcessors
 
             string[] stringBits = utilityEngine.Flatten2DGrid(gameGrid);
 
-            Node root = new Node(stringBits, currentTurn, byte.MinValue);
+            string currentBitsTurn = utilityEngine.StringToStringBits(currentTurn);
+            Node root = new Node(stringBits, currentBitsTurn, byte.MinValue);
 
             // Set desired points by turn and set worst possible reward to bestReward
             bool isMaximizing = currentTurn == "X" ? true : false;
@@ -136,7 +137,7 @@ namespace FourZug.Backend.TreeManager.TreeManagerProcessors
                 string[] childStringBits = utilityEngine.MakeMove(node.stringBits, node.nextMoveBy, col);
 
                 // If node's next move by X, then for child it would be O. Vise versa for O to X
-                string childNextMoveBy = node.nextMoveBy == "X" ? "O" : "X";
+                string childNextMoveBy = node.nextMoveBy == "10" ? "01" : "10";
 
                 nodesMade++;
 

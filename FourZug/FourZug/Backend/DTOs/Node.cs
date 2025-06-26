@@ -6,17 +6,17 @@
         // Represents grid AFTER a move
         public string[] stringBits;
 
-        // Represents who makes the next move (who's turn it is)
+        // Represents who makes the next move (who's turn it is) - as 2 string bits
         public string nextMoveBy;
 
         // Represents the last column move that made this board
-        public byte lastColMove;
+        public byte lastIDMove;
 
-        public Node(string[] stringBits, string currentTurn, byte lastColMove)
+        public Node(string[] stringBits, string currentTurn, byte lastIDMove)
         {
             this.stringBits = stringBits;
             this.nextMoveBy = currentTurn;
-            this.lastColMove = lastColMove;
+            this.lastIDMove = lastIDMove;
         }
     }
 }

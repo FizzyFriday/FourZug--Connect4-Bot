@@ -147,13 +147,12 @@ namespace FourZug.Backend.HeuristicsEngine.HeuristicsEngineProcessors
                 // Run through chain
                 for (int idDist = -3; idDist <= 3; idDist++)
                 {
-                    int pointedID = piecePositionID + (idDist * idChangeScales[direc]);
+                    int pointedID = lastMoveID + (idDist * idChangeScales[direc]);
 
-                    if (isValidID(piecePositionID, pointedID))
+                    if (isValidID(lastMoveID, pointedID))
                     {
-
-                        string pieceAtPosition = utilityEngine.PieceAtPositionID(grid, pointedID);
-                        if (pieceAtPosition == lastMoveBy) connectedPieces++;
+                        string pieceBits = stringBits[pointedID];
+                        if (pieceBits == lastMoveBy) connectedPieces++;
                         else connectedPieces = 0;
 
                         if (connectedPieces == 4)
@@ -193,9 +192,9 @@ namespace FourZug.Backend.HeuristicsEngine.HeuristicsEngineProcessors
 
         public static short EvaluateNode(Node node)
         {
-            string nodeLastMoveBy = node.nextMoveBy == "X" ? "O" : "X";
+            string nodeLastMoveBy = node.nextMoveBy == "10" ? "01" : "10";
 
-            char nodeState = BoardWinnerAsChar_REMAKE(node.grid, nodeLastMoveBy, node.lastColMove);
+            char nodeState = BoardWinnerAsChar_REMAKE(node.stringBits, nodeLastMoveBy, node.lastColMove);
 
             return EvaluateNodeUsingWinner(node, nodeState, nodeLastMoveBy);
         }
