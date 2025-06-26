@@ -24,8 +24,8 @@ namespace FourZug.Backend.UtilityEngine.UtilityEngineAccess
         // Converts a grid row and columns into an unique "id"
         public int RowColumnToID(int row, int col)
         {
-            const byte idGainFromCol = 6, idGainFromRow = 1;
-            int id = (idGainFromCol * col) + (idGainFromRow * row);
+            const byte idGainFromCol = 6;
+            int id = (idGainFromCol * col) + (row);
 
             return id;
         }
@@ -33,8 +33,8 @@ namespace FourZug.Backend.UtilityEngine.UtilityEngineAccess
         // Gets the piece at the row and column related to unique "id"
         public string PieceAtPositionID(string[,] grid, int ID)
         {
-            const byte idGainFromCol = 6, idGainFromRow = 1;
-            int col = ID / idGainFromCol, row = ID % idGainFromRow;
+            const byte idGainFromCol = 6;
+            int col = ID / idGainFromCol, row = ID % idGainFromCol;
             return grid[col, row];
         }
     }

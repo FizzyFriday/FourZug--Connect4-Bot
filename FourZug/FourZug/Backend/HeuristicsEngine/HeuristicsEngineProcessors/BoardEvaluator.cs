@@ -180,32 +180,19 @@ namespace FourZug.Backend.HeuristicsEngine.HeuristicsEngineProcessors
         private static bool isValidID(int positionID, int pointedID)
         {
             // Handles invalid IDs
-            if (pointedID < 0 || pointedID > 42) return false;
+            if (pointedID < 0 || pointedID > 41) return false;
 
             int posCol = positionID / 6, posRow = positionID % 6;
             int pointCol = pointedID / 6, pointRow = pointedID % 6;
             int colDist = Math.Abs(posCol - pointCol), rowDist = Math.Abs(posRow - pointRow);
 
-            // Either
-            //  Only col or only row can be different
-            //  Else, colDist must equal rowDist (for 1 to 1 gradient)
-
-            // Horizontal check
-            if (colDist != 0 && rowDist == 0) return true;
-
-            // Vertical check
-            if (colDist == 0 && rowDist != 0) return true;
-
-            // Same row and col / ID check
-            if (colDist == 0 && rowDist == 0) return true;
-
-            // Diagonal checks
+            // Checks for diagonal 1 to 1
             if (colDist != 0 && rowDist != 0)
             {
-                // Checks if not a 1 to 1 gradient
                 if (colDist != rowDist) return false;
-                else return true;
             }
+
+            return true;
         }
 
         public static short EvaluateNode(Node node)
