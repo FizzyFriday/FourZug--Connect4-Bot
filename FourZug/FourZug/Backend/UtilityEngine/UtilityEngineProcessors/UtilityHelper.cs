@@ -6,9 +6,18 @@
     internal static class UtilityHelper
     {
 
-        public static byte[] MakeMove(byte[] grid, string turn, int posID)
+        public static string[] MakeMove(string[] stringBits, string bitsTurn, int posID)
         {
-            return null;
+            stringBits = (string[])stringBits.Clone();
+            List<int> validMoveIDs = ValidMoveIDs(stringBits);
+
+            if (!validMoveIDs.Contains(posID))
+            {
+                throw new Exception("Invalid column move made on grid");
+            }
+
+            stringBits[posID] = bitsTurn;
+            return stringBits;
         }
 
         // Makes a move onto a grid, and returns the new grid
@@ -95,7 +104,7 @@
 
         public static (int col, int row) IDToColRow(int id)
         {
-            int row = id / 6, col = id % 6;
+            int col = id % 6, row = id / 6;
             return (col, row);
         }
 
