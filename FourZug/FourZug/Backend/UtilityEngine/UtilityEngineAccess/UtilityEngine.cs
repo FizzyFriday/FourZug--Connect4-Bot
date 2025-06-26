@@ -26,6 +26,7 @@ namespace FourZug.Backend.UtilityEngine.UtilityEngineAccess
         {
             const byte idGainFromCol = 6, idGainFromRow = 1;
             int id = (idGainFromCol * col) + (idGainFromRow * row);
+
             return id;
         }
 

@@ -144,51 +144,45 @@ namespace FourZug.Backend.HeuristicsEngine.HeuristicsEngineProcessors
             // In order: Vertical, Diagonal (NE / SW), Horizontal, Diagonal (SE / NW)
             int[] idChangeScales = { 1, 7, 6, 5 };
 
-            int highestID = utilityEngine.RowColumnToID(grid.GetLength(1) - 1, grid.GetLength(0) - 1);
-
-            // Save the chain of IDs to run through
-            List<List<int>> idChainsToCheck = new();
-            for (int i = 0; i < idChangeScales.Length - 1; i++)
+            // Run through each direction, checking for connect 4
+            for (int direc = 0; direc < idChangeScales.Length; direc++)
             {
-                List<int> directionIDChain = new();
+                int connectedPieces = 0;
+                // Run through chain
                 for (int idDist = -3; idDist <= 3; idDist++)
                 {
-                    int id = piecePositionID + (idDist * idChangeScales[i]);
-                    if (id >= 0 && id <= highestID) directionIDChain.Add(id);
-                }
+                    int pointedID = piecePositionID + (idDist * idChangeScales[direc]);
 
-                idChainsToCheck.Add(directionIDChain);
-            }
-
-            // Run through each chain of IDs, to check for a connect 4
-            for (int i = 0; i < idChainsToCheck.Count; i++)
-            {
-                List<int> chain = idChainsToCheck[i];
-                int ownedPiecesInChain = 0;
-
-                // Run through all the ids in chain
-                for (int chainIndex = 0; chainIndex < chain.Count; chainIndex++)
-                {
-                    int idInChain = chain[chainIndex];
-                    string pieceAtID = utilityEngine.PieceAtPositionID(grid, idInChain);
-
-                    if (pieceAtID == lastMoveBy) ownedPiecesInChain++;
-                    else ownedPiecesInChain = 0;
-
-                    if (ownedPiecesInChain == 4)
+                    if (isValidID(piecePositionID, pointedID))
                     {
-                        if (lastMoveBy == "X") return 'X';
-                        else return 'O';
-                    }
+                        string pieceAtPosition = utilityEngine.PieceAtPositionID(grid, pointedID);
+                        if (pieceAtPosition == lastMoveBy) connectedPieces++;
+                        else connectedPieces = 0;
 
+                        if (connectedPieces == 4)
+                        {
+                            if (lastMoveBy == "X") return 'X';
+                            else return 'O';
+                        }
+                    }
+                    else connectedPieces = 0;
                 }
             }
 
             // If no player has won and no move left, game is a draw
-            if (utilityEngine?.GetValidBoardColumns(grid).Count == 0) return 'D';
+            if (utilityEngine.GetValidBoardColumns(grid).Count == 0) return 'D';
 
             // If no one has won and it isnt a draw, the game must still be in play
             else return '?';
+        }
+
+        private static bool isValidID(int positionID, int pointedID)
+        {
+            // Check if pointedID in the ID bounds (if not, return false)
+
+            // Check if pointedID matches the intended row and column in chain (if not, return false)
+
+            return true;
         }
 
         public static short EvaluateNode(Node node)
