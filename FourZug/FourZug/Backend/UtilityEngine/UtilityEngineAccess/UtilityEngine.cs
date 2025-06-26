@@ -39,15 +39,33 @@ namespace FourZug.Backend.UtilityEngine.UtilityEngineAccess
         }
 
         // Converts 2D string grid to 1D byte grid
-        byte[] StringGridToByteGrid(string[,] grid)
+        public string[] Flatten2DGrid(string[,] grid)
         {
-            return null;
+            string[] stringBits = new string[grid.GetLength(0) + grid.GetLength(1)];
+
+            for (int row = 0; row < 5; row++)
+            {
+                for (int col = 0; col < 6; col++)
+                {
+                    int posID = RowColumnToID(row, col);
+                    // Do string to byte conversion
+                    stringBits[posID] = UtilityHelper.PieceStringBitConvert(grid[col, row]);
+                }
+            }
+            return stringBits;
         }
 
         // Converts 1D byte grid to 2D string grid
-        string[,] ByteGridToStringGrid(byte[] grid)
+        public string[,] Unflatten1DGrid(string[] stringBits)
         {
-            return null;
+            string[,] grid = new string[7, 6];
+
+            for (int id = 0; id < stringBits.Length; id++)
+            {
+                int idCol = id / 6, idRow = id % 6;
+                grid[idCol, idRow] = UtilityHelper.PieceStringBitConvert(stringBits[id]);
+            }
+            return grid;
         }
     }
 }

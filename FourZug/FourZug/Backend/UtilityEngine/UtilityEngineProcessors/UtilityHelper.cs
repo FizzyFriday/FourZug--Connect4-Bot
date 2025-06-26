@@ -6,6 +6,11 @@
     internal static class UtilityHelper
     {
 
+        public static byte[] MakeMove(byte[] grid, string turn, int posID)
+        {
+            return null;
+        }
+
         // Makes a move onto a grid, and returns the new grid
         public static string[,] MakeMove(string[,] grid, string turn, int col)
         {
@@ -57,6 +62,22 @@
             }
 
             return validCols;
+        }
+
+        // This will make integrating bitwise require less changes
+        public static string PieceStringBitConvert(string c)
+        {
+            // Convert piece to string bits
+            if (c == "X") return "10";
+            else if (c == "O") return "01";
+            else if (c == " ") return "00";
+
+            // Convert string bits to piece
+            if (c == "10") return "X";
+            else if (c == "01") return "O";
+            else if (c == "00") return " ";
+
+            return "";
         }
     }
 }
