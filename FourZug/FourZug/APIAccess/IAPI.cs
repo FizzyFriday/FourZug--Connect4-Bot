@@ -4,8 +4,7 @@
     public interface IAPI
     {
         // Implementations must have a constructor
-        // This constructor does interface referencing
-        // between components in the backend processors
+        // This constructor does dependency injection 
 
 
         /*
@@ -48,8 +47,8 @@
          *      @param - grid, represents the game board
          *      @param - turn, turn of current player
          * @post:
-         *      @return - String, representing state of game 
-         *          String can be: Win (for current player), Draw or StillInPlay
+         *      @return - Char, representing game winner (if applicable)
+         *          Possiblities: 'X', 'O', 'D', '?'
          */
         char GetGameWinner(string[,] grid, string turn, int lastColMove);
     }

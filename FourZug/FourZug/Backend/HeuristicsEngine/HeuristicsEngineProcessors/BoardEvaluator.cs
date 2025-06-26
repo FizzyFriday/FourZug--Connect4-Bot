@@ -155,6 +155,7 @@ namespace FourZug.Backend.HeuristicsEngine.HeuristicsEngineProcessors
 
                     if (isValidID(piecePositionID, pointedID))
                     {
+
                         string pieceAtPosition = utilityEngine.PieceAtPositionID(grid, pointedID);
                         if (pieceAtPosition == lastMoveBy) connectedPieces++;
                         else connectedPieces = 0;
@@ -178,11 +179,33 @@ namespace FourZug.Backend.HeuristicsEngine.HeuristicsEngineProcessors
 
         private static bool isValidID(int positionID, int pointedID)
         {
-            // Check if pointedID in the ID bounds (if not, return false)
+            // Handles invalid IDs
+            if (pointedID < 0 || pointedID > 42) return false;
 
-            // Check if pointedID matches the intended row and column in chain (if not, return false)
+            int posCol = positionID / 6, posRow = positionID % 6;
+            int pointCol = pointedID / 6, pointRow = pointedID % 6;
+            int colDist = Math.Abs(posCol - pointCol), rowDist = Math.Abs(posRow - pointRow);
 
-            return true;
+            // Either
+            //  Only col or only row can be different
+            //  Else, colDist must equal rowDist (for 1 to 1 gradient)
+
+            // Horizontal check
+            if (colDist != 0 && rowDist == 0) return true;
+
+            // Vertical check
+            if (colDist == 0 && rowDist != 0) return true;
+
+            // Same row and col / ID check
+            if (colDist == 0 && rowDist == 0) return true;
+
+            // Diagonal checks
+            if (colDist != 0 && rowDist != 0)
+            {
+                // Checks if not a 1 to 1 gradient
+                if (colDist != rowDist) return false;
+                else return true;
+            }
         }
 
         public static short EvaluateNode(Node node)
