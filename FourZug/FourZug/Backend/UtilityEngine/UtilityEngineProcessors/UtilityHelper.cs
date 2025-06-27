@@ -69,16 +69,18 @@ namespace FourZug.Backend.UtilityEngine.UtilityEngineProcessors
             return (sbyte)id;
         }
 
+        // The bug is caused here. ID 37+ is null, so then when UNFLATTENING, ID 37+ is null
+        // ID 37 isnt even reached???
         public static string[] Flatten2DGrid(string[,] grid)
         {
             string[] stringBits = new string[grid.GetLength(0) * grid.GetLength(1)];
 
-            for (int row = 0; row < grid.GetLength(1); row++)
+            for (int col = 0; col < grid.GetLength(0); col++)
             {
-                for (int col = 0; col < grid.GetLength(0); col++)
+                for (int row = 0; row < grid.GetLength(1); row++)
                 {
                     // String to string bits conversion
-                    int posID = ColRowToID(row, col);
+                    int posID = ColRowToID(col, row);
 
                     string bits = grid[col, row] switch
                     {
@@ -101,8 +103,16 @@ namespace FourZug.Backend.UtilityEngine.UtilityEngineProcessors
             for (int id = 0; id < stringBits.Length; id++)
             {
                 int idCol = id / 6, idRow = id % 6;
-                string bits = stringBits[id];
-                grid[idCol, idRow] = (bits == "10") ? "X" : "O";
+
+                string piece = stringBits[id] switch
+                {
+                    "00" => " ",
+                    "01" => "O",
+                    "10" => "X",
+                    _ => throw new NotImplementedException(),
+                };
+
+                grid[idCol, idRow] = piece;
             }
             return grid;
         }

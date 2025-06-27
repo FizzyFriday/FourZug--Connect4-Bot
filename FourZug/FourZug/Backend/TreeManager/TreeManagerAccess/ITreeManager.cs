@@ -10,7 +10,10 @@ namespace FourZug.Backend.TreeManager.TreeManagerAccess
         // Calls component scripts to create their references
         void InitComponentReferences(IHeuristicsEngine heuEngine, IUtilityEngine utilEngine);
 
-        // Starts the Bot and returns best move results
-        int GetBotBestMove(string[,] grid, string currentTurn);
+        // Gets eval of every move
+        Dictionary<int, int> EvaluateMoves(string[,] grid, string currentTurn);
+
+        // Returns best col move
+        public int GetBestMove(string[,] grid, string currentTurn);
     }
 }

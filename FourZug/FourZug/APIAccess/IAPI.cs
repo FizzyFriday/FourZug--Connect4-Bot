@@ -32,6 +32,17 @@
 
 
         /*
+         * Returns the eval of each col move option given a board
+         * @pre:
+         *      @param - grid, represents the game board
+         *      @param - turn, turn of current player
+         * @post:
+         *      @return - Dict where key is col, value is eval
+        */
+        public Dictionary<int, int> EvalMoves(string[,] grid, string turn);
+
+
+        /*
          * Returns valid columns based on a game grid/board
          * @pre:
          *      @param - grid, represents the gameboard

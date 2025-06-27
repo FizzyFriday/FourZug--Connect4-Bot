@@ -15,11 +15,17 @@ namespace FourZug.Backend.TreeManager.TreeManagerAccess
             TreeSearcher.LoadReferences(heuEngine, utilEngine);
         }
 
-        // Starts the tree search for the best move, and returns result
-        public int GetBotBestMove(string[,] grid, string currentTurn)
+        // Returns each eval of each move option
+        public Dictionary<int, int> EvaluateMoves(string[,] grid, string currentTurn)
         {
-            int BestCol = TreeSearcher.BestMove(grid, currentTurn);
-            return BestCol;
+            return TreeSearcher.EvalMoves(grid, currentTurn);
+        }
+
+
+        public int GetBestMove(string[,] grid, string currentTurn)
+        {
+            Dictionary<int, int> evals = TreeSearcher.EvalMoves(grid, currentTurn);
+            return evals.OrderByDescending(x => x.Value).First().Key;
         }
     }
 }

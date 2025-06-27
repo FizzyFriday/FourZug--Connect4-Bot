@@ -47,8 +47,23 @@ namespace FourZug.APIAccess
          */
         public int BestMove(string[,] grid, string turn)
         {
-            return this.treeManager.GetBotBestMove(grid, turn);
+            return this.treeManager.GetBestMove(grid, turn);
         }
+
+        /*
+         * Returns the eval of each col move option given a board
+         * @pre:
+         *      @param - grid, represents the game board
+         *      @param - turn, turn of current player
+         * @post:
+         *      @return - Dict where key is col, value is eval
+        */
+        public Dictionary<int, int> EvalMoves(string[,] grid, string turn)
+        {
+            return this.treeManager.EvaluateMoves(grid, turn);
+        }
+
+
 
 
         /*

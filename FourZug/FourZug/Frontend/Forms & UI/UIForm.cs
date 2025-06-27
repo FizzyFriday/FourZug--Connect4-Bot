@@ -150,12 +150,12 @@ namespace FourZug.Frontend.Forms
             // User makes move and switches turn
             MakeBoardMove(col, "X");
             if (this.gameEnded) return;
-            this.playersTurn = false;
+            this.playersTurn = true;
 
             // Bot makes move
-            //int botCol = api.BestMove(grid, "O");
-            //MakeBoardMove(botCol, "O");
-            //this.playersTurn = true;
+            int botCol = api.BestMove(grid, "O");
+            MakeBoardMove(botCol, "O");
+            this.playersTurn = true;
             
         }
 
@@ -174,7 +174,7 @@ namespace FourZug.Frontend.Forms
             if (gameWinner != '?')
             {
                 // End the game
-                //EndGame(gameWinner);
+                EndGame(gameWinner);
             }
         }
 

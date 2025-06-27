@@ -32,9 +32,9 @@ namespace FourZug.Backend.TreeManager.TreeManagerProcessors
 
 
         // Manages the Minimax searching, returning best move for grid
-        public static byte BestMove(string[,] gameGrid, string currentTurn)
+        public static Dictionary<int, int> EvalMoves(string[,] gameGrid, string currentTurn)
         {
-            if (utilityEngine == null) return 0;
+            if (utilityEngine == null) return null;
 
             // This should be based on pieces in grid, not a set increment
             turnNum += 2;
@@ -52,11 +52,10 @@ namespace FourZug.Backend.TreeManager.TreeManagerProcessors
 
             // Set desired points by turn and set worst possible reward to bestReward
             bool isMaximizing = root.nextBitsMove == "10" ? true : false;
-            short bestReward = isMaximizing ? short.MinValue : short.MaxValue;
 
-            byte bestMoveID = 0;
             List<byte> validIDs = utilityEngine.ValidMoveIDs(stringBits);
-            if (validIDs.Count() == 0) return 0;
+            if (validIDs.Count() == 0) return null;
+            Dictionary<int, int> evals = new();
 
             foreach (byte validID in validIDs)
             {
@@ -66,20 +65,12 @@ namespace FourZug.Backend.TreeManager.TreeManagerProcessors
                 // Begin the search
                 short reward = Minimax(child, 1, !isMaximizing);
 
-                // If the move result is better than already seen
-                if (reward > bestReward && isMaximizing)
-                {
-                    bestReward = reward;
-                    bestMoveID = child.lastIDMove;
-                }
-                if (reward < bestReward && !isMaximizing)
-                {
-                    bestReward = reward;
-                    bestMoveID = child.lastIDMove;
-                }
+                // Records eval of col move
+                int idCol = utilityEngine.ColRowFromID(validID).col;
+                evals[idCol] = reward;
             }
 
-            return (byte)utilityEngine.ColRowFromID(bestMoveID).col;
+            return evals;
         }
 
 
