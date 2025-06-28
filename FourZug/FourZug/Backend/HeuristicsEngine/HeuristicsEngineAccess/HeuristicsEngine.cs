@@ -29,9 +29,7 @@ namespace FourZug.Backend.HeuristicsEngine.HeuristicsEngineAccess
         {
             // If next move is by X, then last was by O. Same for O to X
             string nodeLastMoveBy = node.nextBitsMove == "10" ? "01" : "10";
-
             char nodeWinner = BoardEvaluator.BoardWinnerAsChar(node.stringBits, nodeLastMoveBy, node.lastIDMove);
-
             short nodeEval = BoardEvaluator.EvaluateNodeUsingWinner(node, nodeWinner, nodeLastMoveBy);
 
             if (nodeWinner != '?') return (true, nodeEval);
@@ -41,12 +39,10 @@ namespace FourZug.Backend.HeuristicsEngine.HeuristicsEngineAccess
         // Return the game winner (Used by API)
         public char BoardWinner(string[,] grid, string lastMoveBy, int lastColMove)
         {
-            if (utilityEngine == null) return ' ';
+            if (utilityEngine == null) throw new Exception("HeuristicsEngine.cs lacking dependency");
 
             string[] stringBits = utilityEngine.Flatten2DGrid(grid);
-
             byte pieceID = (byte)(utilityEngine.NextEmptyIDInCol(stringBits, lastColMove) - 1);
-
             string lastBitsMove = (lastMoveBy == "X") ? "10" : "01";
 
             return BoardEvaluator.BoardWinnerAsChar(stringBits, lastBitsMove, pieceID);

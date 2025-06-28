@@ -25,7 +25,8 @@ namespace FourZug.Backend.TreeManager.TreeManagerAccess
         public int GetBestMove(string[,] grid, string currentTurn)
         {
             Dictionary<int, int> evals = TreeSearcher.EvalMoves(grid, currentTurn);
-            return evals.OrderByDescending(x => x.Value).First().Key;
+            if (currentTurn == "X") return evals.OrderByDescending(x => x.Value).First().Key;
+            else return evals.OrderByDescending(x => x.Value).Last().Key;
         }
     }
 }

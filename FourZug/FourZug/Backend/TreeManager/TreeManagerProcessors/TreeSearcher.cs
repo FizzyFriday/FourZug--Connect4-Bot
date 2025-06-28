@@ -15,8 +15,8 @@ namespace FourZug.Backend.TreeManager.TreeManagerProcessors
     internal static class TreeSearcher
     {
         // - PARAMETERS -
-        private static byte maxDepth = 7;
-        private static byte turnNum = 0;
+        private static byte maxDepth = 4;
+        public static byte turnNum = 0;
 
         private static int nodesMade = 1; // 1 because of root
         
@@ -34,7 +34,7 @@ namespace FourZug.Backend.TreeManager.TreeManagerProcessors
         // Manages the Minimax searching, returning best move for grid
         public static Dictionary<int, int> EvalMoves(string[,] gameGrid, string currentTurn)
         {
-            if (utilityEngine == null) return null;
+            if (utilityEngine == null) throw new Exception("Treesearcher.cs lacking dependency");
 
             // This should be based on pieces in grid, not a set increment
             turnNum += 2;
@@ -45,7 +45,15 @@ namespace FourZug.Backend.TreeManager.TreeManagerProcessors
             else if (turnNum >= 16) maxDepth = 16; // 16
             else if (turnNum >= 18) maxDepth = 30;
 
+
+            // Flatten and unflatten works
+            // Make move clones, not affecting original
+            //gameGrid[0, 0] = "O";
             string[] stringBits = utilityEngine.Flatten2DGrid(gameGrid);
+            //string[] stringBits2 = utilityEngine.MakeMove(stringBits, "01", 1);
+
+            Console.WriteLine("");
+
 
             string bitsTurn = (currentTurn == "X") ? "10" : "01";
             Node root = new Node(stringBits, bitsTurn, byte.MinValue);
@@ -78,7 +86,7 @@ namespace FourZug.Backend.TreeManager.TreeManagerProcessors
         private static short Minimax(Node node, int currentDepth, bool isMaximizing)
         {
             // Would never actually be true due to API loading all references on load
-            if (utilityEngine == null || heuristicsEngine == null) return -1;
+            if (utilityEngine == null || heuristicsEngine == null) throw new Exception("Treesearcher.cs lacking dependency");
 
             // Leaf node - run heuristics
             if (currentDepth == maxDepth)
@@ -95,9 +103,16 @@ namespace FourZug.Backend.TreeManager.TreeManagerProcessors
                 // Get node after move
                 Node child = CreateChild(node, childMoveID);
 
+                if (currentDepth == 1)
+                {
+                    Console.WriteLine("");
+                }
+
                 // If the game ends from this node, return its eval
                 var nodeSummary = heuristicsEngine.NodeSummary(child);
                 if (nodeSummary.endsGame) return nodeSummary.nodeEval;
+                
+
 
                 // Get best reward from deeper searches
                 short reward = Minimax(child, currentDepth + 1, !isMaximizing);
@@ -110,28 +125,20 @@ namespace FourZug.Backend.TreeManager.TreeManagerProcessors
             return bestReward;
         }
 
-        // Make sure col is valid before calling
         // Returns a created child node given a column
         private static Node CreateChild(Node node, byte idMove)
         {
-            if (utilityEngine == null) return null;
+            if (utilityEngine == null) throw new Exception("Treesearcher.cs lacking dependency");
+            if (idMove < 0 || idMove > 41) throw new IndexOutOfRangeException("CreateChild() - invalid move id");
 
-            // If this fails, it was because col parameter was invalid
-            try
-            {
-                // This game board is an option for the node / nextMoveBy player
-                string[] childStringBits = utilityEngine.MakeMove(node.stringBits, node.nextBitsMove, idMove);
+            // This game board is an option for the node / nextMoveBy player
+            string[] childStringBits = utilityEngine.MakeMove(node.stringBits, node.nextBitsMove, idMove);
 
-                // If node's next move by X, then for child it would be O. Vise versa for O to X
-                string childNextMoveBy = node.nextBitsMove == "10" ? "01" : "10";
+            // If node's next move by X, then for child it would be O. Vise versa for O to X
+            string childNextMoveBy = node.nextBitsMove == "10" ? "01" : "10";
 
-                nodesMade++;
-
-                return new Node(childStringBits, childNextMoveBy, idMove);
-            }
-            catch {
-                return null;
-            }
+            nodesMade++;
+            return new Node(childStringBits, childNextMoveBy, idMove);
         }
     }
 }

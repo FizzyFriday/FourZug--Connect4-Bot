@@ -30,6 +30,7 @@
         {
             gbxGameBoard = new GroupBox();
             txtGameResult = new TextBox();
+            rtbEvals = new RichTextBox();
             SuspendLayout();
             // 
             // gbxGameBoard
@@ -50,12 +51,21 @@
             txtGameResult.TabIndex = 1;
             txtGameResult.TabStop = false;
             // 
+            // rtbEvals
+            // 
+            rtbEvals.Location = new Point(439, 21);
+            rtbEvals.Name = "rtbEvals";
+            rtbEvals.Size = new Size(105, 139);
+            rtbEvals.TabIndex = 2;
+            rtbEvals.Text = "";
+            // 
             // UIForm
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             BackColor = SystemColors.ControlDark;
-            ClientSize = new Size(430, 423);
+            ClientSize = new Size(556, 423);
+            Controls.Add(rtbEvals);
             Controls.Add(txtGameResult);
             Controls.Add(gbxGameBoard);
             Name = "UIForm";
@@ -68,5 +78,6 @@
 
         private GroupBox gbxGameBoard;
         private TextBox txtGameResult;
+        private RichTextBox rtbEvals;
     }
 }

@@ -21,10 +21,17 @@
         string[,] Unflatten1DGrid(string[] grid);
 
         // Converts a grid row and columns into an unique "id"
+<<<<<<< HEAD
         byte ColRowToID (int col, int row = -1);
 
         (int col, int row) ColRowFromID(byte id);
 
         public sbyte NextEmptyIDInCol(string[] stringBits, int col);
+=======
+        int RowColumnToID(int row, int col);
+
+        // Gets the piece at the row and column related to unique "id"
+        string PieceAtPositionID(string[,] grid, int ID);
+>>>>>>> parent of 8fd35d5 (Added byte and string array conversion contracts)
     }
 }

@@ -7,10 +7,16 @@ namespace FourZug.Backend.UtilityEngine.UtilityEngineProcessors
     // Contains helper methods such as getting valid moves for a grid
     internal static class UtilityHelper
     {
-
-        public static string[] MakeMove(string[] stringBits, string bitsTurn, byte posID)
+        // This appears to be the source of the problem, but it clones correctly so idk
+        // This is being called somewhere multiple times which would be part of the eval
+        // This is being called somewhere multiple times which would be part of the eval
+        public static string[] MakeMove(string[] stringBitsa, string bitsTurn, byte posID)
         {
-            stringBits = (string[])stringBits.Clone();
+            string[] stringBits = (string[])stringBitsa.Clone();
+
+            int turnNum = 0;
+            for (int i = 0; i < 41; i++) if (stringBits[i] != "00") turnNum++;
+
             List<byte> validMoveIDs = MoveOptionIDs(stringBits);
 
             if (!validMoveIDs.Contains(posID))

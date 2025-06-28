@@ -153,6 +153,7 @@ namespace FourZug.Frontend.Forms
             this.playersTurn = true;
 
             // Bot makes move
+            DisplayMoveEvals("O");
             int botCol = api.BestMove(grid, "O");
             MakeBoardMove(botCol, "O");
             this.playersTurn = true;
@@ -200,6 +201,16 @@ namespace FourZug.Frontend.Forms
             }
 
             this.gameEnded = true;
+        }
+
+        public void DisplayMoveEvals(string turn)
+        {
+            Dictionary<int, int> moveEvals = api.EvalMoves(grid, turn);
+            rtbEvals.Text = $"For Player {turn}\n";
+            foreach (var entry in moveEvals)
+            {
+                rtbEvals.AppendText($"c{entry.Key} -> e{entry.Value}\n");
+            }
         }
     }
 }

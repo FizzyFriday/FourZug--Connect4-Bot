@@ -45,6 +45,7 @@ namespace FourZug.Backend.UtilityEngine.UtilityEngineAccess
         {
             return UtilityHelper.ColRowToID(col, row);
         }
+<<<<<<< HEAD
 
         // Converts 2D string grid to 1D byte grid
         public string[] Flatten2DGrid(string[,] grid)
@@ -67,5 +68,7 @@ namespace FourZug.Backend.UtilityEngine.UtilityEngineAccess
         {
             return UtilityHelper.NextSpotInCol(stringBits, col);
         }
+=======
+>>>>>>> parent of 8fd35d5 (Added byte and string array conversion contracts)
     }
 }
