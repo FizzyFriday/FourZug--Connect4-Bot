@@ -32,8 +32,10 @@ namespace FourZug.Backend.TreeManager.TreeManagerProcessors
 
 
         // Manages the Minimax searching, returning best move for grid
-        public static sbyte BestMove(string[,] grid, string currentTurn)
+        public static byte BestMove(string[,] grid, string currentTurn)
         {
+            if (heuristicsEngine == null) throw new Exception();
+
             // This should be based on pieces in grid, not a set increment
             turnNum += 2;
 
@@ -49,29 +51,33 @@ namespace FourZug.Backend.TreeManager.TreeManagerProcessors
             bool isMaximizing = currentTurn == "X" ? true : false;
             short bestReward = isMaximizing ? short.MinValue : short.MaxValue;
 
-
-            sbyte bestCol = -1;
+            byte bestCol = 0;
             List<byte>? validColumns = utilityEngine?.GetValidBoardColumns(grid);
-            if (validColumns == null) return -1;
+            if (validColumns.Count() == 0) return 0;
 
             foreach (byte validCol in validColumns)
             {
                 // Get node after move
-                Node child = CreateChild(root, validCol);
+                Node moveOption = CreateChild(root, validCol);
 
-                // Begin the search
-                short reward = Minimax(child, 1, !isMaximizing);
+                // Only allow deepening if node doesnt end game
+                var nodeSummary = heuristicsEngine.NodeSummary(moveOption);
+                short reward = 0;
+                if (nodeSummary.endsGame) reward = nodeSummary.nodeEval;
+
+                // Allow deepening
+                else reward = Minimax(moveOption, 1, !isMaximizing);
 
                 // If the move result is better than already seen
                 if (reward > bestReward && isMaximizing)
                 {
                     bestReward = reward;
-                    bestCol = (sbyte)child.lastColMove;
+                    bestCol = validCol;
                 }
                 if (reward < bestReward && !isMaximizing)
                 {
                     bestReward = reward;
-                    bestCol = (sbyte)child.lastColMove;
+                    bestCol = validCol;
                 }
             }
 
@@ -120,23 +126,16 @@ namespace FourZug.Backend.TreeManager.TreeManagerProcessors
         private static Node CreateChild(Node node, byte col)
         {
             if (utilityEngine == null) return new Node();
+            
+            // This game board is an option for the node / nextMoveBy player
+            string[,] childGrid = utilityEngine.MakeMove(node.grid, node.nextMoveBy, col);
 
-            // If this fails, it was because col parameter was invalid
-            try
-            {
-                // This game board is an option for the node / nextMoveBy player
-                string[,] childGrid = utilityEngine.MakeMove(node.grid, node.nextMoveBy, col);
+            // If node's next move by X, then for child it would be O. Vise versa for O to X
+            string childNextMoveBy = node.nextMoveBy == "X" ? "O" : "X";
 
-                // If node's next move by X, then for child it would be O. Vise versa for O to X
-                string childNextMoveBy = node.nextMoveBy == "X" ? "O" : "X";
+            nodesMade++;
 
-                nodesMade++;
-
-                return new Node(childGrid, childNextMoveBy, col);
-            }
-            catch {
-                return new Node();
-            }
+            return new Node(childGrid, childNextMoveBy, col);
         }
     }
 }
