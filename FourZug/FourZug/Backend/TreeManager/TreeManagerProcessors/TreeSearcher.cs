@@ -34,7 +34,7 @@ namespace FourZug.Backend.TreeManager.TreeManagerProcessors
         // Manages the Minimax searching, returning best move for grid
         public static byte BestMove(string[,] grid, string currentTurn)
         {
-            if (heuristicsEngine == null) throw new Exception();
+            if (heuristicsEngine == null) throw new MissingFieldException();
 
             // This should be based on pieces in grid, not a set increment
             turnNum += 2;
@@ -53,20 +53,15 @@ namespace FourZug.Backend.TreeManager.TreeManagerProcessors
 
             byte bestCol = 0;
             List<byte>? validColumns = utilityEngine?.GetValidBoardColumns(grid);
-            if (validColumns.Count() == 0) return 0;
+            if (validColumns == null) return 0;
 
             foreach (byte validCol in validColumns)
             {
-                // Get node after move
+                // Get current board move option
                 Node moveOption = CreateChild(root, validCol);
 
-                // Only allow deepening if node doesnt end game
-                var nodeSummary = heuristicsEngine.NodeSummary(moveOption);
-                short reward = 0;
-                if (nodeSummary.endsGame) reward = nodeSummary.nodeEval;
-
-                // Allow deepening
-                else reward = Minimax(moveOption, 1, !isMaximizing);
+                // Start search
+                short reward = Minimax(moveOption, 1, !isMaximizing);
 
                 // If the move result is better than already seen
                 if (reward > bestReward && isMaximizing)
@@ -89,31 +84,26 @@ namespace FourZug.Backend.TreeManager.TreeManagerProcessors
         private static short Minimax(Node node, int currentDepth, bool isMaximizing)
         {
             // Would never actually be true due to API loading all references on load
-            if (utilityEngine == null || heuristicsEngine == null) return -1;
+            if (utilityEngine == null || heuristicsEngine == null) throw new MissingFieldException();
 
-            // Leaf node - run heuristics
-            if (currentDepth == maxDepth)
-            {
-                return heuristicsEngine.NodeEval(node);
-            }
+            // Check if this node ends the game
+            var nodeSummary = heuristicsEngine.NodeSummary(node);
 
-            // Set best reward to worst possible for player
+            // Return value if ends game or leaf node
+            if (nodeSummary.endsGame || currentDepth == maxDepth) return nodeSummary.nodeEval;
+
+            // Deepen if node isn't leaf or ends game
             short bestReward = isMaximizing ? short.MinValue : short.MaxValue;
-
             List<byte> childCols = utilityEngine.GetValidBoardColumns(node.grid);
+
             foreach (byte childCol in childCols)
             {
-                // Get node after move
-                Node child = CreateChild(node, childCol);
-
-                // If the game ends from this node, return its eval
-                var nodeSummary = heuristicsEngine.NodeSummary(child);
-                if (nodeSummary.endsGame) return nodeSummary.nodeEval;
+                Node childMoveOption = CreateChild(node, childCol);
 
                 // Get best reward from deeper searches
-                short reward = Minimax(child, currentDepth + 1, !isMaximizing);
+                short reward = Minimax(childMoveOption, currentDepth + 1, !isMaximizing);
 
-                // If the reward is better than already seen
+                // If reward is better than already seen
                 if (isMaximizing) bestReward = Math.Max(reward, bestReward);
                 if (!isMaximizing) bestReward = Math.Min(reward, bestReward);
             }
