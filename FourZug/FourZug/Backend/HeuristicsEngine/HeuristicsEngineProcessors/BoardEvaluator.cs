@@ -22,10 +22,11 @@ namespace FourZug.Backend.HeuristicsEngine.HeuristicsEngineProcessors
 
         public static char GetBoardWinner(string[,] grid, string lastMoveBy, int lastColMove)
         {
-            if (utilityEngine == null) return ' ';
-            int lastRowMove = -1;
+            if (utilityEngine == null) throw new MissingFieldException();
+
 
             // Get the row the last piece fell into
+            int lastRowMove = -1;
             for (int row = grid.GetLength(1) - 1; row >= 0; row--)
             {
                 if (grid[lastColMove, row] != " ")
@@ -94,7 +95,6 @@ namespace FourZug.Backend.HeuristicsEngine.HeuristicsEngineProcessors
         public static short EvaluateNode(Node node)
         {
             string nodeLastMoveBy = node.nextMoveBy == "X" ? "O" : "X";
-
             char nodeState = GetBoardWinner(node.grid, nodeLastMoveBy, node.lastColMove);
 
             return EvaluateNodeUsingWinner(node, nodeState, nodeLastMoveBy);

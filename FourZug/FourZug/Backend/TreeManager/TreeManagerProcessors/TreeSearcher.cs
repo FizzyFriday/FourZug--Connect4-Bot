@@ -35,15 +35,8 @@ namespace FourZug.Backend.TreeManager.TreeManagerProcessors
         public static byte BestMove(string[,] grid, string currentTurn)
         {
             if (heuristicsEngine == null) throw new MissingFieldException();
-
-            // This should be based on pieces in grid, not a set increment
+       
             turnNum += 2;
-
-            // Increases the depth getting later in the game
-            if (turnNum >= 12) maxDepth = 8; // 8
-            else if (turnNum >= 14) maxDepth = 10; // 10
-            else if (turnNum >= 16) maxDepth = 16; // 16
-            else if (turnNum >= 18) maxDepth = 30;
 
             Node root = new Node(grid, currentTurn, byte.MinValue);
 
@@ -51,29 +44,30 @@ namespace FourZug.Backend.TreeManager.TreeManagerProcessors
             bool isMaximizing = currentTurn == "X" ? true : false;
             short bestReward = isMaximizing ? short.MinValue : short.MaxValue;
 
+
+
             byte bestCol = 0;
             List<byte>? validColumns = utilityEngine?.GetValidBoardColumns(grid);
-            if (validColumns == null) return 0;
+            if (validColumns == null) throw new Exception("Board is full. No 'best move'");
 
             foreach (byte validCol in validColumns)
             {
                 // Get current board move option
                 Node moveOption = CreateChild(root, validCol);
 
+                // Do a quick depth 1 check for a clear best move. Depth 1 doesnt detect losses
+                var nodeSummary = heuristicsEngine.NodeSummary(moveOption);
+                if (nodeSummary.endsGame) return validCol;
+
                 // Start search
                 short reward = Minimax(moveOption, 1, !isMaximizing);
 
-                // If the move result is better than already seen
-                if (reward > bestReward && isMaximizing)
-                {
-                    bestReward = reward;
-                    bestCol = validCol;
-                }
-                if (reward < bestReward && !isMaximizing)
-                {
-                    bestReward = reward;
-                    bestCol = validCol;
-                }
+                // Don't save reward if it isn't a new PB
+                if (isMaximizing && reward <= bestReward) continue;
+                else if (!isMaximizing && reward >= bestReward) continue;
+
+                bestReward = reward;
+                bestCol = validCol;
             }
 
             return bestCol;
@@ -83,16 +77,15 @@ namespace FourZug.Backend.TreeManager.TreeManagerProcessors
         // Runs the minimax tree searching logic
         private static short Minimax(Node node, int currentDepth, bool isMaximizing)
         {
-            // Would never actually be true due to API loading all references on load
             if (utilityEngine == null || heuristicsEngine == null) throw new MissingFieldException();
 
-            // Check if this node ends the game
-            var nodeSummary = heuristicsEngine.NodeSummary(node);
-
-            // Return value if ends game or leaf node
-            if (nodeSummary.endsGame || currentDepth == maxDepth) return nodeSummary.nodeEval;
-
-            // Deepen if node isn't leaf or ends game
+            if (currentDepth > 0)
+            {
+                // Return value of node ends game or is a leaf
+                var nodeSummary = heuristicsEngine.NodeSummary(node);
+                if (nodeSummary.endsGame || currentDepth == maxDepth) return nodeSummary.nodeEval;
+            }
+            
             short bestReward = isMaximizing ? short.MinValue : short.MaxValue;
             List<byte> childCols = utilityEngine.GetValidBoardColumns(node.grid);
 
@@ -115,7 +108,7 @@ namespace FourZug.Backend.TreeManager.TreeManagerProcessors
         // Returns a created child node given a column
         private static Node CreateChild(Node node, byte col)
         {
-            if (utilityEngine == null) return new Node();
+            if (utilityEngine == null) throw new MissingFieldException();
             
             // This game board is an option for the node / nextMoveBy player
             string[,] childGrid = utilityEngine.MakeMove(node.grid, node.nextMoveBy, col);
