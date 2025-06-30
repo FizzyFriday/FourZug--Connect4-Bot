@@ -116,10 +116,8 @@ namespace FourZug.Backend.HeuristicsEngine.HeuristicsEngineProcessors
             else return PositionEval(node.grid);
         }
 
-
-        // Returns the position score of the 2 players
-        // Returns points of maximizer take points of minimizer
-        private static short PositionEval(string[,] grid)
+        // Get eval gain from placement of 1 piece
+        public static short PlacementHeuristic(int col, int row, string pieceAtPos)
         {
             // Represents the points gained from positions taken
             // Viewing from side would correlate visually to game board and help understand array access
@@ -134,24 +132,8 @@ namespace FourZug.Backend.HeuristicsEngine.HeuristicsEngineProcessors
                 { 3, 4, 5, 5, 4, 3}
             };
 
-            // Get the points gained for each player on each position
-            short pointBalance = 0;
-            for (int col = 0; col < grid.GetLength(0); col++)
-            {
-                for (int row = 0; row < grid.GetLength(1); row++)
-                {
-                    // Add on points for the position owning player
-                    string containedPiece = grid[col, row];
-                    int positionPoints = pointTable[col, row];
-
-                    if (containedPiece == "X") pointBalance += (short)positionPoints;
-                    else if (containedPiece == "O")
-                    {
-                        pointBalance -= (short)positionPoints;
-                    }
-                }
-            }
-            return pointBalance;
+            if (pieceAtPos == "X") return pointTable[col, row];
+            else return (short)(pointTable[col, row] * -1);
         }
     }
 }

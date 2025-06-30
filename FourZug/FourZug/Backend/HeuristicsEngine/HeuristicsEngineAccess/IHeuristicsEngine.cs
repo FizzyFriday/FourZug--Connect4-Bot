@@ -19,5 +19,7 @@ namespace FourZug.Backend.HeuristicsEngine.HeuristicsEngineAccess
 
         // Return the board state as a string (Used by API)
         char BoardWinner(string[,] grid, string lastMoveBy, int lastColMove);
+
+        short EvaluateBoardPositions(string[,] grid);
     }
 }

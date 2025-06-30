@@ -40,5 +40,23 @@ namespace FourZug.Backend.HeuristicsEngine.HeuristicsEngineAccess
         {
             return BoardEvaluator.GetBoardWinner(grid, lastMoveBy, lastColMove);
         }
+
+        // Gets total placement eval using all slots
+        public static short BoardPlacementEval(string[,] grid)
+        {
+            short posEval = 0;
+
+            for (int col = 0; col < grid.GetLength(0); col++)
+            {
+                for (int row = 0; row < grid.GetLength(1); row++)
+                {
+                    string containedPiece = grid[col, row];
+                    if (containedPiece == " ") continue;
+                    posEval += BoardEvaluator.PlacementHeuristic(col, row, containedPiece);
+                }
+            }
+
+            return posEval;
+        }
     }
 }
