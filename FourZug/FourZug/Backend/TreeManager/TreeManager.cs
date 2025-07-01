@@ -29,6 +29,7 @@ namespace FourZug.Backend.TreeManagerAccess
             if (heuristicsEngine == null) throw new MissingFieldException();
 
             Node root = new Node(grid, currentTurn, byte.MinValue);
+            root.placementEval = heuristicsEngine.EvalPiecePlacements(root.grid);
 
             // Set desired points by turn and set worst possible reward to bestReward
             bool isMaximizing = currentTurn == 'X' ? true : false;
@@ -99,7 +100,7 @@ namespace FourZug.Backend.TreeManagerAccess
         // Returns a created child node given a column
         private Node CreateChild(Node node, byte colMove)
         {
-            if (utilityEngine == null) throw new MissingFieldException();
+            if (utilityEngine == null || heuristicsEngine == null) throw new MissingFieldException();
 
             // This game board is an option for the node / nextMoveBy player
             char[,] childGrid = utilityEngine.MakeMove(node.grid, node.nextMoveBy, colMove);
@@ -107,7 +108,23 @@ namespace FourZug.Backend.TreeManagerAccess
 
             nodesMade++;
 
-            return new Node(childGrid, childNextMoveBy, colMove);
+            Node child = new Node(childGrid, childNextMoveBy, colMove);
+
+            // Gets row the piece fell into
+            int pieceRow = node.grid.GetLength(1) - 1;
+            while (pieceRow >= 0)
+            {
+                if (childGrid[colMove, pieceRow] == ' ')
+                {
+                    pieceRow--;
+                }
+                else break;
+            }
+
+            int piecePlacementEvalChange = heuristicsEngine.EvalPlacement(colMove, pieceRow, node.nextMoveBy);
+            child.placementEval = (short)(node.placementEval + piecePlacementEvalChange);
+
+            return child;
         }
     }
 }

@@ -86,7 +86,7 @@ namespace FourZug.Backend.HeuristicsEngineAccess
         }
 
         // Returns placement eval of entire baord
-        private short EvalPiecePlacements(char[,] grid)
+        public short EvalPiecePlacements(char[,] grid)
         {
             short pointBalance = 0;
             for (int col = 0; col < grid.GetLength(0); col++)
@@ -158,7 +158,7 @@ namespace FourZug.Backend.HeuristicsEngineAccess
             }
 
             // (If nodeWinner == '?')
-            else return EvalPiecePlacements(node.grid);
+            else return node.placementEval;
         }        
     }
 }

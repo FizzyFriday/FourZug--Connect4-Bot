@@ -1,7 +1,7 @@
 ﻿namespace FourZug.Backend.DTOs
 {
     // Represents a node in the parent-pointer "tree"
-    public struct Node
+    public class Node
     {
         // Represents grid AFTER the {lastColMove} move
         public char[,] grid;

@@ -20,8 +20,6 @@ namespace FourZug.Backend.HeuristicsEngineAccess
         short EvalPiecePlacements(char[,] grid);
 
         // Returns eval to adjust by for new move
-        short EvalPlacement(int col, int row, char containedPiece);
-
-
+        sbyte EvalPlacement(int col, int row, char containedPiece);
     }
 }
