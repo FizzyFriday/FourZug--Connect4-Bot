@@ -11,6 +11,6 @@ namespace FourZug.Backend.TreeManagerAccess
         void InitComponentReferences(IHeuristicsEngine heuEngine, IUtilityEngine utilEngine);
 
         // Starts the Bot and returns best move results
-        int BestMove(string[,] grid, string currentTurn);
+        int BestMove(char[,] grid, char currentTurn);
     }
 }

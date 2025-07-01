@@ -15,7 +15,7 @@
          * @post:
          *      @return - Returns column of best move
          */
-        int BestMove(string[,] grid, string turn);
+        int BestMove(char[,] grid, char turn);
 
 
         /*
@@ -28,7 +28,7 @@
          *      @modify - Makes move change to grid
          *      @return - Returns changed grid
          */
-        string[,] MakeMove(string[,] grid, string turn, int col);
+        char[,] MakeMove(char[,] grid, char turn, int col);
 
 
         /*
@@ -38,7 +38,7 @@
          * @post:
          *      @return - Returns an int list of valid column moves
          */
-        List<int> GetValidMoves(string[,] grid);
+        List<int> GetValidMoves(char[,] grid);
 
 
         /*
@@ -50,6 +50,6 @@
          *      @return - Char, representing game winner (if applicable)
          *          Possiblities: 'X', 'O', 'D', '?'
          */
-        char GetGameWinner(string[,] grid, string turn, int lastColMove);
+        char GetGameWinner(char[,] grid, char turn, int lastColMove);
     }
 }

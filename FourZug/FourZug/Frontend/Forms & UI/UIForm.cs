@@ -19,7 +19,7 @@ namespace FourZug.Frontend.Forms
     // Handles UI changes
     public partial class UIForm : Form
     {
-        private string[,]? grid;
+        private char[,]? grid;
         private bool playersTurn;
         private bool gameEnded;
         private Panel[,]? boardPanels;
@@ -64,12 +64,12 @@ namespace FourZug.Frontend.Forms
 
 
             // Create an empty board
-            grid = new string[colCount, rowCount];
+            grid = new char[colCount, rowCount];
             for (int c = 0; c < colCount; c++)
             {
                 for (int r = 0; r < rowCount; r++)
                 {
-                    grid[c, r] = " ";
+                    grid[c, r] = ' ';
 
                     // Create panel
                     Panel panel = new Panel();
@@ -96,7 +96,7 @@ namespace FourZug.Frontend.Forms
         }
 
         // Displays game onto screen
-        private void DisplayBoard(string[,] grid, bool gameEnded = false)
+        private void DisplayBoard(char[,] grid, bool gameEnded = false)
         {
             if (boardPanels == null) return;
 
@@ -107,15 +107,15 @@ namespace FourZug.Frontend.Forms
                 {
                     // Using the value at each index, change colour of each panel
                     // Using the boardPanels field, and matching index
-                    string positionPiece = grid[col, row];
+                    char positionPiece = grid[col, row];
 
                     // Set colour based on piece
-                    if (positionPiece == "X")
+                    if (positionPiece == 'X')
                     {
                         Panel parallelPanel = boardPanels[col, row];
                         parallelPanel.BackColor = Color.Blue;
                     }
-                    if (positionPiece == "O")
+                    if (positionPiece == 'O')
                     {
                         Panel parallelPanel = boardPanels[col, row];
                         parallelPanel.BackColor = Color.Red;
@@ -147,19 +147,19 @@ namespace FourZug.Frontend.Forms
             if (!validCols.Contains(col)) return;
 
             // User makes move and switches turn
-            MakeBoardMove(col, "X");
+            MakeBoardMove(col, 'X');
             if (this.gameEnded) return;
             this.playersTurn = false;
 
             // Bot makes move
-            int botCol = FourZugAPI.BestMove(grid, "O");
-            MakeBoardMove(botCol, "O");
+            int botCol = FourZugAPI.BestMove(grid, 'O');
+            MakeBoardMove(botCol, 'O');
             this.playersTurn = true;
             
         }
 
         // Makes a move on the board, and returns if the game ended
-        private void MakeBoardMove(int col, string turn)
+        private void MakeBoardMove(int col, char turn)
         {
             if (grid == null) return;
 

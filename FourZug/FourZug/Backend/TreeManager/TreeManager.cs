@@ -23,14 +23,14 @@ namespace FourZug.Backend.TreeManagerAccess
         }
 
         // Manages the Minimax searching, returning best move for grid
-        public int BestMove(string[,] grid, string currentTurn)
+        public int BestMove(char[,] grid, char currentTurn)
         {
             if (heuristicsEngine == null) throw new MissingFieldException();
 
             Node root = new Node(grid, currentTurn, byte.MinValue);
 
             // Set desired points by turn and set worst possible reward to bestReward
-            bool isMaximizing = currentTurn == "X" ? true : false;
+            bool isMaximizing = currentTurn == 'X' ? true : false;
             short bestReward = isMaximizing ? short.MinValue : short.MaxValue;
 
             byte bestCol = 0;
@@ -101,8 +101,8 @@ namespace FourZug.Backend.TreeManagerAccess
             if (utilityEngine == null) throw new MissingFieldException();
 
             // This game board is an option for the node / nextMoveBy player
-            string[,] childGrid = utilityEngine.MakeMove(node.grid, node.nextMoveBy, colMove);
-            string childNextMoveBy = node.nextMoveBy == "X" ? "O" : "X";
+            char[,] childGrid = utilityEngine.MakeMove(node.grid, node.nextMoveBy, colMove);
+            char childNextMoveBy = node.nextMoveBy == 'X' ? 'O' : 'X';
 
             nodesMade++;
 

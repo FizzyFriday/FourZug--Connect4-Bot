@@ -45,7 +45,7 @@ namespace FourZug.APIAccess
          * @post:
          *      @return - Returns column of best move
          */
-        public int BestMove(string[,] grid, string turn)
+        public int BestMove(char[,] grid, char turn)
         {
             return this.treeManager.BestMove(grid, turn);
         }
@@ -61,7 +61,7 @@ namespace FourZug.APIAccess
          *      @modify - Makes move change to grid
          *      @return - Returns changed grid
          */
-        public string[,] MakeMove(string[,] grid, string turn, int col)
+        public char[,] MakeMove(char[,] grid, char turn, int col)
         {
             return this.utilityEngine.MakeMove(grid, turn, col);
         }
@@ -74,7 +74,7 @@ namespace FourZug.APIAccess
          * @post:
          *      @return - Returns an int list of valid column moves
          */
-        public List<int> GetValidMoves(string[,] grid)
+        public List<int> GetValidMoves(char[,] grid)
         {
             List<byte> byteValidColumns = this.utilityEngine.GetValidMoves(grid);
 
@@ -98,7 +98,7 @@ namespace FourZug.APIAccess
          *      @return - String, representing state of game 
          *          String can be: Win (for current player), Draw or StillInPlay
          */
-        public char GetGameWinner(string[,] grid, string turn, int lastColMove)
+        public char GetGameWinner(char[,] grid, char turn, int lastColMove)
         {
             return this.heuristicsEngine.BoardWinner(grid, turn, lastColMove);
         }

@@ -21,17 +21,17 @@ namespace FourZug.Backend.HeuristicsEngineAccess
         // Returns the evaluation of a node
         public short NodeEval(Node node)
         {
-            string nodeLastMoveBy = node.nextMoveBy == "X" ? "O" : "X";
-            char nodeState = BoardWinner(node.grid, nodeLastMoveBy, node.lastColMove);
+            char nodeLastMoveBy = node.nextMoveBy == 'X' ? 'O' : 'X';
+            char nodeWinner = BoardWinner(node.grid, nodeLastMoveBy, node.lastColMove);
 
-            return EvaluateNodeUsingWinner(node, nodeState, nodeLastMoveBy);
+            return EvaluateNodeUsingWinner(node, nodeWinner, nodeLastMoveBy);
         }
 
         // Returns if game ends and the evaluation of a node
         public (bool endsGame, short nodeEval) NodeSummary(Node node)
         {
             // If next move is by X, then last was by O. Same for O to X
-            string nodeLastMoveBy = node.nextMoveBy == "X" ? "O" : "X";
+            char nodeLastMoveBy = node.nextMoveBy == 'X' ? 'O' : 'X';
 
             char nodeWinner = BoardWinner(node.grid, nodeLastMoveBy, node.lastColMove);
 
@@ -42,7 +42,7 @@ namespace FourZug.Backend.HeuristicsEngineAccess
         }
 
         // Return the game winner
-        public char BoardWinner(string[,] grid, string lastMoveBy, int lastColMove)
+        public char BoardWinner(char[,] grid, char lastMoveBy, int lastColMove)
         {
             if (utilEngine == null) throw new MissingFieldException();
 
@@ -51,7 +51,7 @@ namespace FourZug.Backend.HeuristicsEngineAccess
             int lastRowMove = -1;
             for (int row = grid.GetLength(1) - 1; row >= 0; row--)
             {
-                if (grid[lastColMove, row] != " ")
+                if (grid[lastColMove, row] != ' ')
                 {
                     lastRowMove = row;
                     break;
@@ -75,15 +75,12 @@ namespace FourZug.Backend.HeuristicsEngineAccess
 
                     if (isValidID(piecePositionID, pointedID))
                     {
-                        string pieceAtPosition = utilEngine.PieceAtPositionID(grid, pointedID);
+                        char pieceAtPosition = utilEngine.PieceAtPositionID(grid, pointedID);
                         if (pieceAtPosition == lastMoveBy) connectedPieces++;
                         else connectedPieces = 0;
 
-                        if (connectedPieces == 4)
-                        {
-                            if (lastMoveBy == "X") return 'X';
-                            else return 'O';
-                        }
+                        // Return that the last move owner is winner
+                        if (connectedPieces == 4) return lastMoveBy;
                     }
                     else connectedPieces = 0;
                 }
@@ -119,7 +116,7 @@ namespace FourZug.Backend.HeuristicsEngineAccess
             return true;
         }
 
-        private short EvaluateNodeUsingWinner(Node node, char nodeWinner, string nodeLastMoveBy)
+        private short EvaluateNodeUsingWinner(Node node, char nodeWinner, char nodeLastMoveBy)
         {
             const short winGain = 1000, drawGain = -500;
             if (nodeWinner == 'X') return winGain;
@@ -127,7 +124,7 @@ namespace FourZug.Backend.HeuristicsEngineAccess
 
             if (nodeWinner == 'D')
             {
-                if (nodeLastMoveBy == "X") return -1 * drawGain;
+                if (nodeLastMoveBy == 'X') return -1 * drawGain;
                 else return drawGain;
             }
 
@@ -136,7 +133,7 @@ namespace FourZug.Backend.HeuristicsEngineAccess
         }
 
         // Returns piece placement value gain of a slot
-        private short PositionEval(string[,] grid)
+        private short PositionEval(char[,] grid)
         {
             // Represents the points gained from positions taken
             // Viewing from side would correlate visually to game board and help understand array access
@@ -158,11 +155,11 @@ namespace FourZug.Backend.HeuristicsEngineAccess
                 for (int row = 0; row < grid.GetLength(1); row++)
                 {
                     // Add on points for the position owning player
-                    string containedPiece = grid[col, row];
+                    char containedPiece = grid[col, row];
                     int positionPoints = pointTable[col, row];
 
-                    if (containedPiece == "X") pointBalance += (short)positionPoints;
-                    else if (containedPiece == "O")
+                    if (containedPiece == 'X') pointBalance += (short)positionPoints;
+                    else if (containedPiece == 'O')
                     {
                         pointBalance -= (short)positionPoints;
                     }

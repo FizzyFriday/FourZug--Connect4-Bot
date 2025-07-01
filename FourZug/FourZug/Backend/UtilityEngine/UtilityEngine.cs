@@ -18,7 +18,7 @@ namespace FourZug.Backend.ta
         }
 
         // Gets the piece at the row and column related to unique "id"
-        public string PieceAtPositionID(string[,] grid, int ID)
+        public char PieceAtPositionID(char[,] grid, int ID)
         {
             const byte idGainFromCol = 6;
             int col = ID / idGainFromCol, row = ID % idGainFromCol;
@@ -26,10 +26,10 @@ namespace FourZug.Backend.ta
         }
 
         // Makes a move onto a grid, and returns the new grid
-        public string[,] MakeMove(string[,] grid, string turn, int col)
+        public char[,] MakeMove(char[,] grid, char turn, int col)
         {
             // Clones grid so value is used not reference
-            grid = (string[,])grid.Clone();
+            grid = (char[,])grid.Clone();
 
             // Returns valid column moves
             List<byte> validColumns = GetValidMoves(grid);
@@ -47,7 +47,7 @@ namespace FourZug.Backend.ta
             // Result is the row the piece should fall into (via gravity)
             while (currentRow > 0)
             {
-                if (grid[col, currentRow - 1] == " ")
+                if (grid[col, currentRow - 1] == ' ')
                 {
                     currentRow--;
                 }
@@ -60,7 +60,7 @@ namespace FourZug.Backend.ta
         }
 
         // Returns all valid columns in the game
-        public List<byte> GetValidMoves(string[,] grid)
+        public List<byte> GetValidMoves(char[,] grid)
         {
             List<byte> validCols = new();
 
@@ -69,7 +69,7 @@ namespace FourZug.Backend.ta
             {
                 // If the toprow is empty, col is valid
                 int topRow = grid.GetLength(1) - 1;
-                if (grid[col, topRow] == " ")
+                if (grid[col, topRow] == ' ')
                 {
                     validCols.Add(col);
                 }
