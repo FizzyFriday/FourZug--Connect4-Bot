@@ -35,7 +35,7 @@ namespace FourZug.Backend.ta
             List<byte> validColumns = GetValidMoves(grid);
 
             // Checks if inputted column is a valid move
-            if (validColumns.IndexOf((byte)col) == -1)
+            if (!validColumns.Contains((byte)col))
             {
                 throw new Exception("Invalid column move made on grid");
             }

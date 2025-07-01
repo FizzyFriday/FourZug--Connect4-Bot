@@ -1,5 +1,6 @@
 ﻿using FourZug.Backend.DTOs;
 using FourZug.Backend.ta;
+using System.Reflection.Metadata.Ecma335;
 
 namespace FourZug.Backend.HeuristicsEngineAccess
 {
@@ -129,15 +130,31 @@ namespace FourZug.Backend.HeuristicsEngineAccess
             }
 
             // (If nodeWinner == '?')
-            else return PositionEval(node.grid);
+            else return EvalPiecePlacements(node.grid);
+        }
+
+        private short EvalPiecePlacements(char[,] grid)
+        {
+            short pointBalance = 0;
+            for (int col = 0; col < grid.GetLength(0); col++)
+            {
+                for (int row = 0; row < grid.GetLength(1); row++)
+                {
+                    char containedPiece = grid[col, row];
+                    if (containedPiece == ' ') continue;
+                    pointBalance += EvalPlacement(col, row, containedPiece);
+                }
+            }
+
+            return pointBalance;
         }
 
         // Returns piece placement value gain of a slot
-        private short PositionEval(char[,] grid)
+        private sbyte EvalPlacement(int col, int row, char containedPiece)
         {
             // Represents the points gained from positions taken
             // Viewing from side would correlate visually to game board and help understand array access
-            byte[,] pointTable = new byte[7, 6]
+            sbyte[,] pointTable = new sbyte[7, 6]
             {
                 { 3, 4, 5, 5, 4, 3},
                 { 4, 6, 8, 8, 6, 4 },
@@ -148,24 +165,9 @@ namespace FourZug.Backend.HeuristicsEngineAccess
                 { 3, 4, 5, 5, 4, 3}
             };
 
-            // Get the points gained for each player on each position
-            short pointBalance = 0;
-            for (int col = 0; col < grid.GetLength(0); col++)
-            {
-                for (int row = 0; row < grid.GetLength(1); row++)
-                {
-                    // Add on points for the position owning player
-                    char containedPiece = grid[col, row];
-                    int positionPoints = pointTable[col, row];
+            if (containedPiece == 'X') return pointTable[col, row];
+            else return (sbyte)(pointTable[col, row] * -1);
 
-                    if (containedPiece == 'X') pointBalance += (short)positionPoints;
-                    else if (containedPiece == 'O')
-                    {
-                        pointBalance -= (short)positionPoints;
-                    }
-                }
-            }
-            return pointBalance;
         }        
     }
 }
