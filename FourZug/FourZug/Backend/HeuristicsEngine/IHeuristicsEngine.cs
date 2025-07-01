@@ -16,6 +16,12 @@ namespace FourZug.Backend.HeuristicsEngineAccess
         // Return the board state as a string (Used by API)
         char BoardWinner(char[,] grid, char lastMoveBy, int lastColMove);
 
+        // Returns eval of entire board
+        short EvalPiecePlacements(char[,] grid);
+
+        // Returns eval to adjust by for new move
+        short EvalPlacement(int col, int row, char containedPiece);
+
 
     }
 }

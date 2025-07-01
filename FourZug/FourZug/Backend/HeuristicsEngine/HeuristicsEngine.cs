@@ -85,6 +85,43 @@ namespace FourZug.Backend.HeuristicsEngineAccess
             else return '?';
         }
 
+        // Returns placement eval of entire baord
+        private short EvalPiecePlacements(char[,] grid)
+        {
+            short pointBalance = 0;
+            for (int col = 0; col < grid.GetLength(0); col++)
+            {
+                for (int row = 0; row < grid.GetLength(1); row++)
+                {
+                    char containedPiece = grid[col, row];
+                    if (containedPiece == ' ') continue;
+                    pointBalance += EvalPlacement(col, row, containedPiece);
+                }
+            }
+
+            return pointBalance;
+        }
+
+        // Returns piece placement value gain of a slot
+        public sbyte EvalPlacement(int col, int row, char containedPiece)
+        {
+            // Represents the points gained from positions taken
+            // Viewing from side would correlate visually to game board and help understand array access
+            sbyte[,] pointTable = new sbyte[7, 6]
+            {
+                { 3, 4, 5, 5, 4, 3},
+                { 4, 6, 8, 8, 6, 4 },
+                { 5, 8, 11, 11, 8, 5 },
+                { 7, 10, 13, 13, 10, 7 },
+                { 5, 8, 11, 11, 8, 5 },
+                { 4, 6, 8, 8, 6, 4 },
+                { 3, 4, 5, 5, 4, 3}
+            };
+
+            if (containedPiece == 'X') return pointTable[col, row];
+            else return (sbyte)(pointTable[col, row] * -1);
+
+        }
 
 
         // PRIVATE HELPER METHODS
@@ -122,43 +159,6 @@ namespace FourZug.Backend.HeuristicsEngineAccess
 
             // (If nodeWinner == '?')
             else return EvalPiecePlacements(node.grid);
-        }
-
-        private short EvalPiecePlacements(char[,] grid)
-        {
-            short pointBalance = 0;
-            for (int col = 0; col < grid.GetLength(0); col++)
-            {
-                for (int row = 0; row < grid.GetLength(1); row++)
-                {
-                    char containedPiece = grid[col, row];
-                    if (containedPiece == ' ') continue;
-                    pointBalance += EvalPlacement(col, row, containedPiece);
-                }
-            }
-
-            return pointBalance;
-        }
-
-        // Returns piece placement value gain of a slot
-        private sbyte EvalPlacement(int col, int row, char containedPiece)
-        {
-            // Represents the points gained from positions taken
-            // Viewing from side would correlate visually to game board and help understand array access
-            sbyte[,] pointTable = new sbyte[7, 6]
-            {
-                { 3, 4, 5, 5, 4, 3},
-                { 4, 6, 8, 8, 6, 4 },
-                { 5, 8, 11, 11, 8, 5 },
-                { 7, 10, 13, 13, 10, 7 },
-                { 5, 8, 11, 11, 8, 5 },
-                { 4, 6, 8, 8, 6, 4 },
-                { 3, 4, 5, 5, 4, 3}
-            };
-
-            if (containedPiece == 'X') return pointTable[col, row];
-            else return (sbyte)(pointTable[col, row] * -1);
-
         }        
     }
 }

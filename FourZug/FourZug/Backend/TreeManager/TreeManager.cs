@@ -13,6 +13,7 @@ namespace FourZug.Backend.TreeManagerAccess
         private const byte maxDepth = 7;
         private int nodesMade = 1; // 1 because of root
 
+
         // INTERFACE CONTRACTS
 
         // Call component scripts to create their references
