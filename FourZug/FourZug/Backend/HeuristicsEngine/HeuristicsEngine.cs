@@ -19,15 +19,6 @@ namespace FourZug.Backend.HeuristicsEngineAccess
             this.utilEngine = utilEngine;
         }
 
-        // Returns the evaluation of a node
-        public short NodeEval(Node node)
-        {
-            char nodeLastMoveBy = node.nextMoveBy == 'X' ? 'O' : 'X';
-            char nodeWinner = BoardWinner(node.grid, nodeLastMoveBy, node.lastColMove);
-
-            return EvaluateNodeUsingWinner(node, nodeWinner, nodeLastMoveBy);
-        }
-
         // Returns if game ends and the evaluation of a node
         public (bool endsGame, short nodeEval) NodeSummary(Node node)
         {
@@ -36,7 +27,7 @@ namespace FourZug.Backend.HeuristicsEngineAccess
 
             char nodeWinner = BoardWinner(node.grid, nodeLastMoveBy, node.lastColMove);
 
-            short nodeEval = EvaluateNodeUsingWinner(node, nodeWinner, nodeLastMoveBy);
+            short nodeEval = EvalNodeUsingWinner(node, nodeWinner, nodeLastMoveBy);
 
             if (nodeWinner != '?') return (true, nodeEval);
             else return (false, nodeEval);
@@ -117,7 +108,7 @@ namespace FourZug.Backend.HeuristicsEngineAccess
             return true;
         }
 
-        private short EvaluateNodeUsingWinner(Node node, char nodeWinner, char nodeLastMoveBy)
+        private short EvalNodeUsingWinner(Node node, char nodeWinner, char nodeLastMoveBy)
         {
             const short winGain = 1000, drawGain = -500;
             if (nodeWinner == 'X') return winGain;

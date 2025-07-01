@@ -12,6 +12,9 @@
         // Represents the last column move that made this board
         public byte lastColMove;
 
+        // Represents the piece placement eval of node
+        public short placementEval = 0;
+
         public Node(char[,] grid, char currentTurn, byte lastColMove)
         {
             this.grid = grid;
