@@ -1,7 +1,7 @@
-﻿using FourZug.Backend.HeuristicsEngine.HeuristicsEngineAccess;
-using FourZug.Backend.UtilityEngine.UtilityEngineAccess;
+﻿using FourZug.Backend.HeuristicsEngineAccess;
+using FourZug.Backend.ta;
 
-namespace FourZug.Backend.TreeManager.TreeManagerAccess
+namespace FourZug.Backend.TreeManagerAccess
 {
     // The interface blueprint of the component
 
@@ -11,6 +11,6 @@ namespace FourZug.Backend.TreeManager.TreeManagerAccess
         void InitComponentReferences(IHeuristicsEngine heuEngine, IUtilityEngine utilEngine);
 
         // Starts the Bot and returns best move results
-        int GetBotBestMove(string[,] grid, string currentTurn);
+        int BestMove(string[,] grid, string currentTurn);
     }
 }

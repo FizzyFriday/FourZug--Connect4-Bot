@@ -1,42 +1,31 @@
 ﻿using FourZug.Backend.DTOs;
-using FourZug.Backend.HeuristicsEngine.HeuristicsEngineAccess;
-using FourZug.Backend.UtilityEngine.UtilityEngineAccess;
-using System.Windows.Forms.VisualStyles;
+using FourZug.Backend.HeuristicsEngineAccess;
+using FourZug.Backend.ta;
 
-/*
- * Has access permission for assemblies:
- *     HeuristicsEngineAccess
- *     UtilityEngineAccess
- */
-
-
-namespace FourZug.Backend.TreeManager.TreeManagerProcessors
+namespace FourZug.Backend.TreeManagerAccess
 {
-    internal static class TreeSearcher
+    // The implemented interface of the component
+
+    public class TreeManager : ITreeManager
     {
-        // - PARAMETERS -
-        private static byte maxDepth = 7;
-        private static byte turnNum = 0;
+        private IHeuristicsEngine? heuristicsEngine;
+        private IUtilityEngine? utilityEngine;
+        private const byte maxDepth = 7;
+        private int nodesMade = 1; // 1 because of root
 
-        private static int nodesMade = 1; // 1 because of root
-        
-        private static IHeuristicsEngine? heuristicsEngine;
-        private static IUtilityEngine? utilityEngine;
+        // INTERFACE CONTRACTS
 
-
-        public static void LoadReferences(IHeuristicsEngine heuEngine, IUtilityEngine utilEngine)
+        // Call component scripts to create their references
+        public void InitComponentReferences(IHeuristicsEngine heuEngine, IUtilityEngine utilEngine)
         {
             heuristicsEngine = heuEngine;
             utilityEngine = utilEngine;
         }
 
-
         // Manages the Minimax searching, returning best move for grid
-        public static byte BestMove(string[,] grid, string currentTurn)
+        public int BestMove(string[,] grid, string currentTurn)
         {
             if (heuristicsEngine == null) throw new MissingFieldException();
-       
-            turnNum += 2;
 
             Node root = new Node(grid, currentTurn, byte.MinValue);
 
@@ -44,10 +33,8 @@ namespace FourZug.Backend.TreeManager.TreeManagerProcessors
             bool isMaximizing = currentTurn == "X" ? true : false;
             short bestReward = isMaximizing ? short.MinValue : short.MaxValue;
 
-
-
             byte bestCol = 0;
-            List<byte>? validColumns = utilityEngine?.GetValidBoardColumns(grid);
+            List<byte>? validColumns = utilityEngine?.GetValidMoves(grid);
             if (validColumns == null) throw new Exception("Board is full. No 'best move'");
 
             foreach (byte validCol in validColumns)
@@ -74,8 +61,11 @@ namespace FourZug.Backend.TreeManager.TreeManagerProcessors
         }
 
 
+
+        // PRIVATE HELPER METHODS
+
         // Runs the minimax tree searching logic
-        private static short Minimax(Node node, int currentDepth, bool isMaximizing)
+        private short Minimax(Node node, int currentDepth, bool isMaximizing)
         {
             if (utilityEngine == null || heuristicsEngine == null) throw new MissingFieldException();
 
@@ -85,9 +75,9 @@ namespace FourZug.Backend.TreeManager.TreeManagerProcessors
                 var nodeSummary = heuristicsEngine.NodeSummary(node);
                 if (nodeSummary.endsGame || currentDepth == maxDepth) return nodeSummary.nodeEval;
             }
-            
+
             short bestReward = isMaximizing ? short.MinValue : short.MaxValue;
-            List<byte> childCols = utilityEngine.GetValidBoardColumns(node.grid);
+            List<byte> childCols = utilityEngine.GetValidMoves(node.grid);
 
             foreach (byte childCol in childCols)
             {
@@ -106,19 +96,17 @@ namespace FourZug.Backend.TreeManager.TreeManagerProcessors
 
         // Make sure col is valid before calling
         // Returns a created child node given a column
-        private static Node CreateChild(Node node, byte col)
+        private Node CreateChild(Node node, byte colMove)
         {
             if (utilityEngine == null) throw new MissingFieldException();
-            
-            // This game board is an option for the node / nextMoveBy player
-            string[,] childGrid = utilityEngine.MakeMove(node.grid, node.nextMoveBy, col);
 
-            // If node's next move by X, then for child it would be O. Vise versa for O to X
+            // This game board is an option for the node / nextMoveBy player
+            string[,] childGrid = utilityEngine.MakeMove(node.grid, node.nextMoveBy, colMove);
             string childNextMoveBy = node.nextMoveBy == "X" ? "O" : "X";
 
             nodesMade++;
 
-            return new Node(childGrid, childNextMoveBy, col);
+            return new Node(childGrid, childNextMoveBy, colMove);
         }
     }
 }

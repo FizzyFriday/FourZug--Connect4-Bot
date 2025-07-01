@@ -1,8 +1,7 @@
 ﻿using FourZug.Backend.DTOs;
-using FourZug.Backend.UtilityEngine.UtilityEngineAccess;
+using FourZug.Backend.ta;
 
-
-namespace FourZug.Backend.HeuristicsEngine.HeuristicsEngineAccess
+namespace FourZug.Backend.HeuristicsEngineAccess
 {
     // The interface blueprint of the component
 
@@ -19,7 +18,5 @@ namespace FourZug.Backend.HeuristicsEngine.HeuristicsEngineAccess
 
         // Return the board state as a string (Used by API)
         char BoardWinner(string[,] grid, string lastMoveBy, int lastColMove);
-
-        short EvaluateBoardPositions(string[,] grid);
     }
 }

@@ -1,22 +1,41 @@
-﻿namespace FourZug.Backend.UtilityEngine.UtilityEngineProcessors
-{
-    // The actual processor of the component
+﻿using Accessibility;
 
-    // Contains helper methods such as getting valid moves for a grid
-    internal static class UtilityHelper
+namespace FourZug.Backend.ta
+{
+    // The implemented interface of the component
+
+    public class UtilityEngine : IUtilityEngine
     {
+        // INTERFACE CONTRACTS
+
+        // Converts a grid row and columns into an unique "id"
+        public int RowColumnToID(int row, int col)
+        {
+            const byte idGainFromCol = 6;
+            int id = idGainFromCol * col + row;
+
+            return id;
+        }
+
+        // Gets the piece at the row and column related to unique "id"
+        public string PieceAtPositionID(string[,] grid, int ID)
+        {
+            const byte idGainFromCol = 6;
+            int col = ID / idGainFromCol, row = ID % idGainFromCol;
+            return grid[col, row];
+        }
 
         // Makes a move onto a grid, and returns the new grid
-        public static string[,] MakeMove(string[,] grid, string turn, int col)
+        public string[,] MakeMove(string[,] grid, string turn, int col)
         {
             // Clones grid so value is used not reference
             grid = (string[,])grid.Clone();
 
             // Returns valid column moves
-            List<byte> validColumns = ValidColumns(grid);
+            List<byte> validColumns = GetValidMoves(grid);
 
             // Checks if inputted column is a valid move
-            if (!validColumns.Contains((byte)col))
+            if (validColumns.IndexOf((byte)col) == -1)
             {
                 throw new Exception("Invalid column move made on grid");
             }
@@ -41,7 +60,7 @@
         }
 
         // Returns all valid columns in the game
-        public static List<byte> ValidColumns(string[,] grid)
+        public List<byte> GetValidMoves(string[,] grid)
         {
             List<byte> validCols = new();
 

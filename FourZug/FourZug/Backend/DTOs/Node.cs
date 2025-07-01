@@ -3,7 +3,7 @@
     // Represents a node in the parent-pointer "tree"
     public struct Node
     {
-        // Represents grid AFTER a move
+        // Represents grid AFTER the {lastColMove} move
         public string[,] grid;
 
         // Represents who makes the next move (who's turn it is)

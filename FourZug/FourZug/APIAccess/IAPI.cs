@@ -38,7 +38,7 @@
          * @post:
          *      @return - Returns an int list of valid column moves
          */
-        List<int> ValidBoardColumns(string[,] grid);
+        List<int> GetValidMoves(string[,] grid);
 
 
         /*

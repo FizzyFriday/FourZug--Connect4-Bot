@@ -1,6 +1,6 @@
-﻿using FourZug.Backend.HeuristicsEngine.HeuristicsEngineAccess;
-using FourZug.Backend.UtilityEngine.UtilityEngineAccess;
-using FourZug.Backend.TreeManager.TreeManagerAccess;
+﻿using FourZug.Backend.HeuristicsEngineAccess;
+using FourZug.Backend.TreeManagerAccess;
+using FourZug.Backend.ta;
 
 /*
  * Has access permission for assemblies:
@@ -47,7 +47,7 @@ namespace FourZug.APIAccess
          */
         public int BestMove(string[,] grid, string turn)
         {
-            return this.treeManager.GetBotBestMove(grid, turn);
+            return this.treeManager.BestMove(grid, turn);
         }
 
 
@@ -74,9 +74,9 @@ namespace FourZug.APIAccess
          * @post:
          *      @return - Returns an int list of valid column moves
          */
-        public List<int> ValidBoardColumns(string[,] grid)
+        public List<int> GetValidMoves(string[,] grid)
         {
-            List<byte> byteValidColumns = this.utilityEngine.GetValidBoardColumns(grid);
+            List<byte> byteValidColumns = this.utilityEngine.GetValidMoves(grid);
 
             // Creates an List<int> copy of the byte list
             List<int> intValidColumns = new();

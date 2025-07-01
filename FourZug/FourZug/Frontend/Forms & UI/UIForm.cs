@@ -8,8 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using FourZug.APIAccess;
-using FourZug.Backend.HeuristicsEngine;
-using FourZug.Backend.TreeManager.TreeManagerProcessors;
+
 
 namespace FourZug.Frontend.Forms
 {
@@ -26,7 +25,7 @@ namespace FourZug.Frontend.Forms
         private Panel[,]? boardPanels;
 
         // A reference to the API. Also loads the backend references
-        private API api = new();
+        private readonly API FourZugAPI = new();
 
 
 
@@ -144,8 +143,8 @@ namespace FourZug.Frontend.Forms
             int col = (int)tag;
 
             // Check if column is valid
-            List<int> validCols = api.ValidBoardColumns(grid);
-            if (validCols.IndexOf(col) == -1) return;
+            List<int> validCols = FourZugAPI.GetValidMoves(grid);
+            if (!validCols.Contains(col)) return;
 
             // User makes move and switches turn
             MakeBoardMove(col, "X");
@@ -153,7 +152,7 @@ namespace FourZug.Frontend.Forms
             this.playersTurn = false;
 
             // Bot makes move
-            int botCol = api.BestMove(grid, "O");
+            int botCol = FourZugAPI.BestMove(grid, "O");
             MakeBoardMove(botCol, "O");
             this.playersTurn = true;
             
@@ -165,11 +164,11 @@ namespace FourZug.Frontend.Forms
             if (grid == null) return;
 
             // Make move and display
-            this.grid = api.MakeMove(grid, turn, col);
+            this.grid = FourZugAPI.MakeMove(grid, turn, col);
             DisplayBoard(grid);
 
             // Handle the board state after making move
-            char gameWinner = api.GetGameWinner(grid, turn, col);
+            char gameWinner = FourZugAPI.GetGameWinner(grid, turn, col);
             if (gameWinner != '?')
             {
                 // End the game

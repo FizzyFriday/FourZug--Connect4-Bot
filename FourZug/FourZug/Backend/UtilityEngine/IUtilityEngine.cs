@@ -1,4 +1,4 @@
-﻿namespace FourZug.Backend.UtilityEngine.UtilityEngineAccess
+﻿namespace FourZug.Backend.ta
 {
     // The interface blueprint of the component
 
@@ -8,7 +8,7 @@
         string[,] MakeMove(string[,] grid, string turn, int col);
 
         // Returns all valid columns provided a game board
-        List<byte> GetValidBoardColumns(string[,] grid);
+        List<byte> GetValidMoves(string[,] grid);
 
         // Converts a grid row and columns into an unique "id"
         int RowColumnToID(int row, int col);
