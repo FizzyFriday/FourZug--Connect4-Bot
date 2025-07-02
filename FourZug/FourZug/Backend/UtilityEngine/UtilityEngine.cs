@@ -60,10 +60,12 @@ namespace FourZug.Backend.UtilityEngineAccess
             for (int col = 0; col < 7; col++)
             {
                 rowAvailability[col] = -1;
-                for (int row = grid.GetLength(1); row > 0; row--)
+                int row = grid.GetLength(1);
+                while (grid[col, row - 1] == ' ')
                 {
-                    if (grid[col, row - 1] != ' ') rowAvailability[col] = row - 1;
-                    else break;
+                    row--;
+                    rowAvailability[col] = row;
+                    if (row == 0) break;
                 }
             }
             return rowAvailability;
