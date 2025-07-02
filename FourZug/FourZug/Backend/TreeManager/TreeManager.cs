@@ -1,6 +1,6 @@
 ﻿using FourZug.Backend.DTOs;
 using FourZug.Backend.HeuristicsEngineAccess;
-using FourZug.Backend.ta;
+using FourZug.Backend.UtilityEngineAccess;
 
 namespace FourZug.Backend.TreeManagerAccess
 {
@@ -28,8 +28,7 @@ namespace FourZug.Backend.TreeManagerAccess
         {
             if (heuristicsEngine == null) throw new MissingFieldException();
 
-            Node root = new Node(grid, currentTurn, byte.MinValue);
-            root.placementEval = heuristicsEngine.EvalPiecePlacements(root.grid);
+            Node root = CreateRoot(grid, currentTurn);
 
             // Set desired points by turn and set worst possible reward to bestReward
             bool isMaximizing = currentTurn == 'X' ? true : false;
@@ -103,28 +102,40 @@ namespace FourZug.Backend.TreeManagerAccess
             if (utilityEngine == null || heuristicsEngine == null) throw new MissingFieldException();
 
             // This game board is an option for the node / nextMoveBy player
-            char[,] childGrid = utilityEngine.MakeMove(node.grid, node.nextMoveBy, colMove);
+            char[,] childGrid = utilityEngine.MakeMove(node.grid, node.nextMoveBy, colMove, node.availableColRows[colMove]);
             char childNextMoveBy = node.nextMoveBy == 'X' ? 'O' : 'X';
+            int[] newAvailability = AdjustAvailableRows(colMove, node.availableColRows);
 
             nodesMade++;
 
-            Node child = new Node(childGrid, childNextMoveBy, colMove);
+            Node child = new Node(childGrid, childNextMoveBy, newAvailability, (sbyte)colMove);
 
-            // Gets row the piece fell into
-            int pieceRow = node.grid.GetLength(1) - 1;
-            while (pieceRow >= 0)
-            {
-                if (childGrid[colMove, pieceRow] == ' ')
-                {
-                    pieceRow--;
-                }
-                else break;
-            }
+            int pieceRow = newAvailability[colMove] - 1;
 
             int piecePlacementEvalChange = heuristicsEngine.EvalPlacement(colMove, pieceRow, node.nextMoveBy);
             child.placementEval = (short)(node.placementEval + piecePlacementEvalChange);
 
             return child;
+        }
+
+        // Handles creation of a root node
+        private Node CreateRoot(char[,] grid, char currentTurn)
+        {
+            if (utilityEngine == null || heuristicsEngine == null) throw new MissingFieldException();
+
+            // Get the next height a piece falls into for each col
+            int[] availableRows = utilityEngine.GetAvailableRows(grid);
+
+            Node root = new Node(grid, currentTurn, availableRows, -1);
+            root.placementEval = heuristicsEngine.EvalPiecePlacements(root.grid);
+            return root;
+        }
+
+        private int[] AdjustAvailableRows(int col, int[] rowAvailability)
+        {
+            rowAvailability[col]++;
+            if (rowAvailability[col] == 6) rowAvailability[col] = -1;
+            return rowAvailability;
         }
     }
 }

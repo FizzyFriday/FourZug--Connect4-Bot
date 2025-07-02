@@ -1,6 +1,6 @@
 ﻿using FourZug.Backend.HeuristicsEngineAccess;
 using FourZug.Backend.TreeManagerAccess;
-using FourZug.Backend.ta;
+using FourZug.Backend.UtilityEngineAccess;
 
 /*
  * Has access permission for assemblies:
@@ -63,7 +63,8 @@ namespace FourZug.APIAccess
          */
         public char[,] MakeMove(char[,] grid, char turn, int col)
         {
-            return this.utilityEngine.MakeMove(grid, turn, col);
+            int[] availableRows = this.utilityEngine.GetAvailableRows(grid);
+            return this.utilityEngine.MakeMove(grid, turn, col, availableRows[col]);
         }
 
 

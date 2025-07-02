@@ -1,6 +1,6 @@
 ﻿using Accessibility;
 
-namespace FourZug.Backend.ta
+namespace FourZug.Backend.UtilityEngineAccess
 {
     // The implemented interface of the component
 
@@ -26,36 +26,18 @@ namespace FourZug.Backend.ta
         }
 
         // Makes a move onto a grid, and returns the new grid
-        public char[,] MakeMove(char[,] grid, char turn, int col)
+        public char[,] MakeMove(char[,] grid, char turn, int col, int availableRow)
         {
             // Clones grid so value is used not reference
             grid = (char[,])grid.Clone();
 
-            // Returns valid column moves
-            List<byte> validColumns = GetValidMoves(grid);
-
             // Checks if inputted column is a valid move
-            if (!validColumns.Contains((byte)col))
+            if (availableRow == -1)
             {
                 throw new Exception("Invalid column move made on grid");
             }
 
-            // Starts 1 spot above highest index of array
-            int currentRow = grid.GetLength(1);
-
-            // Keep moving down until spot underneath isn't empty
-            // Result is the row the piece should fall into (via gravity)
-            while (currentRow > 0)
-            {
-                if (grid[col, currentRow - 1] == ' ')
-                {
-                    currentRow--;
-                }
-                else break;
-            }
-
-            // Make move and return new grid
-            grid[col, currentRow] = turn;
+            grid[col, availableRow] = turn;
             return grid;
         }
 
@@ -63,19 +45,28 @@ namespace FourZug.Backend.ta
         public List<byte> GetValidMoves(char[,] grid)
         {
             List<byte> validCols = new();
+            int[] availableRows = GetAvailableRows(grid);
 
-            // Runs through all columns of grid
-            for (byte col = 0; col < grid.GetLength(0); col++)
+            foreach (int row in availableRows)
             {
-                // If the toprow is empty, col is valid
-                int topRow = grid.GetLength(1) - 1;
-                if (grid[col, topRow] == ' ')
+                if (row != -1) validCols.Add((byte)row);
+            }
+            return validCols;
+        }
+
+        public int[] GetAvailableRows(char[,] grid)
+        {
+            int[] rowAvailability = new int[7];
+            for (int col = 0; col < 7; col++)
+            {
+                rowAvailability[col] = -1;
+                for (int row = grid.GetLength(1); row > 0; row--)
                 {
-                    validCols.Add(col);
+                    if (grid[col, row - 1] != ' ') rowAvailability[col] = row - 1;
+                    else break;
                 }
             }
-
-            return validCols;
+            return rowAvailability;
         }
     }
 }
