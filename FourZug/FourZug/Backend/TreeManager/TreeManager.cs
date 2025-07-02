@@ -101,7 +101,9 @@ namespace FourZug.Backend.TreeManagerAccess
         {
             if (utilityEngine == null || heuristicsEngine == null) throw new MissingFieldException();
 
-            // This game board is an option for the node / nextMoveBy player
+            // Calculate new data for child
+            int moveRow = node.availableColRows[colMove];
+            short newPlacementEval = (short)(node.placementEval + heuristicsEngine.EvalPlacement(colMove, moveRow, node.nextMoveBy));
             char[,] childGrid = utilityEngine.MakeMove(node.grid, node.nextMoveBy, colMove, node.availableColRows[colMove]);
             char childNextMoveBy = node.nextMoveBy == 'X' ? 'O' : 'X';
             int[] newAvailability = AdjustAvailableRows(colMove, node.availableColRows);
@@ -109,11 +111,7 @@ namespace FourZug.Backend.TreeManagerAccess
             nodesMade++;
 
             Node child = new Node(childGrid, childNextMoveBy, newAvailability, (sbyte)colMove);
-
-            int pieceRow = newAvailability[colMove] - 1;
-
-            int piecePlacementEvalChange = heuristicsEngine.EvalPlacement(colMove, pieceRow, node.nextMoveBy);
-            child.placementEval = (short)(node.placementEval + piecePlacementEvalChange);
+            child.placementEval = newPlacementEval;
 
             return child;
         }
@@ -133,9 +131,10 @@ namespace FourZug.Backend.TreeManagerAccess
 
         private int[] AdjustAvailableRows(int col, int[] rowAvailability)
         {
-            rowAvailability[col]++;
-            if (rowAvailability[col] == 6) rowAvailability[col] = -1;
-            return rowAvailability;
+            int[] newAvailability = (int[])rowAvailability.Clone();
+            newAvailability[col]++;
+            if (rowAvailability[col] == 6) newAvailability[col] = -1;
+            return newAvailability;
         }
     }
 }

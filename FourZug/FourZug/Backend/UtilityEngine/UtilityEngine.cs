@@ -1,4 +1,5 @@
 ﻿using Accessibility;
+using System.Reflection.Metadata.Ecma335;
 
 namespace FourZug.Backend.UtilityEngineAccess
 {
@@ -47,26 +48,34 @@ namespace FourZug.Backend.UtilityEngineAccess
             List<byte> validCols = new();
             int[] availableRows = GetAvailableRows(grid);
 
-            foreach (int row in availableRows)
+            for (int col = 0; col < grid.GetLength(0); col++)
             {
-                if (row != -1) validCols.Add((byte)row);
+                if (availableRows[col] != -1) validCols.Add((byte)col);
             }
             return validCols;
         }
 
+        // Gets the row a piece would fall in for each col
         public int[] GetAvailableRows(char[,] grid)
         {
             int[] rowAvailability = new int[7];
             for (int col = 0; col < 7; col++)
             {
-                rowAvailability[col] = -1;
+                // If top of column full, no row available
+                if (grid[col, 5] != ' ')
+                {
+                    rowAvailability[col] = -1;
+                    continue;
+                }
+
+                // Get lowest empty row
                 int row = grid.GetLength(1);
                 while (grid[col, row - 1] == ' ')
                 {
                     row--;
-                    rowAvailability[col] = row;
                     if (row == 0) break;
                 }
+                rowAvailability[col] = row;
             }
             return rowAvailability;
         }
